@@ -1,0 +1,19 @@
+User-agent: *
+Allow: /
+
+# Sitemap
+Sitemap: https://eservices.gov.lk/sitemap.xml
+
+# Block development and admin paths
+Disallow: /api/
+Disallow: /_next/
+Disallow: /admin/
+Disallow: /.well-known/
+
+# Allow important pages
+Allow: /
+Allow: /services
+Allow: /about
+Allow: /contact
+Allow: /login
+Allow: /register

@@ -14,6 +14,7 @@ const roboto = Roboto({
 })
 
 export const metadata: Metadata = {
+  metadataBase: new URL(process.env.NODE_ENV === 'production' ? 'https://eservices.gov.lk' : 'http://localhost:3001'),
   title: {
     default: 'e-Services | Sri Lankan Government Services',
     template: '%s | e-Services'
@@ -44,7 +45,7 @@ export const metadata: Metadata = {
   openGraph: {
     type: 'website',
     locale: 'en_US',
-    url: 'https://eservices.gov.lk',
+    url: '/',
     siteName: 'e-Services Sri Lanka',
     title: 'e-Services | Sri Lankan Government Services',
     description: 'Centralized appointment booking system for Sri Lankan government services',

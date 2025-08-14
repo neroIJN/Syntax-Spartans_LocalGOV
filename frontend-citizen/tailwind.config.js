@@ -9,30 +9,30 @@ module.exports = {
   theme: {
     extend: {
       colors: {
-        // Sri Lankan Government Brand Colors
+        // Sri Lankan Government Brand Colors - Based on official DGI website
         primary: {
-          50: '#f0f4f8',
-          100: '#d9e6f2',
-          200: '#b3cde0',
-          300: '#8db4d3',
-          400: '#679bc6',
-          500: '#4182b9',
-          600: '#003366', // Main navy blue
-          700: '#002952',
-          800: '#001f3d',
-          900: '#001529',
+          50: '#eff6ff',
+          100: '#dbeafe',
+          200: '#bfdbfe',
+          300: '#93c5fd',
+          400: '#60a5fa',
+          500: '#3b82f6',
+          600: '#1e40af', // Deep government blue
+          700: '#1e3a8a', // Darker blue
+          800: '#1e293b', // Very dark blue
+          900: '#0f172a', // Navy black
         },
         secondary: {
-          50: '#fdfbf7',
-          100: '#faf6eb',
-          200: '#f4ead7',
-          300: '#eddec3',
-          400: '#e7d2af',
-          500: '#D4AF37', // Muted gold
-          600: '#c19b2d',
-          700: '#a6852a',
-          800: '#8b6f26',
-          900: '#705923',
+          50: '#fefce8',
+          100: '#fef9c3',
+          200: '#fef08a',
+          300: '#fde047',
+          400: '#facc15',
+          500: '#eab308', // Government gold
+          600: '#ca8a04',
+          700: '#a16207',
+          800: '#854d0e',
+          900: '#713f12',
         },
         accent: {
           50: '#f0fdf4',
@@ -140,6 +140,11 @@ module.exports = {
       },
       screens: {
         'xs': '475px',
+        'sm': '640px',
+        'md': '768px',
+        'lg': '1024px',
+        'xl': '1280px',
+        '2xl': '1536px',
       },
     },
   },

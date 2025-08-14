@@ -6,32 +6,39 @@
 @layer base {
   html {
     scroll-behavior: smooth;
+    /* Prevent horizontal scroll on mobile */
+    overflow-x: hidden;
   }
 
   body {
     @apply font-sans text-neutral-900 bg-neutral-50;
     font-feature-settings: 'rlig' 1, 'calt' 1;
+    /* Prevent horizontal scroll on mobile */
+    overflow-x: hidden;
+    /* Improve text rendering on mobile */
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
   }
 
-  /* Typography */
+  /* Typography with responsive scaling */
   h1, h2, h3, h4, h5, h6 {
     @apply font-heading font-semibold text-primary-600;
   }
 
   h1 {
-    @apply text-3xl lg:text-4xl;
+    @apply text-2xl sm:text-3xl lg:text-4xl xl:text-5xl;
   }
 
   h2 {
-    @apply text-2xl lg:text-3xl;
+    @apply text-xl sm:text-2xl lg:text-3xl;
   }
 
   h3 {
-    @apply text-xl lg:text-2xl;
+    @apply text-lg sm:text-xl lg:text-2xl;
   }
 
   h4 {
-    @apply text-lg lg:text-xl;
+    @apply text-base sm:text-lg lg:text-xl;
   }
 
   /* Focus styles for accessibility */
@@ -74,7 +81,7 @@
   }
 
   .btn-outline {
-    @apply btn border border-primary-600 text-primary-600 hover:bg-primary-50 focus:ring-primary-500;
+    @apply btn border-2 border-primary-600 text-primary-600 bg-white hover:bg-primary-600 hover:text-white focus:ring-primary-500;
   }
 
   .btn-ghost {
@@ -202,6 +209,50 @@
   /* Mobile-first responsive utilities */
   .container-custom {
     @apply max-w-7xl mx-auto px-4 sm:px-6 lg:px-8;
+  }
+
+  /* Responsive text sizing */
+  .text-responsive-xs {
+    @apply text-xs sm:text-sm;
+  }
+
+  .text-responsive-sm {
+    @apply text-sm sm:text-base;
+  }
+
+  .text-responsive-base {
+    @apply text-base sm:text-lg;
+  }
+
+  .text-responsive-lg {
+    @apply text-lg sm:text-xl md:text-2xl;
+  }
+
+  .text-responsive-xl {
+    @apply text-xl sm:text-2xl md:text-3xl lg:text-4xl;
+  }
+
+  /* Responsive spacing */
+  .space-responsive {
+    @apply space-y-4 sm:space-y-6 md:space-y-8;
+  }
+
+  .gap-responsive {
+    @apply gap-2 sm:gap-4 md:gap-6;
+  }
+
+  /* Mobile-optimized navigation */
+  .mobile-nav-hidden {
+    @apply hidden lg:flex;
+  }
+
+  .mobile-nav-visible {
+    @apply lg:hidden;
+  }
+
+  /* Touch-friendly sizing */
+  .touch-target {
+    @apply min-h-[44px] min-w-[44px];
   }
 
   /* QR Code styling */
