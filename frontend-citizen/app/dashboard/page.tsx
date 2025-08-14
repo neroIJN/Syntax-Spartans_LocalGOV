@@ -11,9 +11,13 @@ import {
   CheckCircleIcon,
   ExclamationTriangleIcon,
   PlusIcon,
-  EyeIcon
+  EyeIcon,
+  ChevronLeftIcon,
+  ChevronRightIcon,
+  BuildingOfficeIcon
 } from '@heroicons/react/24/outline';
 import Link from 'next/link';
+import Image from 'next/image';
 import DashboardLayout from '@/components/DashboardLayout';
 
 interface Appointment {
@@ -52,6 +56,76 @@ export default function Dashboard() {
     email: 'perera@example.com',
     phone: '+94 70 123 4567'
   });
+
+  // Carousel state
+  const [currentSlide, setCurrentSlide] = useState(0);
+  const [isAutoPlaying, setIsAutoPlaying] = useState(true);
+
+  // Government services carousel data
+  const governmentServices = [
+    {
+      id: 1,
+      title: "Department for Registration of Persons",
+      subtitle: "Birth Certificates & National ID",
+      description: "Get your birth certificate online through the official government portal. Fast, secure, and government-verified digital services available 24/7.",
+      image: "/1614235811_7926395_hirunews.jpg",
+      href: "/services/birth-certificate",
+      buttonText: "Get Birth Certificate",
+      services: ["Birth Certificate", "National ID", "Marriage Registration"],
+      color: "from-blue-600 to-indigo-600",
+      badge: "Online Available"
+    },
+    {
+      id: 2,
+      title: "Registrar of Companies",
+      subtitle: "Business Registration Services", 
+      description: "Register your business or company with the official government registry. Complete incorporation services with digital processing and verification.",
+      image: "/download.jpeg",
+      href: "/services",
+      buttonText: "Register Business",
+      services: ["Company Registration", "Business License", "Corporate Services"],
+      color: "from-purple-600 to-pink-600",
+      badge: "Appointment Required"
+    },
+    {
+      id: 3,
+      title: "District Secretariat Offices",
+      subtitle: "Local Government Services",
+      description: "Access various district-level services including land registration, local permits, and community services through our network of offices.",
+      image: "/hq720.jpg",
+      href: "/appointments/book",
+      buttonText: "Book Appointment",
+      services: ["Land Registration", "Local Permits", "Community Services"],
+      color: "from-emerald-600 to-green-600",
+      badge: "Multiple Locations"
+    }
+  ];
+
+  // Auto-play carousel
+  useEffect(() => {
+    if (!isAutoPlaying) return;
+    
+    const interval = setInterval(() => {
+      setCurrentSlide((prev) => (prev + 1) % governmentServices.length);
+    }, 5000);
+
+    return () => clearInterval(interval);
+  }, [isAutoPlaying, governmentServices.length]);
+
+  const nextSlide = () => {
+    setCurrentSlide((prev) => (prev + 1) % governmentServices.length);
+    setIsAutoPlaying(false);
+  };
+
+  const prevSlide = () => {
+    setCurrentSlide((prev) => (prev - 1 + governmentServices.length) % governmentServices.length);
+    setIsAutoPlaying(false);
+  };
+
+  const goToSlide = (index: number) => {
+    setCurrentSlide(index);
+    setIsAutoPlaying(false);
+  };
 
   const [upcomingAppointments, setUpcomingAppointments] = useState<Appointment[]>([
     {
@@ -159,27 +233,27 @@ export default function Dashboard() {
     switch (status) {
       case 'confirmed':
       case 'verified':
-        return 'text-emerald-600 bg-emerald-100';
+        return 'text-emerald-800 bg-emerald-200 border border-emerald-300';
       case 'pending':
-        return 'text-amber-600 bg-amber-100';
+        return 'text-amber-800 bg-amber-200 border border-amber-300';
       case 'completed':
-        return 'text-blue-600 bg-blue-100';
+        return 'text-blue-800 bg-blue-200 border border-blue-300';
       case 'cancelled':
       case 'rejected':
-        return 'text-red-600 bg-red-100';
+        return 'text-red-800 bg-red-200 border border-red-300';
       default:
-        return 'text-gray-600 bg-gray-100';
+        return 'text-gray-800 bg-gray-200 border border-gray-300';
     }
   };
 
   const getNotificationIcon = (type: string) => {
     switch (type) {
       case 'success':
-        return <CheckCircleIcon className="h-5 w-5 text-emerald-500" />;
+        return <CheckCircleIcon className="h-6 w-6 text-emerald-600" />;
       case 'warning':
-        return <ExclamationTriangleIcon className="h-5 w-5 text-amber-500" />;
+        return <ExclamationTriangleIcon className="h-6 w-6 text-amber-600" />;
       default:
-        return <BellIcon className="h-5 w-5 text-blue-500" />;
+        return <BellIcon className="h-6 w-6 text-blue-600" />;
     }
   };
 
@@ -193,47 +267,190 @@ export default function Dashboard() {
 
   return (
     <DashboardLayout>
-      <div className="px-4 sm:px-6 lg:px-8 py-8">
+      <div className="px-4 sm:px-6 lg:px-8 py-10 bg-gradient-to-br from-slate-50 via-blue-50 to-indigo-100 min-h-screen">
         {/* Welcome Section */}
         <div className="mb-8">
-          <div className="bg-white rounded-xl shadow-lg border border-slate-200 overflow-hidden">
-            <div className="bg-gradient-to-r from-blue-600 to-indigo-600 px-6 py-8">
-              <div className="flex items-center space-x-4">
-                <div className="h-16 w-16 rounded-full bg-white/20 flex items-center justify-center">
-                  <UserCircleIcon className="h-10 w-10 text-white" />
+          <div className="bg-white rounded-2xl shadow-xl border-2 border-blue-100 overflow-hidden">
+            <div className="bg-gradient-to-r from-blue-600 via-blue-700 to-indigo-700 px-8 py-12">
+              <div className="flex items-center space-x-6">
+                <div className="h-20 w-20 rounded-full bg-white/30 backdrop-blur-sm flex items-center justify-center border-2 border-white/50">
+                  <UserCircleIcon className="h-12 w-12 text-white" />
                 </div>
                 <div>
-                  <h1 className="text-3xl font-bold text-white">
+                  <h1 className="text-4xl font-bold text-white mb-2">
                     Welcome back, {user.name}!
                   </h1>
-                  <p className="text-blue-100 mt-1">
+                  <p className="text-blue-100 text-xl font-medium">
                     Manage your government services efficiently
                   </p>
+                  <div className="mt-4 flex items-center space-x-6 text-blue-100">
+                    <div className="flex items-center space-x-2">
+                      <span className="text-sm font-medium">National ID:</span>
+                      <span className="text-white font-semibold">{user.nationalId}</span>
+                    </div>
+                    <div className="flex items-center space-x-2">
+                      <span className="text-sm font-medium">Status:</span>
+                      <span className="bg-green-500 text-white px-3 py-1 rounded-full text-xs font-bold">Active</span>
+                    </div>
+                  </div>
                 </div>
               </div>
             </div>
           </div>
         </div>
+
+        {/* Animated Government Services Carousel */}
+        <div className="mb-10 bg-white rounded-2xl shadow-xl border-2 border-blue-100 overflow-hidden">
+          <div className="px-8 py-6 border-b border-slate-200 bg-gradient-to-r from-slate-50 to-blue-50">
+            <h3 className="text-3xl font-bold text-slate-900 mb-2 text-center">Sri Lankan Government Services</h3>
+            <p className="text-lg text-slate-600 text-center">Access official government departments online</p>
+          </div>
+          
+          {/* Animated Carousel */}
+          <div className="relative bg-white overflow-hidden">
+            <div className="relative h-96 lg:h-80">
+              {/* Carousel Content */}
+              <div 
+                className="flex transition-transform duration-700 ease-in-out h-full"
+                style={{ transform: `translateX(-${currentSlide * 100}%)` }}
+              >
+                {governmentServices.map((service, index) => (
+                  <div key={service.id} className="w-full flex-shrink-0">
+                    <div className="grid grid-cols-1 lg:grid-cols-2 h-full">
+                      {/* Image Side */}
+                      <div className="relative overflow-hidden">
+                        <Image
+                          src={service.image}
+                          alt={service.title}
+                          fill
+                          className="object-cover hover:scale-105 transition-transform duration-500"
+                          sizes="(max-width: 768px) 100vw, 50vw"
+                        />
+                        <div className="absolute inset-0 bg-gradient-to-r from-black/20 to-transparent"></div>
+                      </div>
+                      
+                      {/* Content Side */}
+                      <div className="p-8 flex flex-col justify-center bg-gradient-to-br from-slate-50 to-blue-50">
+                        <div className="max-w-md">
+                          <h4 className="text-2xl lg:text-3xl font-bold text-slate-900 mb-2">
+                            {service.title}
+                          </h4>
+                          <h5 className="text-lg font-semibold text-blue-600 mb-4">
+                            {service.subtitle}
+                          </h5>
+                          <p className="text-slate-700 mb-6 leading-relaxed">
+                            {service.description}
+                          </p>
+                          
+                          {/* Services List */}
+                          <div className="mb-6">
+                            <h6 className="font-semibold text-slate-900 mb-3">Available Services:</h6>
+                            <div className="space-y-2">
+                              {service.services.map((svc, idx) => (
+                                <div key={idx} className="flex items-center text-slate-600">
+                                  <CheckCircleIcon className="h-4 w-4 text-emerald-500 mr-2 flex-shrink-0" />
+                                  <span className="text-sm">{svc}</span>
+                                </div>
+                              ))}
+                            </div>
+                          </div>
+                          
+                          {/* Action Button */}
+                          <Link
+                            href={service.href}
+                            className={`inline-flex items-center px-6 py-3 bg-gradient-to-r ${service.color} text-white font-bold rounded-xl shadow-lg hover:shadow-xl transform hover:scale-105 transition-all duration-200`}
+                          >
+                            {service.buttonText}
+                            <ArrowRightIcon className="ml-2 h-5 w-5" />
+                          </Link>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </div>
+            
+            {/* Navigation Arrows */}
+            <button
+              onClick={prevSlide}
+              className="absolute left-4 top-1/2 transform -translate-y-1/2 bg-white/90 hover:bg-white text-slate-800 p-3 rounded-full shadow-lg hover:shadow-xl transition-all duration-200 z-10"
+              onMouseEnter={() => setIsAutoPlaying(false)}
+            >
+              <ChevronLeftIcon className="h-6 w-6" />
+            </button>
+            
+            <button
+              onClick={nextSlide}
+              className="absolute right-4 top-1/2 transform -translate-y-1/2 bg-white/90 hover:bg-white text-slate-800 p-3 rounded-full shadow-lg hover:shadow-xl transition-all duration-200 z-10"
+              onMouseEnter={() => setIsAutoPlaying(false)}
+            >
+              <ChevronRightIcon className="h-6 w-6" />
+            </button>
+            
+            {/* Slide Indicators */}
+            <div className="absolute bottom-4 left-1/2 transform -translate-x-1/2 flex space-x-3 z-10">
+              {governmentServices.map((_, index) => (
+                <button
+                  key={index}
+                  onClick={() => goToSlide(index)}
+                  className={`w-3 h-3 rounded-full transition-all duration-300 ${
+                    index === currentSlide 
+                      ? 'bg-white shadow-lg scale-125' 
+                      : 'bg-white/60 hover:bg-white/80'
+                  }`}
+                />
+              ))}
+            </div>
+            
+            {/* Auto-play Indicator */}
+            <div className="absolute top-4 right-4 z-10">
+              <button
+                onClick={() => setIsAutoPlaying(!isAutoPlaying)}
+                className={`p-2 rounded-full transition-all duration-200 ${
+                  isAutoPlaying 
+                    ? 'bg-emerald-500 text-white' 
+                    : 'bg-white/90 text-slate-800'
+                }`}
+                title={isAutoPlaying ? 'Pause slideshow' : 'Play slideshow'}
+              >
+                {isAutoPlaying ? (
+                  <svg className="h-4 w-4" fill="currentColor" viewBox="0 0 24 24">
+                    <path d="M6 4h4v16H6V4zm8 0h4v16h-4V4z"/>
+                  </svg>
+                ) : (
+                  <svg className="h-4 w-4" fill="currentColor" viewBox="0 0 24 24">
+                    <path d="M8 5v14l11-7z"/>
+                  </svg>
+                )}
+              </button>
+            </div>
+          </div>
+        </div>
+
         {/* Quick Actions */}
-        <div className="mb-8">
-          <h2 className="text-xl font-semibold text-slate-900 mb-6">Quick Actions</h2>
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+        <div className="mb-10">
+          <h2 className="text-2xl font-bold text-slate-900 mb-8">Quick Actions</h2>
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
             {quickActions.map((action, index) => (
               <Link
                 key={index}
                 href={action.href}
-                className={`group relative overflow-hidden rounded-xl bg-gradient-to-r ${action.color} p-6 text-white shadow-lg hover:shadow-xl transform hover:scale-105 transition-all duration-300`}
+                className={`group relative overflow-hidden rounded-2xl bg-gradient-to-br ${action.color} p-8 text-white shadow-xl hover:shadow-2xl transform hover:scale-105 transition-all duration-300 border border-white/20`}
               >
-                <div className={`absolute inset-0 bg-gradient-to-r ${action.hoverColor} opacity-0 group-hover:opacity-100 transition-opacity duration-300`} />
+                <div className={`absolute inset-0 bg-gradient-to-br ${action.hoverColor} opacity-0 group-hover:opacity-100 transition-opacity duration-300`} />
                 <div className="relative z-10">
-                  <action.icon className="h-8 w-8 mb-4" />
-                  <h3 className="text-lg font-semibold mb-2">{action.title}</h3>
-                  <p className="text-sm opacity-90 mb-4">{action.description}</p>
-                  <div className="flex items-center text-sm font-medium">
+                  <action.icon className="h-12 w-12 mb-6 text-white/90" />
+                  <h3 className="text-xl font-bold mb-3 text-white">{action.title}</h3>
+                  <p className="text-white/90 mb-6 text-base leading-relaxed">{action.description}</p>
+                  <div className="flex items-center text-base font-semibold text-white">
                     Get Started
-                    <ArrowRightIcon className="ml-2 h-4 w-4 group-hover:translate-x-1 transition-transform duration-300" />
+                    <ArrowRightIcon className="ml-3 h-5 w-5 group-hover:translate-x-2 transition-transform duration-300" />
                   </div>
                 </div>
+                {/* Decorative elements */}
+                <div className="absolute top-4 right-4 w-24 h-24 bg-white/10 rounded-full -translate-y-12 translate-x-12"></div>
+                <div className="absolute bottom-4 left-4 w-16 h-16 bg-white/5 rounded-full translate-y-8 -translate-x-8"></div>
               </Link>
             ))}
           </div>
@@ -242,50 +459,59 @@ export default function Dashboard() {
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
           {/* Upcoming Appointments */}
           <div className="lg:col-span-2">
-            <div className="bg-white rounded-xl shadow-lg border border-slate-200 overflow-hidden">
-              <div className="px-6 py-4 border-b border-slate-200 flex items-center justify-between">
-                <h3 className="text-lg font-semibold text-slate-900">Upcoming Appointments</h3>
+            <div className="bg-white rounded-2xl shadow-xl border-2 border-blue-50 overflow-hidden">
+              <div className="px-8 py-6 border-b border-slate-200 flex items-center justify-between bg-gradient-to-r from-slate-50 to-blue-50">
+                <h3 className="text-2xl font-bold text-slate-900">Upcoming Appointments</h3>
                 <Link 
                   href="/appointments" 
-                  className="text-blue-600 hover:text-blue-700 text-sm font-medium flex items-center"
+                  className="bg-blue-600 hover:bg-blue-700 text-white px-6 py-3 rounded-lg font-semibold flex items-center transition-colors duration-200 shadow-lg"
                 >
                   View All
-                  <ArrowRightIcon className="ml-1 h-4 w-4" />
+                  <ArrowRightIcon className="ml-2 h-5 w-5" />
                 </Link>
               </div>
               <div className="divide-y divide-slate-200">
                 {upcomingAppointments.length > 0 ? (
                   upcomingAppointments.map((appointment) => (
-                    <div key={appointment.id} className="p-6 hover:bg-slate-50 transition-colors duration-200">
+                    <div key={appointment.id} className="p-8 hover:bg-gradient-to-r hover:from-blue-50 hover:to-indigo-50 transition-all duration-200 border-l-4 border-transparent hover:border-blue-500">
                       <div className="flex items-start justify-between">
                         <div className="flex-1">
-                          <h4 className="text-base font-medium text-slate-900 mb-1">
+                          <h4 className="text-xl font-bold text-slate-900 mb-3">
                             {appointment.service}
                           </h4>
-                          <p className="text-sm text-slate-600 mb-2">
+                          <p className="text-lg text-slate-700 mb-4 font-medium">
                             {appointment.department}
                           </p>
-                          <div className="flex items-center space-x-4 text-sm text-slate-500">
-                            <span>📅 {new Date(appointment.date).toLocaleDateString()}</span>
-                            <span>🕒 {appointment.time}</span>
-                            <span>📍 {appointment.location}</span>
+                          <div className="flex items-center space-x-8 text-base text-slate-600">
+                            <div className="flex items-center space-x-2">
+                              <span className="text-2xl">📅</span>
+                              <span className="font-semibold">{new Date(appointment.date).toLocaleDateString()}</span>
+                            </div>
+                            <div className="flex items-center space-x-2">
+                              <span className="text-2xl">🕒</span>
+                              <span className="font-semibold">{appointment.time}</span>
+                            </div>
+                            <div className="flex items-center space-x-2">
+                              <span className="text-2xl">📍</span>
+                              <span className="font-semibold">{appointment.location}</span>
+                            </div>
                           </div>
                         </div>
-                        <span className={`px-3 py-1 rounded-full text-xs font-medium ${getStatusColor(appointment.status)}`}>
+                        <span className={`px-4 py-2 rounded-xl text-sm font-bold uppercase tracking-wider ${getStatusColor(appointment.status)} shadow-lg`}>
                           {appointment.status.charAt(0).toUpperCase() + appointment.status.slice(1)}
                         </span>
                       </div>
                     </div>
                   ))
                 ) : (
-                  <div className="p-8 text-center">
-                    <CalendarDaysIcon className="h-12 w-12 text-slate-400 mx-auto mb-4" />
-                    <p className="text-slate-600">No upcoming appointments</p>
+                  <div className="p-12 text-center">
+                    <CalendarDaysIcon className="h-16 w-16 text-slate-400 mx-auto mb-6" />
+                    <p className="text-xl text-slate-600 font-medium mb-4">No upcoming appointments</p>
                     <Link 
                       href="/appointments/book" 
-                      className="mt-2 inline-flex items-center text-blue-600 hover:text-blue-700 text-sm font-medium"
+                      className="inline-flex items-center bg-blue-600 hover:bg-blue-700 text-white px-6 py-3 rounded-lg font-semibold transition-colors duration-200"
                     >
-                      <PlusIcon className="h-4 w-4 mr-1" />
+                      <PlusIcon className="h-5 w-5 mr-2" />
                       Book an appointment
                     </Link>
                   </div>
@@ -296,32 +522,41 @@ export default function Dashboard() {
 
           {/* Notifications */}
           <div>
-            <div className="bg-white rounded-xl shadow-lg border border-slate-200 overflow-hidden mb-6">
-              <div className="px-6 py-4 border-b border-slate-200">
-                <h3 className="text-lg font-semibold text-slate-900">Recent Notifications</h3>
+            <div className="bg-white rounded-2xl shadow-xl border-2 border-blue-50 overflow-hidden mb-8">
+              <div className="px-8 py-6 border-b border-slate-200 bg-gradient-to-r from-slate-50 to-blue-50">
+                <div className="flex items-center justify-between">
+                  <h3 className="text-2xl font-bold text-slate-900">Recent Notifications</h3>
+                  {unreadCount > 0 && (
+                    <span className="bg-red-500 text-white px-3 py-1 rounded-full text-sm font-bold">
+                      {unreadCount} new
+                    </span>
+                  )}
+                </div>
               </div>
-              <div className="max-h-80 overflow-y-auto">
+              <div className="max-h-96 overflow-y-auto">
                 {notifications.slice(0, 5).map((notification) => (
                   <div 
                     key={notification.id} 
-                    className={`p-4 border-b border-slate-200 last:border-b-0 cursor-pointer hover:bg-slate-50 transition-colors duration-200 ${!notification.read ? 'bg-blue-50' : ''}`}
+                    className={`p-6 border-b border-slate-200 last:border-b-0 cursor-pointer hover:bg-gradient-to-r hover:from-blue-50 hover:to-indigo-50 transition-all duration-200 ${!notification.read ? 'bg-gradient-to-r from-blue-50 to-blue-100 border-l-4 border-blue-500' : ''}`}
                     onClick={() => markNotificationAsRead(notification.id)}
                   >
-                    <div className="flex items-start space-x-3">
-                      {getNotificationIcon(notification.type)}
+                    <div className="flex items-start space-x-4">
+                      <div className="flex-shrink-0 p-2 rounded-lg bg-gradient-to-r from-blue-100 to-indigo-100">
+                        {getNotificationIcon(notification.type)}
+                      </div>
                       <div className="flex-1 min-w-0">
-                        <p className={`text-sm font-medium ${!notification.read ? 'text-slate-900' : 'text-slate-700'}`}>
+                        <p className={`text-base font-bold ${!notification.read ? 'text-slate-900' : 'text-slate-700'} mb-2`}>
                           {notification.title}
                         </p>
-                        <p className="text-xs text-slate-600 mt-1 line-clamp-2">
+                        <p className="text-sm text-slate-600 mb-3 leading-relaxed">
                           {notification.message}
                         </p>
-                        <p className="text-xs text-slate-500 mt-1">
+                        <p className="text-xs text-slate-500 font-medium">
                           {notification.time}
                         </p>
                       </div>
                       {!notification.read && (
-                        <div className="w-2 h-2 bg-blue-500 rounded-full"></div>
+                        <div className="w-3 h-3 bg-blue-500 rounded-full shadow-lg"></div>
                       )}
                     </div>
                   </div>
@@ -330,110 +565,41 @@ export default function Dashboard() {
             </div>
 
             {/* Recent Documents */}
-            <div className="bg-white rounded-xl shadow-lg border border-slate-200 overflow-hidden">
-              <div className="px-6 py-4 border-b border-slate-200 flex items-center justify-between">
-                <h3 className="text-lg font-semibold text-slate-900">Recent Documents</h3>
+            <div className="bg-white rounded-2xl shadow-xl border-2 border-blue-50 overflow-hidden">
+              <div className="px-8 py-6 border-b border-slate-200 flex items-center justify-between bg-gradient-to-r from-slate-50 to-blue-50">
+                <h3 className="text-2xl font-bold text-slate-900">Recent Documents</h3>
                 <Link 
                   href="/documents" 
-                  className="text-blue-600 hover:text-blue-700 text-sm font-medium flex items-center"
+                  className="bg-emerald-600 hover:bg-emerald-700 text-white px-6 py-3 rounded-lg font-semibold flex items-center transition-colors duration-200 shadow-lg"
                 >
                   View All
-                  <EyeIcon className="ml-1 h-4 w-4" />
+                  <EyeIcon className="ml-2 h-5 w-5" />
                 </Link>
               </div>
               <div className="divide-y divide-slate-200">
                 {recentDocuments.map((document) => (
-                  <div key={document.id} className="p-4 hover:bg-slate-50 transition-colors duration-200">
+                  <div key={document.id} className="p-6 hover:bg-gradient-to-r hover:from-emerald-50 hover:to-green-50 transition-all duration-200 border-l-4 border-transparent hover:border-emerald-500">
                     <div className="flex items-center justify-between">
-                      <div className="flex items-center space-x-3">
-                        <div className="w-8 h-8 bg-gradient-to-r from-blue-600 to-indigo-600 rounded-lg flex items-center justify-center">
-                          <DocumentTextIcon className="h-4 w-4 text-white" />
+                      <div className="flex items-center space-x-4">
+                        <div className="w-12 h-12 bg-gradient-to-r from-emerald-600 to-green-600 rounded-xl flex items-center justify-center shadow-lg">
+                          <DocumentTextIcon className="h-6 w-6 text-white" />
                         </div>
                         <div>
-                          <p className="text-sm font-medium text-slate-900">
+                          <p className="text-lg font-bold text-slate-900 mb-1">
                             {document.name}
                           </p>
-                          <p className="text-xs text-slate-500">
-                            {document.type} • {document.size}
+                          <p className="text-sm text-slate-600 font-medium">
+                            {document.type} • {document.size} • {new Date(document.uploadDate).toLocaleDateString()}
                           </p>
                         </div>
                       </div>
-                      <span className={`px-2 py-1 rounded-full text-xs font-medium ${getStatusColor(document.status)}`}>
+                      <span className={`px-4 py-2 rounded-xl text-sm font-bold uppercase tracking-wider ${getStatusColor(document.status)} shadow-lg`}>
                         {document.status.charAt(0).toUpperCase() + document.status.slice(1)}
                       </span>
                     </div>
                   </div>
                 ))}
               </div>
-            </div>
-          </div>
-        </div>
-
-        {/* Government Building Illustration */}
-        <div className="mt-12 bg-white rounded-xl shadow-lg border border-slate-200 overflow-hidden">
-          <div className="p-8">
-            <div className="text-center mb-6">
-              <h3 className="text-xl font-semibold text-slate-900 mb-2">
-                Sri Lankan Government Services
-              </h3>
-              <p className="text-slate-600">
-                Efficient, transparent, and citizen-friendly digital services
-              </p>
-            </div>
-            <div className="relative bg-gradient-to-b from-sky-200 to-emerald-200 rounded-lg p-8 min-h-64 flex items-center justify-center">
-              {/* Government Building SVG */}
-              <svg
-                viewBox="0 0 800 400"
-                className="w-full max-w-2xl h-auto"
-                fill="none"
-                xmlns="http://www.w3.org/2000/svg"
-              >
-                {/* Building Base */}
-                <rect x="100" y="250" width="600" height="120" fill="#f8fafc" stroke="#64748b" strokeWidth="2"/>
-                
-                {/* Columns */}
-                {[150, 200, 250, 300, 350, 400, 450, 500, 550, 600, 650].map((x, i) => (
-                  <rect key={i} x={x} y="200" width="20" height="70" fill="#e2e8f0" stroke="#64748b" strokeWidth="1"/>
-                ))}
-                
-                {/* Main Building */}
-                <rect x="150" y="200" width="500" height="50" fill="#f1f5f9" stroke="#64748b" strokeWidth="2"/>
-                
-                {/* Central Dome */}
-                <ellipse cx="400" cy="180" rx="80" ry="40" fill="#059669" stroke="#064e3b" strokeWidth="2"/>
-                <ellipse cx="400" cy="170" rx="60" ry="30" fill="#10b981" stroke="#064e3b" strokeWidth="1"/>
-                
-                {/* Central Tower */}
-                <rect x="360" y="120" width="80" height="80" fill="#f8fafc" stroke="#64748b" strokeWidth="2"/>
-                <rect x="370" y="130" width="60" height="60" fill="#f1f5f9" stroke="#94a3b8" strokeWidth="1"/>
-                
-                {/* Dome Top */}
-                <ellipse cx="400" cy="120" rx="50" ry="20" fill="#047857" stroke="#064e3b" strokeWidth="2"/>
-                
-                {/* Flag */}
-                <line x1="400" y1="120" x2="400" y2="80" stroke="#dc2626" strokeWidth="3"/>
-                <rect x="400" y="80" width="30" height="20" fill="#dc2626"/>
-                
-                {/* Windows */}
-                {[170, 220, 270, 320, 370, 420, 470, 520, 570, 620].map((x, i) => (
-                  <rect key={i} x={x} y="220" width="15" height="20" fill="#3b82f6" stroke="#1e40af" strokeWidth="1"/>
-                ))}
-                
-                {/* Trees */}
-                <circle cx="80" cy="280" r="25" fill="#10b981"/>
-                <rect x="75" y="280" width="10" height="30" fill="#92400e"/>
-                
-                <circle cx="720" cy="280" r="25" fill="#10b981"/>
-                <rect x="715" y="280" width="10" height="30" fill="#92400e"/>
-                
-                {/* Steps */}
-                <rect x="200" y="350" width="400" height="10" fill="#e2e8f0" stroke="#94a3b8" strokeWidth="1"/>
-                <rect x="220" y="360" width="360" height="10" fill="#cbd5e1" stroke="#94a3b8" strokeWidth="1"/>
-                
-                {/* Clouds */}
-                <ellipse cx="150" cy="80" rx="30" ry="15" fill="white" opacity="0.8"/>
-                <ellipse cx="650" cy="60" rx="40" ry="20" fill="white" opacity="0.8"/>
-              </svg>
             </div>
           </div>
         </div>
