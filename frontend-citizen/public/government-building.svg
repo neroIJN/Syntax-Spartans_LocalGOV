@@ -1,0 +1,57 @@
+<!-- Sri Lankan Government Building Placeholder SVG -->
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 600">
+  <!-- Sky background -->
+  <defs>
+    <linearGradient id="skyGradient" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" style="stop-color:#87CEEB;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#E0F6FF;stop-opacity:1" />
+    </linearGradient>
+  </defs>
+  <rect fill="url(#skyGradient)" width="1200" height="600"/>
+  
+  <!-- Government building structure -->
+  <!-- Main building base -->
+  <rect fill="#F5F5DC" x="200" y="300" width="800" height="200"/>
+  
+  <!-- Columns -->
+  <rect fill="#FFFFFF" x="250" y="250" width="50" height="250"/>
+  <rect fill="#FFFFFF" x="350" y="250" width="50" height="250"/>
+  <rect fill="#FFFFFF" x="450" y="250" width="50" height="250"/>
+  <rect fill="#FFFFFF" x="550" y="250" width="50" height="250"/>
+  <rect fill="#FFFFFF" x="650" y="250" width="50" height="250"/>
+  <rect fill="#FFFFFF" x="750" y="250" width="50" height="250"/>
+  <rect fill="#FFFFFF" x="850" y="250" width="50" height="250"/>
+  
+  <!-- Roof -->
+  <polygon fill="#8B4513" points="150,250 600,150 1050,250"/>
+  
+  <!-- Central entrance -->
+  <rect fill="#654321" x="550" y="350" width="100" height="150"/>
+  
+  <!-- Steps -->
+  <rect fill="#D3D3D3" x="400" y="480" width="400" height="20"/>
+  <rect fill="#DCDCDC" x="350" y="500" width="500" height="15"/>
+  <rect fill="#E5E5E5" x="300" y="515" width="600" height="15"/>
+  
+  <!-- Windows -->
+  <rect fill="#87CEEB" x="270" y="320" width="30" height="40"/>
+  <rect fill="#87CEEB" x="320" y="320" width="30" height="40"/>
+  <rect fill="#87CEEB" x="420" y="320" width="30" height="40"/>
+  <rect fill="#87CEEB" x="470" y="320" width="30" height="40"/>
+  <rect fill="#87CEEB" x="670" y="320" width="30" height="40"/>
+  <rect fill="#87CEEB" x="720" y="320" width="30" height="40"/>
+  <rect fill="#87CEEB" x="820" y="320" width="30" height="40"/>
+  <rect fill="#87CEEB" x="870" y="320" width="30" height="40"/>
+  
+  <!-- Palm trees -->
+  <rect fill="#8B4513" x="100" y="400" width="15" height="100"/>
+  <circle fill="#228B22" cx="107" cy="390" r="25"/>
+  
+  <rect fill="#8B4513" x="1080" y="420" width="15" height="80"/>
+  <circle fill="#228B22" cx="1087" cy="410" r="20"/>
+  
+  <!-- Sri Lankan flag -->
+  <rect fill="#FF6B35" x="450" y="180" width="60" height="40"/>
+  <rect fill="#FFD700" x="450" y="180" width="60" height="13"/>
+  <rect fill="#006A4E" x="450" y="207" width="60" height="13"/>
+</svg>

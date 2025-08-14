@@ -23,9 +23,150 @@
 }
 
 @layer components {
-  /* Inherit all citizen portal styles */
-  @import '../../../frontend-citizen/app/globals.css';
-  
+  /* Button variants */
+  .btn {
+    @apply inline-flex items-center justify-center px-4 py-2 text-sm font-medium rounded-lg transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-offset-2 disabled:opacity-50 disabled:cursor-not-allowed;
+  }
+
+  .btn-primary {
+    @apply btn bg-primary-600 text-white hover:bg-primary-700 focus:ring-primary-500;
+  }
+
+  .btn-secondary {
+    @apply btn bg-secondary-500 text-white hover:bg-secondary-600 focus:ring-secondary-500;
+  }
+
+  .btn-outline {
+    @apply btn border border-primary-600 text-primary-600 hover:bg-primary-50 focus:ring-primary-500;
+  }
+
+  .btn-ghost {
+    @apply btn text-primary-600 hover:bg-primary-50 focus:ring-primary-500;
+  }
+
+  .btn-danger {
+    @apply btn bg-error-600 text-white hover:bg-error-700 focus:ring-error-500;
+  }
+
+  .btn-sm {
+    @apply px-3 py-1.5 text-xs;
+  }
+
+  .btn-lg {
+    @apply px-6 py-3 text-base;
+  }
+
+  /* Form controls */
+  .form-input {
+    @apply block w-full px-3 py-2 border border-neutral-300 rounded-lg text-neutral-900 placeholder-neutral-500 focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-transparent;
+  }
+
+  .form-label {
+    @apply block text-sm font-medium text-neutral-700 mb-1;
+  }
+
+  .form-error {
+    @apply text-sm text-error-600 mt-1;
+  }
+
+  .form-help {
+    @apply text-sm text-neutral-500 mt-1;
+  }
+
+  /* Card components */
+  .card {
+    @apply bg-white rounded-xl shadow-soft border border-neutral-200;
+  }
+
+  .card-header {
+    @apply px-6 py-4 border-b border-neutral-200;
+  }
+
+  .card-body {
+    @apply px-6 py-4;
+  }
+
+  .card-footer {
+    @apply px-6 py-4 border-t border-neutral-200 bg-neutral-50 rounded-b-xl;
+  }
+
+  /* Status badges */
+  .badge {
+    @apply inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium;
+  }
+
+  .badge-success {
+    @apply badge bg-accent-100 text-accent-800;
+  }
+
+  .badge-warning {
+    @apply badge bg-warning-100 text-warning-800;
+  }
+
+  .badge-error {
+    @apply badge bg-error-100 text-error-800;
+  }
+
+  .badge-info {
+    @apply badge bg-primary-100 text-primary-800;
+  }
+
+  .badge-neutral {
+    @apply badge bg-neutral-100 text-neutral-800;
+  }
+
+  /* Loading states */
+  .loading-spinner {
+    @apply inline-block w-4 h-4 border-2 border-current border-t-transparent rounded-full animate-spin;
+  }
+
+  /* Navigation styles */
+  .nav-link {
+    @apply flex items-center px-3 py-2 text-sm font-medium rounded-lg transition-colors duration-200;
+  }
+
+  .nav-link-active {
+    @apply nav-link bg-primary-100 text-primary-700;
+  }
+
+  .nav-link-inactive {
+    @apply nav-link text-neutral-600 hover:bg-neutral-100 hover:text-neutral-900;
+  }
+
+  /* Sri Lankan Government specific styles */
+  .gov-header {
+    @apply bg-primary-600 text-white;
+  }
+
+  .gov-footer {
+    @apply bg-primary-800 text-white;
+  }
+
+  .service-card {
+    @apply card hover:shadow-medium transition-shadow duration-200 cursor-pointer;
+  }
+
+  .appointment-status-pending {
+    @apply badge-warning;
+  }
+
+  .appointment-status-confirmed {
+    @apply badge-info;
+  }
+
+  .appointment-status-completed {
+    @apply badge-success;
+  }
+
+  .appointment-status-cancelled {
+    @apply badge-error;
+  }
+
+  /* Mobile-first responsive utilities */
+  .container-custom {
+    @apply max-w-7xl mx-auto px-4 sm:px-6 lg:px-8;
+  }
+
   /* Officer-specific component styles */
   .dashboard-sidebar {
     @apply w-64 bg-white border-r border-neutral-200 h-screen fixed left-0 top-0 overflow-y-auto;
