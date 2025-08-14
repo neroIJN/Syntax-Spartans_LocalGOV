@@ -11,8 +11,8 @@ export default function Home() {
             <div className="flex items-center gap-2 sm:gap-3">
               <span className="text-xl sm:text-2xl text-secondary-400 font-bold">🏛️</span>
               <span className="font-heading text-sm sm:text-lg lg:text-xl font-bold tracking-wide text-white drop-shadow-md">
-                <span className="hidden sm:inline">Appointment Scheduling System</span>
-                <span className="sm:hidden">Appointments</span>
+                <span className="hidden sm:inline">LocalGov</span>
+                <span className="sm:hidden">LocalGov</span>
               </span>
             </div>
             {/* Desktop Navigation Links */}
@@ -52,9 +52,12 @@ export default function Home() {
         {/* Hero Content */}
         <div className="relative z-10 flex flex-col items-center justify-center min-h-[70vh] w-full max-w-7xl mx-auto">
           <div className="mx-auto w-full max-w-xs sm:max-w-md md:max-w-2xl lg:max-w-4xl xl:max-w-5xl bg-gradient-to-br from-white/95 to-white/90 backdrop-blur-sm rounded-2xl sm:rounded-3xl shadow-2xl border border-white/20 p-6 sm:p-8 md:p-12 lg:p-16 flex flex-col items-center">
-            <h1 className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl xl:text-6xl font-heading font-extrabold bg-gradient-to-r from-primary-700 to-primary-600 bg-clip-text text-transparent mb-4 sm:mb-6 md:mb-8 text-center tracking-tight leading-tight">
-              Welcome to the Appointment Scheduling System
+            <h1 className="text-4xl sm:text-5xl md:text-6xl lg:text-7xl xl:text-8xl font-heading font-extrabold bg-gradient-to-r from-primary-700 to-primary-600 bg-clip-text text-transparent mb-3 sm:mb-4 text-center tracking-tight leading-tight">
+              LocalGov
             </h1>
+            <h2 className="text-lg sm:text-xl md:text-2xl lg:text-3xl font-heading font-semibold text-secondary-600 mb-4 sm:mb-6 md:mb-8 text-center tracking-wide">
+              Your appointment management made easy.
+            </h2>
             <p className="text-sm sm:text-base md:text-lg lg:text-xl text-neutral-700 mb-6 sm:mb-8 md:mb-10 text-center max-w-xs sm:max-w-md md:max-w-2xl lg:max-w-3xl leading-relaxed">
               Efficiently manage your appointments with Grama Niladhari and Divisional Secretariat services across Sri Lanka.
               <br className="hidden sm:inline" /> 
