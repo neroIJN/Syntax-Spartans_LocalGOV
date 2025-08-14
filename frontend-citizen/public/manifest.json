@@ -1,7 +1,7 @@
 {
-  "name": "e-Services Sri Lanka - Government Appointment System",
-  "short_name": "e-Services",
-  "description": "Centralized appointment booking system for Sri Lankan government services including Grama Niladhari and Divisional Secretariat services.",
+  "name": "LocalGov - Sri Lankan Government Appointment System",
+  "short_name": "LocalGov",
+  "description": "LocalGov - Centralized appointment booking system for Sri Lankan government services including Grama Niladhari and Divisional Secretariat services.",
   "start_url": "/",
   "display": "standalone",
   "background_color": "#1e3a8a",

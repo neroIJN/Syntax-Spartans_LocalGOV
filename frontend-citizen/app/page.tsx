@@ -92,7 +92,7 @@ export default function Home() {
               <Link href="/help" className="hover:text-secondary-400 text-xs sm:text-sm transition-colors font-medium">Help</Link>
             </div>
             <div className="text-xs sm:text-sm text-neutral-300">
-              © 2024 Appointment Scheduling System. All rights reserved.
+              © 2024 LocalGov. All rights reserved.
             </div>
           </div>
         </div>

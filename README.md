@@ -1,6 +1,6 @@
-# e-Services: Sri Lankan Government Services Portal
+# LocalGov: Sri Lankan Government Services Portal
 
-A comprehensive, microservices-based appointment booking system for Sri Lankan government services, specifically focusing on Grama Niladhari and Divisional Secretariat services.
+LocalGov is a comprehensive, microservices-based appointment booking system for Sri Lankan government services, specifically focusing on Grama Niladhari and Divisional Secretariat services.
 
 ## 🏗️ Architecture Overview
 
@@ -37,7 +37,7 @@ docker-compose up -d
 ## 📁 Project Structure
 
 ```
-e-Services/
+LocalGov/
 ├── frontend-citizen/          # Next.js citizen portal
 ├── frontend-officer/          # Next.js officer dashboard
 ├── services/

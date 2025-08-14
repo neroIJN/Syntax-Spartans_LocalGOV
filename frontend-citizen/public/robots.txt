@@ -2,7 +2,7 @@ User-agent: *
 Allow: /
 
 # Sitemap
-Sitemap: https://eservices.gov.lk/sitemap.xml
+Sitemap: https://localgov.gov.lk/sitemap.xml
 
 # Block development and admin paths
 Disallow: /api/

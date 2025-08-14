@@ -1,7 +1,7 @@
 {
-  "name": "eservices-citizen-portal",
+  "name": "localgov-citizen-portal",
   "version": "1.0.0",
-  "description": "Citizen portal for Sri Lankan government services appointment booking",
+  "description": "LocalGov - Citizen portal for Sri Lankan government services appointment booking",
   "private": true,
   "scripts": {
     "dev": "next dev",

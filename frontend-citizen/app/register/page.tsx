@@ -6,6 +6,7 @@ import { useState } from 'react'
 export default function RegisterPage() {
   const [formData, setFormData] = useState({
     fullName: '',
+    nameWithInitials: '',
     nationalId: '',
     contactNumber: '',
     address: '',
@@ -35,6 +36,10 @@ export default function RegisterPage() {
 
     if (!formData.fullName.trim()) {
       newErrors.fullName = 'Full name is required'
+    }
+
+    if (!formData.nameWithInitials.trim()) {
+      newErrors.nameWithInitials = 'Name with initials is required'
     }
 
     if (!formData.nationalId.trim()) {
@@ -92,8 +97,8 @@ export default function RegisterPage() {
             <Link href="/" className="flex items-center gap-2 sm:gap-3 hover:opacity-80 transition-opacity">
               <span className="text-xl sm:text-2xl text-secondary-400 font-bold">🏛️</span>
               <span className="font-heading text-sm sm:text-lg lg:text-xl font-bold tracking-wide text-white drop-shadow-md">
-                <span className="hidden sm:inline">e-Services Portal</span>
-                <span className="sm:hidden">e-Services</span>
+                <span className="hidden sm:inline">LocalGov</span>
+                <span className="sm:hidden">LocalGov</span>
               </span>
             </Link>
             
@@ -122,7 +127,7 @@ export default function RegisterPage() {
       </nav>
 
       {/* Registration Form */}
-      <main className="relative min-h-screen bg-gradient-to-br from-primary-900 via-primary-800 to-primary-700 flex flex-col justify-center items-center px-4 sm:px-6 lg:px-8 py-8">
+      <main className="relative min-h-screen bg-gradient-to-br from-primary-900 via-primary-800 to-primary-700 flex flex-col justify-center items-center px-4 sm:px-6 lg:px-8 py-4">
         {/* Background Image Overlay */}
         <div 
           className="absolute inset-0 bg-cover bg-center bg-no-repeat opacity-10"
@@ -135,25 +140,25 @@ export default function RegisterPage() {
         <div className="absolute inset-0 bg-gradient-to-t from-primary-900/50 via-transparent to-primary-800/30" />
         
         {/* Registration Content */}
-        <div className="relative z-10 w-full max-w-md mx-auto">
-          <div className="bg-gradient-to-br from-white/95 to-white/90 backdrop-blur-sm rounded-2xl shadow-2xl border border-white/20 p-8">
+        <div className="relative z-10 w-full max-w-md mx-auto my-4">
+          <div className="bg-gradient-to-br from-white/95 to-white/90 backdrop-blur-sm rounded-2xl shadow-2xl border border-white/20 p-6">
             
             {/* Header */}
-            <div className="text-center mb-8">
-              <h1 className="text-2xl sm:text-3xl font-heading font-bold bg-gradient-to-r from-primary-700 to-primary-600 bg-clip-text text-transparent mb-2">
+            <div className="text-center mb-6">
+              <h1 className="text-xl sm:text-2xl font-heading font-bold bg-gradient-to-r from-primary-700 to-primary-600 bg-clip-text text-transparent mb-2">
                 Create Your Account
               </h1>
               <p className="text-neutral-600 text-sm">
-                Join e-Services to book government appointments
+                Join LocalGov to book government appointments
               </p>
             </div>
 
             {/* Registration Form */}
-            <form onSubmit={handleSubmit} className="space-y-6">
+            <form onSubmit={handleSubmit} className="space-y-4">
               
               {/* Full Name */}
               <div>
-                <label htmlFor="fullName" className="block text-sm font-medium text-neutral-700 mb-2">
+                <label htmlFor="fullName" className="block text-sm font-medium text-neutral-700 mb-1">
                   Full Name
                 </label>
                 <input
@@ -163,14 +168,31 @@ export default function RegisterPage() {
                   value={formData.fullName}
                   onChange={handleInputChange}
                   placeholder="Enter your full name"
-                  className={`w-full px-4 py-3 bg-primary-900/90 border ${errors.fullName ? 'border-red-500' : 'border-primary-700'} rounded-lg text-white placeholder-primary-300 focus:outline-none focus:ring-2 focus:ring-secondary-500 focus:border-transparent transition-all duration-200`}
+                  className={`w-full px-3 py-2 bg-primary-900/90 border ${errors.fullName ? 'border-red-500' : 'border-primary-700'} rounded-lg text-white placeholder-primary-300 focus:outline-none focus:ring-2 focus:ring-secondary-500 focus:border-transparent transition-all duration-200 text-sm`}
                 />
                 {errors.fullName && <p className="text-red-500 text-xs mt-1">{errors.fullName}</p>}
               </div>
 
+              {/* Name with Initials */}
+              <div>
+                <label htmlFor="nameWithInitials" className="block text-sm font-medium text-neutral-700 mb-1">
+                  Name with Initials
+                </label>
+                <input
+                  type="text"
+                  id="nameWithInitials"
+                  name="nameWithInitials"
+                  value={formData.nameWithInitials}
+                  onChange={handleInputChange}
+                  placeholder="e.g., S.M.K. Silva"
+                  className={`w-full px-3 py-2 bg-primary-900/90 border ${errors.nameWithInitials ? 'border-red-500' : 'border-primary-700'} rounded-lg text-white placeholder-primary-300 focus:outline-none focus:ring-2 focus:ring-secondary-500 focus:border-transparent transition-all duration-200 text-sm`}
+                />
+                {errors.nameWithInitials && <p className="text-red-500 text-xs mt-1">{errors.nameWithInitials}</p>}
+              </div>
+
               {/* National ID */}
               <div>
-                <label htmlFor="nationalId" className="block text-sm font-medium text-neutral-700 mb-2">
+                <label htmlFor="nationalId" className="block text-sm font-medium text-neutral-700 mb-1">
                   National ID
                 </label>
                 <input
@@ -180,14 +202,14 @@ export default function RegisterPage() {
                   value={formData.nationalId}
                   onChange={handleInputChange}
                   placeholder="Enter your National ID"
-                  className={`w-full px-4 py-3 bg-primary-900/90 border ${errors.nationalId ? 'border-red-500' : 'border-primary-700'} rounded-lg text-white placeholder-primary-300 focus:outline-none focus:ring-2 focus:ring-secondary-500 focus:border-transparent transition-all duration-200`}
+                  className={`w-full px-3 py-2 bg-primary-900/90 border ${errors.nationalId ? 'border-red-500' : 'border-primary-700'} rounded-lg text-white placeholder-primary-300 focus:outline-none focus:ring-2 focus:ring-secondary-500 focus:border-transparent transition-all duration-200 text-sm`}
                 />
                 {errors.nationalId && <p className="text-red-500 text-xs mt-1">{errors.nationalId}</p>}
               </div>
 
               {/* Contact Number */}
               <div>
-                <label htmlFor="contactNumber" className="block text-sm font-medium text-neutral-700 mb-2">
+                <label htmlFor="contactNumber" className="block text-sm font-medium text-neutral-700 mb-1">
                   Contact Number
                 </label>
                 <input
@@ -197,14 +219,14 @@ export default function RegisterPage() {
                   value={formData.contactNumber}
                   onChange={handleInputChange}
                   placeholder="Enter your contact number"
-                  className={`w-full px-4 py-3 bg-primary-900/90 border ${errors.contactNumber ? 'border-red-500' : 'border-primary-700'} rounded-lg text-white placeholder-primary-300 focus:outline-none focus:ring-2 focus:ring-secondary-500 focus:border-transparent transition-all duration-200`}
+                  className={`w-full px-3 py-2 bg-primary-900/90 border ${errors.contactNumber ? 'border-red-500' : 'border-primary-700'} rounded-lg text-white placeholder-primary-300 focus:outline-none focus:ring-2 focus:ring-secondary-500 focus:border-transparent transition-all duration-200 text-sm`}
                 />
                 {errors.contactNumber && <p className="text-red-500 text-xs mt-1">{errors.contactNumber}</p>}
               </div>
 
               {/* Address */}
               <div>
-                <label htmlFor="address" className="block text-sm font-medium text-neutral-700 mb-2">
+                <label htmlFor="address" className="block text-sm font-medium text-neutral-700 mb-1">
                   Address
                 </label>
                 <textarea
@@ -213,15 +235,15 @@ export default function RegisterPage() {
                   value={formData.address}
                   onChange={handleInputChange}
                   placeholder="Enter your address"
-                  rows={3}
-                  className={`w-full px-4 py-3 bg-primary-900/90 border ${errors.address ? 'border-red-500' : 'border-primary-700'} rounded-lg text-white placeholder-primary-300 focus:outline-none focus:ring-2 focus:ring-secondary-500 focus:border-transparent transition-all duration-200 resize-none`}
+                  rows={2}
+                  className={`w-full px-3 py-2 bg-primary-900/90 border ${errors.address ? 'border-red-500' : 'border-primary-700'} rounded-lg text-white placeholder-primary-300 focus:outline-none focus:ring-2 focus:ring-secondary-500 focus:border-transparent transition-all duration-200 resize-none text-sm`}
                 />
                 {errors.address && <p className="text-red-500 text-xs mt-1">{errors.address}</p>}
               </div>
 
               {/* Password */}
               <div>
-                <label htmlFor="password" className="block text-sm font-medium text-neutral-700 mb-2">
+                <label htmlFor="password" className="block text-sm font-medium text-neutral-700 mb-1">
                   Password
                 </label>
                 <input
@@ -231,14 +253,14 @@ export default function RegisterPage() {
                   value={formData.password}
                   onChange={handleInputChange}
                   placeholder="Create a password"
-                  className={`w-full px-4 py-3 bg-primary-900/90 border ${errors.password ? 'border-red-500' : 'border-primary-700'} rounded-lg text-white placeholder-primary-300 focus:outline-none focus:ring-2 focus:ring-secondary-500 focus:border-transparent transition-all duration-200`}
+                  className={`w-full px-3 py-2 bg-primary-900/90 border ${errors.password ? 'border-red-500' : 'border-primary-700'} rounded-lg text-white placeholder-primary-300 focus:outline-none focus:ring-2 focus:ring-secondary-500 focus:border-transparent transition-all duration-200 text-sm`}
                 />
                 {errors.password && <p className="text-red-500 text-xs mt-1">{errors.password}</p>}
               </div>
 
               {/* Confirm Password */}
               <div>
-                <label htmlFor="confirmPassword" className="block text-sm font-medium text-neutral-700 mb-2">
+                <label htmlFor="confirmPassword" className="block text-sm font-medium text-neutral-700 mb-1">
                   Confirm Password
                 </label>
                 <input
@@ -248,30 +270,30 @@ export default function RegisterPage() {
                   value={formData.confirmPassword}
                   onChange={handleInputChange}
                   placeholder="Confirm your password"
-                  className={`w-full px-4 py-3 bg-primary-900/90 border ${errors.confirmPassword ? 'border-red-500' : 'border-primary-700'} rounded-lg text-white placeholder-primary-300 focus:outline-none focus:ring-2 focus:ring-secondary-500 focus:border-transparent transition-all duration-200`}
+                  className={`w-full px-3 py-2 bg-primary-900/90 border ${errors.confirmPassword ? 'border-red-500' : 'border-primary-700'} rounded-lg text-white placeholder-primary-300 focus:outline-none focus:ring-2 focus:ring-secondary-500 focus:border-transparent transition-all duration-200 text-sm`}
                 />
                 {errors.confirmPassword && <p className="text-red-500 text-xs mt-1">{errors.confirmPassword}</p>}
               </div>
 
               {/* Action Buttons */}
-              <div className="flex flex-col sm:flex-row gap-4 pt-4">
+              <div className="flex flex-col sm:flex-row gap-3 pt-3">
                 <button
                   type="submit"
-                  className="bg-gradient-to-r from-secondary-500 to-secondary-600 text-white font-bold px-6 py-3 rounded-lg shadow-xl hover:from-secondary-600 hover:to-secondary-700 hover:shadow-2xl transform hover:scale-105 transition-all duration-300 w-full sm:flex-1"
+                  className="bg-gradient-to-r from-secondary-500 to-secondary-600 text-white font-bold px-5 py-2.5 rounded-lg shadow-xl hover:from-secondary-600 hover:to-secondary-700 hover:shadow-2xl transform hover:scale-105 transition-all duration-300 w-full sm:flex-1 text-sm"
                 >
                   Register
                 </button>
                 <button
                   type="button"
                   onClick={handleCancel}
-                  className="bg-gradient-to-r from-neutral-500 to-neutral-600 text-white font-bold px-6 py-3 rounded-lg shadow-xl hover:from-neutral-600 hover:to-neutral-700 hover:shadow-2xl transform hover:scale-105 transition-all duration-300 w-full sm:flex-1"
+                  className="bg-gradient-to-r from-neutral-500 to-neutral-600 text-white font-bold px-5 py-2.5 rounded-lg shadow-xl hover:from-neutral-600 hover:to-neutral-700 hover:shadow-2xl transform hover:scale-105 transition-all duration-300 w-full sm:flex-1 text-sm"
                 >
                   Cancel
                 </button>
               </div>
 
               {/* Login Link */}
-              <div className="text-center pt-4 border-t border-neutral-200">
+              <div className="text-center pt-3 border-t border-neutral-200">
                 <p className="text-sm text-neutral-600">
                   Already have an account?{' '}
                   <Link href="/login" className="text-primary-600 hover:text-primary-700 font-medium transition-colors">

@@ -14,13 +14,14 @@ const roboto = Roboto({
 })
 
 export const metadata: Metadata = {
-  metadataBase: new URL(process.env.NODE_ENV === 'production' ? 'https://eservices.gov.lk' : 'http://localhost:3001'),
+  metadataBase: new URL(process.env.NODE_ENV === 'production' ? 'https://localgov.gov.lk' : 'http://localhost:3001'),
   title: {
-    default: 'e-Services | Sri Lankan Government Services',
-    template: '%s | e-Services'
+    default: 'LocalGov | Sri Lankan Government Services',
+    template: '%s | LocalGov'
   },
-  description: 'Centralized appointment booking system for Sri Lankan government services including Grama Niladhari and Divisional Secretariat services.',
+  description: 'LocalGov - Centralized appointment booking system for Sri Lankan government services including Grama Niladhari and Divisional Secretariat services.',
   keywords: [
+    'LocalGov',
     'Sri Lanka',
     'Government Services',
     'Appointment Booking',
@@ -29,8 +30,8 @@ export const metadata: Metadata = {
     'e-Services',
     'Digital Government'
   ],
-  authors: [{ name: 'Government of Sri Lanka' }],
-  creator: 'Government of Sri Lanka',
+  authors: [{ name: 'LocalGov Development Team' }],
+  creator: 'LocalGov',
   publisher: 'Government of Sri Lanka',
   robots: {
     index: true,
@@ -46,22 +47,22 @@ export const metadata: Metadata = {
     type: 'website',
     locale: 'en_US',
     url: '/',
-    siteName: 'e-Services Sri Lanka',
-    title: 'e-Services | Sri Lankan Government Services',
-    description: 'Centralized appointment booking system for Sri Lankan government services',
+    siteName: 'LocalGov Sri Lanka',
+    title: 'LocalGov | Sri Lankan Government Services',
+    description: 'LocalGov - Centralized appointment booking system for Sri Lankan government services',
     images: [
       {
         url: '/og-image.png',
         width: 1200,
         height: 630,
-        alt: 'e-Services Sri Lanka',
+        alt: 'LocalGov Sri Lanka',
       },
     ],
   },
   twitter: {
     card: 'summary_large_image',
-    title: 'e-Services | Sri Lankan Government Services',
-    description: 'Centralized appointment booking system for Sri Lankan government services',
+    title: 'LocalGov | Sri Lankan Government Services',
+    description: 'LocalGov - Centralized appointment booking system for Sri Lankan government services',
     images: ['/og-image.png'],
   },
 }
