@@ -5,36 +5,36 @@ export default function Home() {
     <>
       {/* Navigation Header */}
       <nav className="absolute top-0 left-0 right-0 z-50 bg-white/10 backdrop-blur-md border-b border-white/20">
-        <div className="container-custom">
-          <div className="flex items-center justify-between h-16 lg:h-20">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="flex items-center justify-between h-14 lg:h-16">
             {/* Logo and Brand */}
-            <div className="flex items-center gap-2 sm:gap-3">
-              <div className="w-8 h-8 sm:w-10 sm:h-10 bg-gradient-to-br from-blue-600 to-blue-800 rounded-lg flex items-center justify-center shadow-lg">
-                <span className="text-white font-bold text-sm sm:text-base">🏛️</span>
+            <div className="flex items-center gap-2">
+              <div className="w-7 h-7 sm:w-8 sm:h-8 bg-gradient-to-br from-blue-600 to-blue-800 rounded-lg flex items-center justify-center shadow-lg">
+                <span className="text-white font-bold text-xs sm:text-sm">🏛️</span>
               </div>
-              <span className="font-heading text-lg sm:text-xl lg:text-2xl font-bold tracking-wide text-white drop-shadow-lg">
+              <span className="font-heading text-base sm:text-lg lg:text-xl font-bold tracking-wide text-white drop-shadow-lg">
                 LocalGov
               </span>
             </div>
             {/* Desktop Navigation Links */}
-            <div className="hidden lg:flex items-center gap-6">
-              <Link href="/" className="text-white/90 hover:text-white font-medium transition-colors text-sm px-4 py-2 rounded-lg hover:bg-white/10 backdrop-blur-sm">Home</Link>
-              <Link href="/services" className="text-white/90 hover:text-white font-medium transition-colors text-sm px-4 py-2 rounded-lg hover:bg-white/10 backdrop-blur-sm">Services</Link>
-              <Link href="/about" className="text-white/90 hover:text-white font-medium transition-colors text-sm px-4 py-2 rounded-lg hover:bg-white/10 backdrop-blur-sm">About</Link>
-              <Link href="/contact" className="text-white/90 hover:text-white font-medium transition-colors text-sm px-4 py-2 rounded-lg hover:bg-white/10 backdrop-blur-sm">Contact</Link>
-              <div className="flex items-center gap-3 ml-4">
-                <Link href="/login" className="text-white/90 hover:text-white font-medium transition-all duration-300 text-sm px-4 py-2 rounded-lg border border-white/30 hover:bg-white/10 backdrop-blur-sm">
+            <div className="hidden lg:flex items-center gap-4">
+              <Link href="/" className="text-white/90 hover:text-white font-medium transition-colors text-sm px-3 py-1.5 rounded-lg hover:bg-white/10 backdrop-blur-sm">Home</Link>
+              <Link href="/services" className="text-white/90 hover:text-white font-medium transition-colors text-sm px-3 py-1.5 rounded-lg hover:bg-white/10 backdrop-blur-sm">Services</Link>
+              <Link href="/about" className="text-white/90 hover:text-white font-medium transition-colors text-sm px-3 py-1.5 rounded-lg hover:bg-white/10 backdrop-blur-sm">About</Link>
+              <Link href="/contact" className="text-white/90 hover:text-white font-medium transition-colors text-sm px-3 py-1.5 rounded-lg hover:bg-white/10 backdrop-blur-sm">Contact</Link>
+              <div className="flex items-center gap-2 ml-2">
+                <Link href="/auth/login" className="text-white/90 hover:text-white font-medium transition-all duration-300 text-sm px-3 py-1.5 rounded-lg border border-white/30 hover:bg-white/10 backdrop-blur-sm">
                   Sign In
                 </Link>
-                <Link href="/register" className="bg-gradient-to-r from-blue-600 to-blue-700 text-white font-semibold px-6 py-2 rounded-lg shadow-lg hover:from-blue-700 hover:to-blue-800 hover:shadow-xl transform hover:scale-105 transition-all duration-300 text-sm">
+                <Link href="/auth/register" className="bg-gradient-to-r from-blue-600 to-blue-700 text-white font-semibold px-4 py-1.5 rounded-lg shadow-lg hover:from-blue-700 hover:to-blue-800 hover:shadow-xl transform hover:scale-105 transition-all duration-300 text-sm">
                   Get Started
                 </Link>
               </div>
             </div>
             {/* Mobile menu button */}
             <div className="lg:hidden">
-              <button className="text-white/90 hover:text-white p-2 rounded-lg focus:ring-2 focus:ring-white/30 hover:bg-white/10 transition-all duration-200">
-                <svg className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <button className="text-white/90 hover:text-white p-1.5 rounded-lg focus:ring-2 focus:ring-white/30 hover:bg-white/10 transition-all duration-200">
+                <svg className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 6h16M4 12h16M4 18h16" />
                 </svg>
               </button>
@@ -89,7 +89,7 @@ export default function Home() {
             {/* Call to Action Buttons */}
             <div className="flex flex-col sm:flex-row gap-6 justify-center items-center">
               <Link 
-                href="/register" 
+                href="/auth/register" 
                 className="group bg-gradient-to-r from-blue-600 to-blue-700 text-white font-semibold px-10 py-4 rounded-xl text-lg shadow-2xl hover:from-blue-700 hover:to-blue-800 hover:shadow-blue-500/25 transform hover:scale-105 transition-all duration-300 w-full sm:w-auto min-w-[200px] border border-blue-500/30"
               >
                 <span className="flex items-center justify-center gap-2">
@@ -100,13 +100,13 @@ export default function Home() {
                 </span>
               </Link>
               <Link 
-                href="/login" 
+                href="/auth/login" 
                 className="group bg-white/10 backdrop-blur-sm text-white font-semibold px-10 py-4 rounded-xl text-lg shadow-xl border border-white/30 hover:bg-white/20 hover:shadow-2xl transform hover:scale-105 transition-all duration-300 w-full sm:w-auto min-w-[200px]"
               >
                 <span className="flex items-center justify-center gap-2">
                   Sign In
                   <svg className="w-5 h-5 group-hover:translate-x-1 transition-transform duration-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M11 16l-4-4m0 0l4-4m-4 4h14m-5 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h7a3 3 0 013 3v1" />
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M11 16l-4-4m0 0l4-4m-4 4h14m-5 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013 3v1" />
                   </svg>
                 </span>
               </Link>
@@ -138,8 +138,6 @@ export default function Home() {
             </div>
           </div>
         </div>
-        
-      </div>
         
         {/* Scroll Indicator */}
         <div className="absolute bottom-8 left-1/2 transform -translate-x-1/2 animate-bounce">

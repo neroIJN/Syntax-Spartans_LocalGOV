@@ -71,34 +71,36 @@ export default function LoginPage() {
   return (
     <>
       {/* Navigation Header */}
-      <nav className="bg-gradient-to-r from-primary-800 to-primary-700 shadow-xl border-b border-primary-900">
-        <div className="container-custom">
-          <div className="flex items-center justify-between h-16 lg:h-20">
+      <nav className="absolute top-0 left-0 right-0 z-50 bg-white/10 backdrop-blur-md border-b border-white/20">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="flex items-center justify-between h-14 lg:h-16">
             {/* Logo and Brand */}
-            <Link href="/" className="flex items-center gap-2 sm:gap-3 hover:opacity-80 transition-opacity">
-              <span className="text-xl sm:text-2xl text-secondary-400 font-bold">🏛️</span>
-              <span className="font-heading text-sm sm:text-lg lg:text-xl font-bold tracking-wide text-white drop-shadow-md">
-                <span className="hidden sm:inline">LocalGov</span>
-                <span className="sm:hidden">LocalGov</span>
+            <Link href="/" className="flex items-center gap-2 hover:opacity-80 transition-opacity">
+              <div className="w-7 h-7 sm:w-8 sm:h-8 bg-gradient-to-br from-blue-600 to-blue-800 rounded-lg flex items-center justify-center shadow-lg">
+                <span className="text-white font-bold text-xs sm:text-sm">🏛️</span>
+              </div>
+              <span className="font-heading text-base sm:text-lg lg:text-xl font-bold tracking-wide text-white drop-shadow-lg">
+                LocalGov
               </span>
             </Link>
             
             {/* Desktop Navigation Links */}
-            <div className="hidden lg:flex items-center gap-4 xl:gap-6">
-              <Link href="/" className="text-white hover:text-secondary-300 font-medium transition-colors text-sm xl:text-base px-3 py-2 rounded-lg hover:bg-primary-600">Home</Link>
-              <Link href="/services" className="text-white hover:text-secondary-300 font-medium transition-colors text-sm xl:text-base px-3 py-2 rounded-lg hover:bg-primary-600">Services</Link>
-              <Link href="/contact" className="text-white hover:text-secondary-300 font-medium transition-colors text-sm xl:text-base px-3 py-2 rounded-lg hover:bg-primary-600">Contact</Link>
-              <Link href="/about" className="text-white hover:text-secondary-300 font-medium transition-colors text-sm xl:text-base px-3 py-2 rounded-lg hover:bg-primary-600">About</Link>
-              <div className="w-8 h-8 bg-primary-600 rounded-full flex items-center justify-center">
-                <span className="text-white text-sm">?</span>
+            <div className="hidden lg:flex items-center gap-4">
+              <Link href="/" className="text-white/90 hover:text-white font-medium transition-colors text-sm px-3 py-1.5 rounded-lg hover:bg-white/10 backdrop-blur-sm">Home</Link>
+              <Link href="/services" className="text-white/90 hover:text-white font-medium transition-colors text-sm px-3 py-1.5 rounded-lg hover:bg-white/10 backdrop-blur-sm">Services</Link>
+              <Link href="/about" className="text-white/90 hover:text-white font-medium transition-colors text-sm px-3 py-1.5 rounded-lg hover:bg-white/10 backdrop-blur-sm">About</Link>
+              <Link href="/contact" className="text-white/90 hover:text-white font-medium transition-colors text-sm px-3 py-1.5 rounded-lg hover:bg-white/10 backdrop-blur-sm">Contact</Link>
+              <div className="flex items-center gap-2 ml-2">
+                <Link href="/auth/register" className="bg-gradient-to-r from-blue-600 to-blue-700 text-white font-semibold px-4 py-1.5 rounded-lg shadow-lg hover:from-blue-700 hover:to-blue-800 hover:shadow-xl transform hover:scale-105 transition-all duration-300 text-sm">
+                  Get Started
+                </Link>
               </div>
-              <Link href="/register" className="bg-gradient-to-r from-secondary-500 to-secondary-600 text-white font-semibold px-4 py-2 rounded-lg shadow-lg hover:from-secondary-600 hover:to-secondary-700 hover:shadow-xl transform hover:scale-105 transition-all duration-200 text-xs xl:text-sm">Register</Link>
             </div>
 
             {/* Mobile menu button */}
             <div className="lg:hidden">
-              <button className="text-white hover:text-secondary-300 p-2 rounded-lg focus:ring-2 focus:ring-secondary-500 hover:bg-primary-600 transition-all duration-200">
-                <svg className="h-6 w-6 sm:h-7 sm:w-7" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <button className="text-white/90 hover:text-white p-1.5 rounded-lg focus:ring-2 focus:ring-white/30 hover:bg-white/10 transition-all duration-200">
+                <svg className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 6h16M4 12h16M4 18h16" />
                 </svg>
               </button>
@@ -108,108 +110,123 @@ export default function LoginPage() {
       </nav>
 
       {/* Login Form */}
-      <main className="relative min-h-screen bg-gradient-to-br from-primary-900 via-primary-800 to-primary-700 flex flex-col justify-center items-center px-4 sm:px-6 lg:px-8 py-4">
-        {/* Background Image Overlay */}
+      <main className="relative min-h-screen overflow-hidden">
+        {/* Background Image */}
         <div 
-          className="absolute inset-0 bg-cover bg-center bg-no-repeat opacity-10"
+          className="absolute inset-0 bg-cover bg-center bg-no-repeat"
           style={{
-            backgroundImage: `url('/government-building.svg')`
+            backgroundImage: `url('/Manage.jpg')`
           }}
         />
         
-        {/* Gradient Overlay for depth */}
-        <div className="absolute inset-0 bg-gradient-to-t from-primary-900/50 via-transparent to-primary-800/30" />
+        {/* Professional Overlay */}
+        <div className="absolute inset-0 bg-gradient-to-br from-slate-900/85 via-blue-900/75 to-slate-800/90" />
+        
+        {/* Subtle Pattern Overlay */}
+        <div className="absolute inset-0 opacity-20 bg-[radial-gradient(circle_at_1px_1px,rgba(255,255,255,0.15)_1px,transparent_0)] bg-[size:20px_20px]" />
         
         {/* Login Content */}
-        <div className="relative z-10 w-full max-w-md mx-auto my-4">
-          <div className="bg-gradient-to-br from-white/95 to-white/90 backdrop-blur-sm rounded-2xl shadow-2xl border border-white/20 p-6">
-            
-            {/* Header */}
-            <div className="text-center mb-6">
-              <h1 className="text-xl sm:text-2xl font-heading font-bold bg-gradient-to-r from-primary-700 to-primary-600 bg-clip-text text-transparent mb-2">
-                Login to Your Account
-              </h1>
-              <p className="text-neutral-600 text-sm">
-                Access LocalGov services
-              </p>
-            </div>
-
-            {/* Login Form */}
-            <form onSubmit={handleSubmit} className="space-y-4">
+        <div className="relative z-10 flex flex-col justify-center items-center min-h-screen px-4 sm:px-6 lg:px-8 py-20">
+          <div className="w-full max-w-md mx-auto">
+            <div className="bg-white/10 backdrop-blur-md rounded-2xl shadow-2xl border border-white/20 p-8">
               
-              {/* Username or National ID */}
-              <div>
-                <label htmlFor="usernameOrNationalId" className="block text-sm font-medium text-neutral-700 mb-1">
-                  Username or National ID
-                </label>
-                <input
-                  type="text"
-                  id="usernameOrNationalId"
-                  name="usernameOrNationalId"
-                  value={formData.usernameOrNationalId}
-                  onChange={handleInputChange}
-                  placeholder="Enter your username or National ID"
-                  className={`w-full px-3 py-2 bg-primary-900/90 border ${errors.usernameOrNationalId ? 'border-red-500' : 'border-primary-700'} rounded-lg text-white placeholder-primary-300 focus:outline-none focus:ring-2 focus:ring-secondary-500 focus:border-transparent transition-all duration-200 text-sm`}
-                />
-                {errors.usernameOrNationalId && <p className="text-red-500 text-xs mt-1">{errors.usernameOrNationalId}</p>}
-              </div>
-
-              {/* Password */}
-              <div>
-                <label htmlFor="password" className="block text-sm font-medium text-neutral-700 mb-1">
-                  Password
-                </label>
-                <input
-                  type="password"
-                  id="password"
-                  name="password"
-                  value={formData.password}
-                  onChange={handleInputChange}
-                  placeholder="Enter your password"
-                  className={`w-full px-3 py-2 bg-primary-900/90 border ${errors.password ? 'border-red-500' : 'border-primary-700'} rounded-lg text-white placeholder-primary-300 focus:outline-none focus:ring-2 focus:ring-secondary-500 focus:border-transparent transition-all duration-200 text-sm`}
-                />
-                {errors.password && <p className="text-red-500 text-xs mt-1">{errors.password}</p>}
-              </div>
-
-              {/* Forgot Password Link */}
-              <div className="text-left">
-                <button
-                  type="button"
-                  onClick={handleForgotPassword}
-                  className="text-primary-600 hover:text-primary-700 text-sm font-medium transition-colors"
-                >
-                  Forgot Password?
-                </button>
-              </div>
-
-              {/* Action Buttons */}
-              <div className="flex flex-col sm:flex-row gap-3 pt-3">
-                <button
-                  type="submit"
-                  disabled={isLoading}
-                  className="bg-gradient-to-r from-primary-600 to-primary-700 text-white font-bold px-5 py-2.5 rounded-lg shadow-xl hover:from-primary-700 hover:to-primary-800 hover:shadow-2xl transform hover:scale-105 transition-all duration-300 w-full sm:flex-1 text-sm disabled:opacity-50 disabled:cursor-not-allowed disabled:transform-none"
-                >
-                  {isLoading ? 'Logging in...' : 'Login'}
-                </button>
-                <button
-                  type="button"
-                  onClick={handleCancel}
-                  className="bg-gradient-to-r from-neutral-500 to-neutral-600 text-white font-bold px-5 py-2.5 rounded-lg shadow-xl hover:from-neutral-600 hover:to-neutral-700 hover:shadow-2xl transform hover:scale-105 transition-all duration-300 w-full sm:flex-1 text-sm"
-                >
-                  Cancel
-                </button>
-              </div>
-
-              {/* Register Link */}
-              <div className="text-center pt-3 border-t border-neutral-200">
-                <p className="text-sm text-neutral-600">
-                  Don't have an account?{' '}
-                  <Link href="/register" className="text-primary-600 hover:text-primary-700 font-medium transition-colors">
-                    Register here
-                  </Link>
+              {/* Header */}
+              <div className="text-center mb-8">
+                <h1 className="text-2xl sm:text-3xl font-bold text-white mb-3 drop-shadow-lg">
+                  Welcome Back
+                </h1>
+                <p className="text-blue-100 text-sm">
+                  Sign in to access your LocalGov account
                 </p>
               </div>
-            </form>
+
+              {/* Login Form */}
+              <form onSubmit={handleSubmit} className="space-y-6">
+                
+                {/* Username or National ID */}
+                <div>
+                  <label htmlFor="usernameOrNationalId" className="block text-sm font-medium text-white/90 mb-2">
+                    Username or National ID
+                  </label>
+                  <input
+                    type="text"
+                    id="usernameOrNationalId"
+                    name="usernameOrNationalId"
+                    value={formData.usernameOrNationalId}
+                    onChange={handleInputChange}
+                    placeholder="Enter your username or National ID"
+                    className={`w-full px-4 py-3 bg-white/10 backdrop-blur-sm border ${errors.usernameOrNationalId ? 'border-red-400' : 'border-white/30'} rounded-xl text-white placeholder-white/60 focus:outline-none focus:ring-2 focus:ring-blue-400 focus:border-transparent transition-all duration-200 text-sm`}
+                  />
+                  {errors.usernameOrNationalId && <p className="text-red-300 text-xs mt-1">{errors.usernameOrNationalId}</p>}
+                </div>
+
+                {/* Password */}
+                <div>
+                  <label htmlFor="password" className="block text-sm font-medium text-white/90 mb-2">
+                    Password
+                  </label>
+                  <input
+                    type="password"
+                    id="password"
+                    name="password"
+                    value={formData.password}
+                    onChange={handleInputChange}
+                    placeholder="Enter your password"
+                    className={`w-full px-4 py-3 bg-white/10 backdrop-blur-sm border ${errors.password ? 'border-red-400' : 'border-white/30'} rounded-xl text-white placeholder-white/60 focus:outline-none focus:ring-2 focus:ring-blue-400 focus:border-transparent transition-all duration-200 text-sm`}
+                  />
+                  {errors.password && <p className="text-red-300 text-xs mt-1">{errors.password}</p>}
+                </div>
+
+                {/* Forgot Password Link */}
+                <div className="text-right">
+                  <button
+                    type="button"
+                    onClick={handleForgotPassword}
+                    className="text-blue-300 hover:text-blue-200 text-sm font-medium transition-colors"
+                  >
+                    Forgot Password?
+                  </button>
+                </div>
+
+                {/* Action Buttons */}
+                <div className="flex flex-col sm:flex-row gap-4 pt-4">
+                  <button
+                    type="submit"
+                    disabled={isLoading}
+                    className="bg-gradient-to-r from-blue-600 to-blue-700 text-white font-semibold px-8 py-3 rounded-xl shadow-2xl hover:from-blue-700 hover:to-blue-800 hover:shadow-blue-500/25 transform hover:scale-105 transition-all duration-300 w-full sm:flex-1 text-sm disabled:opacity-50 disabled:cursor-not-allowed disabled:transform-none"
+                  >
+                    {isLoading ? (
+                      <span className="flex items-center justify-center gap-2">
+                        <svg className="animate-spin -ml-1 mr-2 h-4 w-4 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                          <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
+                          <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                        </svg>
+                        Signing in...
+                      </span>
+                    ) : (
+                      'Sign In'
+                    )}
+                  </button>
+                  <button
+                    type="button"
+                    onClick={handleCancel}
+                    className="bg-white/10 backdrop-blur-sm text-white font-semibold px-8 py-3 rounded-xl border border-white/30 hover:bg-white/20 hover:shadow-xl transform hover:scale-105 transition-all duration-300 w-full sm:flex-1 text-sm"
+                  >
+                    Cancel
+                  </button>
+                </div>
+
+                {/* Register Link */}
+                <div className="text-center pt-6 border-t border-white/20">
+                  <p className="text-sm text-white/80">
+                    Don't have an account?{' '}
+                    <Link href="/auth/register" className="text-blue-300 hover:text-blue-200 font-medium transition-colors">
+                      Create account here
+                    </Link>
+                  </p>
+                </div>
+              </form>
+            </div>
           </div>
         </div>
       </main>

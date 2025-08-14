@@ -141,34 +141,36 @@ export default function RegisterPage() {
   return (
     <>
       {/* Navigation Header */}
-      <nav className="bg-gradient-to-r from-primary-800 to-primary-700 shadow-xl border-b border-primary-900">
-        <div className="container-custom">
-          <div className="flex items-center justify-between h-16 lg:h-20">
+      <nav className="absolute top-0 left-0 right-0 z-50 bg-white/10 backdrop-blur-md border-b border-white/20">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="flex items-center justify-between h-14 lg:h-16">
             {/* Logo and Brand */}
-            <Link href="/" className="flex items-center gap-2 sm:gap-3 hover:opacity-80 transition-opacity">
-              <span className="text-xl sm:text-2xl text-secondary-400 font-bold">🏛️</span>
-              <span className="font-heading text-sm sm:text-lg lg:text-xl font-bold tracking-wide text-white drop-shadow-md">
-                <span className="hidden sm:inline">LocalGov</span>
-                <span className="sm:hidden">LocalGov</span>
+            <Link href="/" className="flex items-center gap-2 hover:opacity-80 transition-opacity">
+              <div className="w-7 h-7 sm:w-8 sm:h-8 bg-gradient-to-br from-blue-600 to-blue-800 rounded-lg flex items-center justify-center shadow-lg">
+                <span className="text-white font-bold text-xs sm:text-sm">🏛️</span>
+              </div>
+              <span className="font-heading text-base sm:text-lg lg:text-xl font-bold tracking-wide text-white drop-shadow-lg">
+                LocalGov
               </span>
             </Link>
             
             {/* Desktop Navigation Links */}
-            <div className="hidden lg:flex items-center gap-4 xl:gap-6">
-              <Link href="/" className="text-white hover:text-secondary-300 font-medium transition-colors text-sm xl:text-base px-3 py-2 rounded-lg hover:bg-primary-600">Home</Link>
-              <Link href="/services" className="text-white hover:text-secondary-300 font-medium transition-colors text-sm xl:text-base px-3 py-2 rounded-lg hover:bg-primary-600">Services</Link>
-              <Link href="/contact" className="text-white hover:text-secondary-300 font-medium transition-colors text-sm xl:text-base px-3 py-2 rounded-lg hover:bg-primary-600">Contact</Link>
-              <Link href="/about" className="text-white hover:text-secondary-300 font-medium transition-colors text-sm xl:text-base px-3 py-2 rounded-lg hover:bg-primary-600">About</Link>
-              <div className="w-8 h-8 bg-primary-600 rounded-full flex items-center justify-center">
-                <span className="text-white text-sm">?</span>
+            <div className="hidden lg:flex items-center gap-4">
+              <Link href="/" className="text-white/90 hover:text-white font-medium transition-colors text-sm px-3 py-1.5 rounded-lg hover:bg-white/10 backdrop-blur-sm">Home</Link>
+              <Link href="/services" className="text-white/90 hover:text-white font-medium transition-colors text-sm px-3 py-1.5 rounded-lg hover:bg-white/10 backdrop-blur-sm">Services</Link>
+              <Link href="/about" className="text-white/90 hover:text-white font-medium transition-colors text-sm px-3 py-1.5 rounded-lg hover:bg-white/10 backdrop-blur-sm">About</Link>
+              <Link href="/contact" className="text-white/90 hover:text-white font-medium transition-colors text-sm px-3 py-1.5 rounded-lg hover:bg-white/10 backdrop-blur-sm">Contact</Link>
+              <div className="flex items-center gap-2 ml-2">
+                <Link href="/auth/login" className="text-white/90 hover:text-white font-medium transition-all duration-300 text-sm px-3 py-1.5 rounded-lg border border-white/30 hover:bg-white/10 backdrop-blur-sm">
+                  Sign In
+                </Link>
               </div>
-              <Link href="/login" className="bg-gradient-to-r from-secondary-500 to-secondary-600 text-white font-semibold px-4 py-2 rounded-lg shadow-lg hover:from-secondary-600 hover:to-secondary-700 hover:shadow-xl transform hover:scale-105 transition-all duration-200 text-xs xl:text-sm">Login</Link>
             </div>
 
             {/* Mobile menu button */}
             <div className="lg:hidden">
-              <button className="text-white hover:text-secondary-300 p-2 rounded-lg focus:ring-2 focus:ring-secondary-500 hover:bg-primary-600 transition-all duration-200">
-                <svg className="h-6 w-6 sm:h-7 sm:w-7" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <button className="text-white/90 hover:text-white p-1.5 rounded-lg focus:ring-2 focus:ring-white/30 hover:bg-white/10 transition-all duration-200">
+                <svg className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 6h16M4 12h16M4 18h16" />
                 </svg>
               </button>
@@ -178,218 +180,231 @@ export default function RegisterPage() {
       </nav>
 
       {/* Registration Form */}
-      <main className="relative min-h-screen bg-gradient-to-br from-primary-900 via-primary-800 to-primary-700 flex flex-col justify-center items-center px-4 sm:px-6 lg:px-8 py-4">
-        {/* Background Image Overlay */}
+      <main className="relative min-h-screen overflow-hidden">
+        {/* Background Image */}
         <div 
-          className="absolute inset-0 bg-cover bg-center bg-no-repeat opacity-10"
+          className="absolute inset-0 bg-cover bg-center bg-no-repeat"
           style={{
-            backgroundImage: `url('/government-building.svg')`
+            backgroundImage: `url('/Manage.jpg')`
           }}
         />
         
-        {/* Gradient Overlay for depth */}
-        <div className="absolute inset-0 bg-gradient-to-t from-primary-900/50 via-transparent to-primary-800/30" />
+        {/* Professional Overlay */}
+        <div className="absolute inset-0 bg-gradient-to-br from-slate-900/85 via-blue-900/75 to-slate-800/90" />
+        
+        {/* Subtle Pattern Overlay */}
+        <div className="absolute inset-0 opacity-20 bg-[radial-gradient(circle_at_1px_1px,rgba(255,255,255,0.15)_1px,transparent_0)] bg-[size:20px_20px]" />
         
         {/* Registration Content */}
-        <div className="relative z-10 w-full max-w-md mx-auto my-4">
-          <div className="bg-gradient-to-br from-white/95 to-white/90 backdrop-blur-sm rounded-2xl shadow-2xl border border-white/20 p-6">
-            
-            {/* Header */}
-            <div className="text-center mb-6">
-              <h1 className="text-xl sm:text-2xl font-heading font-bold bg-gradient-to-r from-primary-700 to-primary-600 bg-clip-text text-transparent mb-2">
-                Create Your Account
-              </h1>
-              <p className="text-neutral-600 text-sm">
-                Join LocalGov to book government appointments
-              </p>
-            </div>
-
-            {/* Registration Form */}
-            <form onSubmit={handleSubmit} className="space-y-4">
+        <div className="relative z-10 flex flex-col justify-center items-center min-h-screen px-4 sm:px-6 lg:px-8 py-20">
+          <div className="w-full max-w-md mx-auto">
+            <div className="bg-white/10 backdrop-blur-md rounded-2xl shadow-2xl border border-white/20 p-8">
               
-              {/* Full Name */}
-              <div>
-                <label htmlFor="fullName" className="block text-sm font-medium text-neutral-700 mb-1">
-                  Full Name
-                </label>
-                <input
-                  type="text"
-                  id="fullName"
-                  name="fullName"
-                  value={formData.fullName}
-                  onChange={handleInputChange}
-                  placeholder="Enter your full name"
-                  className={`w-full px-3 py-2 bg-primary-900/90 border ${errors.fullName ? 'border-red-500' : 'border-primary-700'} rounded-lg text-white placeholder-primary-300 focus:outline-none focus:ring-2 focus:ring-secondary-500 focus:border-transparent transition-all duration-200 text-sm`}
-                />
-                {errors.fullName && <p className="text-red-500 text-xs mt-1">{errors.fullName}</p>}
-              </div>
-
-              {/* Name with Initials */}
-              <div>
-                <label htmlFor="nameWithInitials" className="block text-sm font-medium text-neutral-700 mb-1">
-                  Name with Initials
-                </label>
-                <input
-                  type="text"
-                  id="nameWithInitials"
-                  name="nameWithInitials"
-                  value={formData.nameWithInitials}
-                  onChange={handleInputChange}
-                  placeholder="e.g., S.M.K. Silva"
-                  className={`w-full px-3 py-2 bg-primary-900/90 border ${errors.nameWithInitials ? 'border-red-500' : 'border-primary-700'} rounded-lg text-white placeholder-primary-300 focus:outline-none focus:ring-2 focus:ring-secondary-500 focus:border-transparent transition-all duration-200 text-sm`}
-                />
-                {errors.nameWithInitials && <p className="text-red-500 text-xs mt-1">{errors.nameWithInitials}</p>}
-              </div>
-
-              {/* National ID */}
-              <div>
-                <label htmlFor="nationalId" className="block text-sm font-medium text-neutral-700 mb-1">
-                  National ID
-                </label>
-                <input
-                  type="text"
-                  id="nationalId"
-                  name="nationalId"
-                  value={formData.nationalId}
-                  onChange={handleInputChange}
-                  placeholder="Enter your National ID"
-                  className={`w-full px-3 py-2 bg-primary-900/90 border ${errors.nationalId ? 'border-red-500' : 'border-primary-700'} rounded-lg text-white placeholder-primary-300 focus:outline-none focus:ring-2 focus:ring-secondary-500 focus:border-transparent transition-all duration-200 text-sm`}
-                />
-                {errors.nationalId && <p className="text-red-500 text-xs mt-1">{errors.nationalId}</p>}
-              </div>
-
-              {/* Contact Number */}
-              <div>
-                <label htmlFor="contactNumber" className="block text-sm font-medium text-neutral-700 mb-1">
-                  Contact Number
-                </label>
-                <input
-                  type="tel"
-                  id="contactNumber"
-                  name="contactNumber"
-                  value={formData.contactNumber}
-                  onChange={handleInputChange}
-                  placeholder="Enter your contact number"
-                  className={`w-full px-3 py-2 bg-primary-900/90 border ${errors.contactNumber ? 'border-red-500' : 'border-primary-700'} rounded-lg text-white placeholder-primary-300 focus:outline-none focus:ring-2 focus:ring-secondary-500 focus:border-transparent transition-all duration-200 text-sm`}
-                />
-                {errors.contactNumber && <p className="text-red-500 text-xs mt-1">{errors.contactNumber}</p>}
-              </div>
-
-              {/* Address */}
-              <div>
-                <label htmlFor="address" className="block text-sm font-medium text-neutral-700 mb-1">
-                  Address
-                </label>
-                <textarea
-                  id="address"
-                  name="address"
-                  value={formData.address}
-                  onChange={handleInputChange}
-                  placeholder="Enter your address"
-                  rows={2}
-                  className={`w-full px-3 py-2 bg-primary-900/90 border ${errors.address ? 'border-red-500' : 'border-primary-700'} rounded-lg text-white placeholder-primary-300 focus:outline-none focus:ring-2 focus:ring-secondary-500 focus:border-transparent transition-all duration-200 resize-none text-sm`}
-                />
-                {errors.address && <p className="text-red-500 text-xs mt-1">{errors.address}</p>}
-              </div>
-
-              {/* Profile Photo */}
-              <div>
-                <label htmlFor="profilePhoto" className="block text-sm font-medium text-neutral-700 mb-1">
-                  Profile Photo
-                </label>
-                <div className="flex flex-col space-y-2">
-                  {/* Photo Preview */}
-                  {photoPreview && (
-                    <div className="flex justify-center">
-                      <div className="w-24 h-24 rounded-full overflow-hidden border-2 border-primary-600 shadow-lg">
-                        <img 
-                          src={photoPreview} 
-                          alt="Profile preview" 
-                          className="w-full h-full object-cover"
-                        />
-                      </div>
-                    </div>
-                  )}
-                  
-                  {/* File Input */}
-                  <div className="relative">
-                    <input
-                      type="file"
-                      id="profilePhoto"
-                      name="profilePhoto"
-                      accept="image/jpeg,image/jpg,image/png"
-                      onChange={handleFileChange}
-                      className="absolute inset-0 w-full h-full opacity-0 cursor-pointer"
-                    />
-                    <div className={`w-full px-3 py-2 bg-primary-900/90 border ${errors.profilePhoto ? 'border-red-500' : 'border-primary-700'} rounded-lg text-white text-center cursor-pointer hover:bg-primary-800/90 transition-all duration-200 text-sm`}>
-                      {formData.profilePhoto ? formData.profilePhoto.name : 'Choose profile photo (JPEG, PNG - Max 5MB)'}
-                    </div>
-                  </div>
-                </div>
-                {errors.profilePhoto && <p className="text-red-500 text-xs mt-1">{errors.profilePhoto}</p>}
-              </div>
-
-              {/* Password */}
-              <div>
-                <label htmlFor="password" className="block text-sm font-medium text-neutral-700 mb-1">
-                  Password
-                </label>
-                <input
-                  type="password"
-                  id="password"
-                  name="password"
-                  value={formData.password}
-                  onChange={handleInputChange}
-                  placeholder="Create a password"
-                  className={`w-full px-3 py-2 bg-primary-900/90 border ${errors.password ? 'border-red-500' : 'border-primary-700'} rounded-lg text-white placeholder-primary-300 focus:outline-none focus:ring-2 focus:ring-secondary-500 focus:border-transparent transition-all duration-200 text-sm`}
-                />
-                {errors.password && <p className="text-red-500 text-xs mt-1">{errors.password}</p>}
-              </div>
-
-              {/* Confirm Password */}
-              <div>
-                <label htmlFor="confirmPassword" className="block text-sm font-medium text-neutral-700 mb-1">
-                  Confirm Password
-                </label>
-                <input
-                  type="password"
-                  id="confirmPassword"
-                  name="confirmPassword"
-                  value={formData.confirmPassword}
-                  onChange={handleInputChange}
-                  placeholder="Confirm your password"
-                  className={`w-full px-3 py-2 bg-primary-900/90 border ${errors.confirmPassword ? 'border-red-500' : 'border-primary-700'} rounded-lg text-white placeholder-primary-300 focus:outline-none focus:ring-2 focus:ring-secondary-500 focus:border-transparent transition-all duration-200 text-sm`}
-                />
-                {errors.confirmPassword && <p className="text-red-500 text-xs mt-1">{errors.confirmPassword}</p>}
-              </div>
-
-              {/* Action Buttons */}
-              <div className="flex flex-col sm:flex-row gap-3 pt-3">
-                <button
-                  type="submit"
-                  className="bg-gradient-to-r from-secondary-500 to-secondary-600 text-white font-bold px-5 py-2.5 rounded-lg shadow-xl hover:from-secondary-600 hover:to-secondary-700 hover:shadow-2xl transform hover:scale-105 transition-all duration-300 w-full sm:flex-1 text-sm"
-                >
-                  Register
-                </button>
-                <button
-                  type="button"
-                  onClick={handleCancel}
-                  className="bg-gradient-to-r from-neutral-500 to-neutral-600 text-white font-bold px-5 py-2.5 rounded-lg shadow-xl hover:from-neutral-600 hover:to-neutral-700 hover:shadow-2xl transform hover:scale-105 transition-all duration-300 w-full sm:flex-1 text-sm"
-                >
-                  Cancel
-                </button>
-              </div>
-
-              {/* Login Link */}
-              <div className="text-center pt-3 border-t border-neutral-200">
-                <p className="text-sm text-neutral-600">
-                  Already have an account?{' '}
-                  <Link href="/login" className="text-primary-600 hover:text-primary-700 font-medium transition-colors">
-                    Login here
-                  </Link>
+              {/* Header */}
+              <div className="text-center mb-8">
+                <h1 className="text-2xl sm:text-3xl font-bold text-white mb-3 drop-shadow-lg">
+                  Create Your Account
+                </h1>
+                <p className="text-blue-100 text-sm">
+                  Join LocalGov to access government services
                 </p>
               </div>
-            </form>
+
+              {/* Registration Form */}
+              <form onSubmit={handleSubmit} className="space-y-4">
+                
+                {/* Full Name */}
+                <div>
+                  <label htmlFor="fullName" className="block text-sm font-medium text-white/90 mb-2">
+                    Full Name
+                  </label>
+                  <input
+                    type="text"
+                    id="fullName"
+                    name="fullName"
+                    value={formData.fullName}
+                    onChange={handleInputChange}
+                    placeholder="Enter your full name"
+                    className={`w-full px-4 py-3 bg-white/10 backdrop-blur-sm border ${errors.fullName ? 'border-red-400' : 'border-white/30'} rounded-xl text-white placeholder-white/60 focus:outline-none focus:ring-2 focus:ring-blue-400 focus:border-transparent transition-all duration-200 text-sm`}
+                  />
+                  {errors.fullName && <p className="text-red-300 text-xs mt-1">{errors.fullName}</p>}
+                </div>
+
+                {/* Name with Initials */}
+                <div>
+                  <label htmlFor="nameWithInitials" className="block text-sm font-medium text-white/90 mb-2">
+                    Name with Initials
+                  </label>
+                  <input
+                    type="text"
+                    id="nameWithInitials"
+                    name="nameWithInitials"
+                    value={formData.nameWithInitials}
+                    onChange={handleInputChange}
+                    placeholder="e.g., S.M.K. Silva"
+                    className={`w-full px-4 py-3 bg-white/10 backdrop-blur-sm border ${errors.nameWithInitials ? 'border-red-400' : 'border-white/30'} rounded-xl text-white placeholder-white/60 focus:outline-none focus:ring-2 focus:ring-blue-400 focus:border-transparent transition-all duration-200 text-sm`}
+                  />
+                  {errors.nameWithInitials && <p className="text-red-300 text-xs mt-1">{errors.nameWithInitials}</p>}
+                </div>
+
+                {/* National ID */}
+                <div>
+                  <label htmlFor="nationalId" className="block text-sm font-medium text-white/90 mb-2">
+                    National ID
+                  </label>
+                  <input
+                    type="text"
+                    id="nationalId"
+                    name="nationalId"
+                    value={formData.nationalId}
+                    onChange={handleInputChange}
+                    placeholder="Enter your National ID"
+                    className={`w-full px-4 py-3 bg-white/10 backdrop-blur-sm border ${errors.nationalId ? 'border-red-400' : 'border-white/30'} rounded-xl text-white placeholder-white/60 focus:outline-none focus:ring-2 focus:ring-blue-400 focus:border-transparent transition-all duration-200 text-sm`}
+                  />
+                  {errors.nationalId && <p className="text-red-300 text-xs mt-1">{errors.nationalId}</p>}
+                </div>
+
+                {/* Contact Number */}
+                <div>
+                  <label htmlFor="contactNumber" className="block text-sm font-medium text-white/90 mb-2">
+                    Contact Number
+                  </label>
+                  <input
+                    type="tel"
+                    id="contactNumber"
+                    name="contactNumber"
+                    value={formData.contactNumber}
+                    onChange={handleInputChange}
+                    placeholder="Enter your contact number"
+                    className={`w-full px-4 py-3 bg-white/10 backdrop-blur-sm border ${errors.contactNumber ? 'border-red-400' : 'border-white/30'} rounded-xl text-white placeholder-white/60 focus:outline-none focus:ring-2 focus:ring-blue-400 focus:border-transparent transition-all duration-200 text-sm`}
+                  />
+                  {errors.contactNumber && <p className="text-red-300 text-xs mt-1">{errors.contactNumber}</p>}
+                </div>
+
+                {/* Address */}
+                <div>
+                  <label htmlFor="address" className="block text-sm font-medium text-white/90 mb-2">
+                    Address
+                  </label>
+                  <textarea
+                    id="address"
+                    name="address"
+                    value={formData.address}
+                    onChange={handleInputChange}
+                    placeholder="Enter your address"
+                    rows={2}
+                    className={`w-full px-4 py-3 bg-white/10 backdrop-blur-sm border ${errors.address ? 'border-red-400' : 'border-white/30'} rounded-xl text-white placeholder-white/60 focus:outline-none focus:ring-2 focus:ring-blue-400 focus:border-transparent transition-all duration-200 resize-none text-sm`}
+                  />
+                  {errors.address && <p className="text-red-300 text-xs mt-1">{errors.address}</p>}
+                </div>
+
+                {/* Profile Photo */}
+                <div>
+                  <label htmlFor="profilePhoto" className="block text-sm font-medium text-white/90 mb-2">
+                    Profile Photo
+                  </label>
+                  <div className="flex flex-col space-y-3">
+                    {/* Photo Preview */}
+                    {photoPreview && (
+                      <div className="flex justify-center">
+                        <div className="w-20 h-20 rounded-full overflow-hidden border-2 border-blue-400 shadow-lg">
+                          <img 
+                            src={photoPreview} 
+                            alt="Profile preview" 
+                            className="w-full h-full object-cover"
+                          />
+                        </div>
+                      </div>
+                    )}
+                    
+                    {/* File Input */}
+                    <div className="relative">
+                      <input
+                        type="file"
+                        id="profilePhoto"
+                        name="profilePhoto"
+                        accept="image/jpeg,image/jpg,image/png"
+                        onChange={handleFileChange}
+                        className="sr-only"
+                      />
+                      <label 
+                        htmlFor="profilePhoto"
+                        className={`block w-full px-4 py-3 bg-white/10 backdrop-blur-sm border ${errors.profilePhoto ? 'border-red-400' : 'border-white/30'} rounded-xl text-white text-center cursor-pointer hover:bg-white/20 transition-all duration-200 text-sm`}
+                      >
+                        <div className="flex items-center justify-center gap-2">
+                          <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12" />
+                          </svg>
+                          {formData.profilePhoto ? formData.profilePhoto.name : 'Choose profile photo (JPEG, PNG - Max 5MB)'}
+                        </div>
+                      </label>
+                    </div>
+                  </div>
+                  {errors.profilePhoto && <p className="text-red-300 text-xs mt-1">{errors.profilePhoto}</p>}
+                </div>
+
+                {/* Password */}
+                <div>
+                  <label htmlFor="password" className="block text-sm font-medium text-white/90 mb-2">
+                    Password
+                  </label>
+                  <input
+                    type="password"
+                    id="password"
+                    name="password"
+                    value={formData.password}
+                    onChange={handleInputChange}
+                    placeholder="Create a password"
+                    className={`w-full px-4 py-3 bg-white/10 backdrop-blur-sm border ${errors.password ? 'border-red-400' : 'border-white/30'} rounded-xl text-white placeholder-white/60 focus:outline-none focus:ring-2 focus:ring-blue-400 focus:border-transparent transition-all duration-200 text-sm`}
+                  />
+                  {errors.password && <p className="text-red-300 text-xs mt-1">{errors.password}</p>}
+                </div>
+
+                {/* Confirm Password */}
+                <div>
+                  <label htmlFor="confirmPassword" className="block text-sm font-medium text-white/90 mb-2">
+                    Confirm Password
+                  </label>
+                  <input
+                    type="password"
+                    id="confirmPassword"
+                    name="confirmPassword"
+                    value={formData.confirmPassword}
+                    onChange={handleInputChange}
+                    placeholder="Confirm your password"
+                    className={`w-full px-4 py-3 bg-white/10 backdrop-blur-sm border ${errors.confirmPassword ? 'border-red-400' : 'border-white/30'} rounded-xl text-white placeholder-white/60 focus:outline-none focus:ring-2 focus:ring-blue-400 focus:border-transparent transition-all duration-200 text-sm`}
+                  />
+                  {errors.confirmPassword && <p className="text-red-300 text-xs mt-1">{errors.confirmPassword}</p>}
+                </div>
+
+                {/* Action Buttons */}
+                <div className="flex flex-col sm:flex-row gap-4 pt-6">
+                  <button
+                    type="submit"
+                    className="bg-gradient-to-r from-blue-600 to-blue-700 text-white font-semibold px-8 py-3 rounded-xl shadow-2xl hover:from-blue-700 hover:to-blue-800 hover:shadow-blue-500/25 transform hover:scale-105 transition-all duration-300 w-full sm:flex-1 text-sm"
+                  >
+                    Create Account
+                  </button>
+                  <button
+                    type="button"
+                    onClick={handleCancel}
+                    className="bg-white/10 backdrop-blur-sm text-white font-semibold px-8 py-3 rounded-xl border border-white/30 hover:bg-white/20 hover:shadow-xl transform hover:scale-105 transition-all duration-300 w-full sm:flex-1 text-sm"
+                  >
+                    Cancel
+                  </button>
+                </div>
+
+                {/* Login Link */}
+                <div className="text-center pt-6 border-t border-white/20">
+                  <p className="text-sm text-white/80">
+                    Already have an account?{' '}
+                    <Link href="/auth/login" className="text-blue-300 hover:text-blue-200 font-medium transition-colors">
+                      Sign in here
+                    </Link>
+                  </p>
+                </div>
+              </form>
+            </div>
           </div>
         </div>
       </main>
