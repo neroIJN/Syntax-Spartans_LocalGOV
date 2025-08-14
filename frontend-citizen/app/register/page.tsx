@@ -11,8 +11,11 @@ export default function RegisterPage() {
     contactNumber: '',
     address: '',
     password: '',
-    confirmPassword: ''
+    confirmPassword: '',
+    profilePhoto: null as File | null
   })
+
+  const [photoPreview, setPhotoPreview] = useState<string | null>(null)
 
   const [errors, setErrors] = useState<Record<string, string>>({})
 
@@ -28,6 +31,50 @@ export default function RegisterPage() {
         ...prev,
         [name]: ''
       }))
+    }
+  }
+
+  const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0]
+    if (file) {
+      // Validate file type
+      const allowedTypes = ['image/jpeg', 'image/jpg', 'image/png']
+      if (!allowedTypes.includes(file.type)) {
+        setErrors(prev => ({
+          ...prev,
+          profilePhoto: 'Please select a valid image file (JPEG, JPG, or PNG)'
+        }))
+        return
+      }
+
+      // Validate file size (max 5MB)
+      const maxSize = 5 * 1024 * 1024 // 5MB in bytes
+      if (file.size > maxSize) {
+        setErrors(prev => ({
+          ...prev,
+          profilePhoto: 'File size must be less than 5MB'
+        }))
+        return
+      }
+
+      // Clear any previous errors
+      setErrors(prev => ({
+        ...prev,
+        profilePhoto: ''
+      }))
+
+      // Update form data
+      setFormData(prev => ({
+        ...prev,
+        profilePhoto: file
+      }))
+
+      // Create preview
+      const reader = new FileReader()
+      reader.onload = (e) => {
+        setPhotoPreview(e.target?.result as string)
+      }
+      reader.readAsDataURL(file)
     }
   }
 
@@ -56,6 +103,10 @@ export default function RegisterPage() {
 
     if (!formData.address.trim()) {
       newErrors.address = 'Address is required'
+    }
+
+    if (!formData.profilePhoto) {
+      newErrors.profilePhoto = 'Profile photo is required'
     }
 
     if (!formData.password) {
@@ -239,6 +290,43 @@ export default function RegisterPage() {
                   className={`w-full px-3 py-2 bg-primary-900/90 border ${errors.address ? 'border-red-500' : 'border-primary-700'} rounded-lg text-white placeholder-primary-300 focus:outline-none focus:ring-2 focus:ring-secondary-500 focus:border-transparent transition-all duration-200 resize-none text-sm`}
                 />
                 {errors.address && <p className="text-red-500 text-xs mt-1">{errors.address}</p>}
+              </div>
+
+              {/* Profile Photo */}
+              <div>
+                <label htmlFor="profilePhoto" className="block text-sm font-medium text-neutral-700 mb-1">
+                  Profile Photo
+                </label>
+                <div className="flex flex-col space-y-2">
+                  {/* Photo Preview */}
+                  {photoPreview && (
+                    <div className="flex justify-center">
+                      <div className="w-24 h-24 rounded-full overflow-hidden border-2 border-primary-600 shadow-lg">
+                        <img 
+                          src={photoPreview} 
+                          alt="Profile preview" 
+                          className="w-full h-full object-cover"
+                        />
+                      </div>
+                    </div>
+                  )}
+                  
+                  {/* File Input */}
+                  <div className="relative">
+                    <input
+                      type="file"
+                      id="profilePhoto"
+                      name="profilePhoto"
+                      accept="image/jpeg,image/jpg,image/png"
+                      onChange={handleFileChange}
+                      className="absolute inset-0 w-full h-full opacity-0 cursor-pointer"
+                    />
+                    <div className={`w-full px-3 py-2 bg-primary-900/90 border ${errors.profilePhoto ? 'border-red-500' : 'border-primary-700'} rounded-lg text-white text-center cursor-pointer hover:bg-primary-800/90 transition-all duration-200 text-sm`}>
+                      {formData.profilePhoto ? formData.profilePhoto.name : 'Choose profile photo (JPEG, PNG - Max 5MB)'}
+                    </div>
+                  </div>
+                </div>
+                {errors.profilePhoto && <p className="text-red-500 text-xs mt-1">{errors.profilePhoto}</p>}
               </div>
 
               {/* Password */}
