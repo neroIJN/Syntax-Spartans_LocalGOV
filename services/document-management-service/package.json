@@ -1,0 +1,25 @@
+{
+  "name": "eservices-document-management-service",
+  "version": "1.0.0",
+  "description": "Document upload and management service for e-Services",
+  "main": "src/main.py",
+  "scripts": {
+    "start": "python -m src.main",
+    "dev": "uvicorn src.main:app --reload --host 0.0.0.0 --port 8000",
+    "test": "pytest",
+    "lint": "black src/ && flake8 src/",
+    "type-check": "mypy src/"
+  },
+  "dependencies": {},
+  "devDependencies": {},
+  "keywords": [
+    "documents",
+    "upload",
+    "storage",
+    "minio",
+    "fastapi",
+    "eservices"
+  ],
+  "author": "Government of Sri Lanka",
+  "license": "MIT"
+}

@@ -1,0 +1,47 @@
+{
+  "name": "eservices-officer-dashboard",
+  "version": "1.0.0",
+  "description": "Officer dashboard for Sri Lankan government services management",
+  "private": true,
+  "scripts": {
+    "dev": "next dev -p 3001",
+    "build": "next build",
+    "start": "next start -p 3001",
+    "lint": "next lint",
+    "type-check": "tsc --noEmit"
+  },
+  "dependencies": {
+    "next": "^14.2.0",
+    "react": "^18.3.0",
+    "react-dom": "^18.3.0",
+    "@types/node": "^20.14.0",
+    "@types/react": "^18.3.0",
+    "@types/react-dom": "^18.3.0",
+    "typescript": "^5.4.0",
+    "tailwindcss": "^3.4.0",
+    "autoprefixer": "^10.4.19",
+    "postcss": "^8.4.38",
+    "@headlessui/react": "^2.0.4",
+    "@heroicons/react": "^2.1.3",
+    "clsx": "^2.1.1",
+    "date-fns": "^3.6.0",
+    "react-hook-form": "^7.51.4",
+    "@hookform/resolvers": "^3.6.0",
+    "zod": "^3.23.8",
+    "axios": "^1.7.2",
+    "react-query": "^3.39.3",
+    "js-cookie": "^3.0.5",
+    "@types/js-cookie": "^3.0.6",
+    "react-hot-toast": "^2.4.1",
+    "recharts": "^2.12.7",
+    "@tanstack/react-table": "^8.17.3",
+    "framer-motion": "^11.2.10",
+    "react-webcam": "^7.2.0"
+  },
+  "devDependencies": {
+    "eslint": "^8.57.0",
+    "eslint-config-next": "^14.2.0",
+    "@tailwindcss/forms": "^0.5.7",
+    "@tailwindcss/typography": "^0.5.13"
+  }
+}

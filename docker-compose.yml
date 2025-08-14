@@ -1,0 +1,377 @@
+version: '3.8'
+
+services:
+  # ==================== DATABASES & INFRASTRUCTURE ====================
+  
+  # PostgreSQL for IAM, Appointments, and Payments
+  postgres:
+    image: postgres:16-alpine
+    container_name: eservices-postgres
+    environment:
+      POSTGRES_DB: eservices
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres123
+      POSTGRES_MULTIPLE_DATABASES: iam_db,appointments_db,payments_db
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+      - ./scripts/init-multiple-databases.sh:/docker-entrypoint-initdb.d/init-multiple-databases.sh
+    networks:
+      - eservices-network
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+
+  # MongoDB for Service Directory
+  mongodb:
+    image: mongo:7.0
+    container_name: eservices-mongodb
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: admin
+      MONGO_INITDB_ROOT_PASSWORD: admin123
+      MONGO_INITDB_DATABASE: servicedirectory
+    ports:
+      - "27017:27017"
+    volumes:
+      - mongodb_data:/data/db
+    networks:
+      - eservices-network
+    healthcheck:
+      test: ["CMD", "mongosh", "--eval", "db.adminCommand('ping')"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+
+  # Redis for Caching and Sessions
+  redis:
+    image: redis:7-alpine
+    container_name: eservices-redis
+    command: redis-server --appendonly yes --requirepass redis123
+    ports:
+      - "6379:6379"
+    volumes:
+      - redis_data:/data
+    networks:
+      - eservices-network
+    healthcheck:
+      test: ["CMD", "redis-cli", "auth", "redis123", "ping"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+
+  # RabbitMQ for Message Queue
+  rabbitmq:
+    image: rabbitmq:3.12-management
+    container_name: eservices-rabbitmq
+    environment:
+      RABBITMQ_DEFAULT_USER: admin
+      RABBITMQ_DEFAULT_PASS: admin123
+    ports:
+      - "5672:5672"
+      - "15672:15672"  # Management UI
+    volumes:
+      - rabbitmq_data:/var/lib/rabbitmq
+    networks:
+      - eservices-network
+    healthcheck:
+      test: ["CMD", "rabbitmq-diagnostics", "ping"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+
+  # MinIO for Object Storage (S3 Compatible)
+  minio:
+    image: minio/minio:latest
+    container_name: eservices-minio
+    command: server /data --console-address ":9001"
+    environment:
+      MINIO_ROOT_USER: minioadmin
+      MINIO_ROOT_PASSWORD: minioadmin123
+    ports:
+      - "9000:9000"
+      - "9001:9001"  # Console UI
+    volumes:
+      - minio_data:/data
+    networks:
+      - eservices-network
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:9000/minio/health/live"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+
+  # ==================== MICROSERVICES ====================
+
+  # IAM Service (Node.js)
+  iam-service:
+    build:
+      context: ./services/iam-service
+      dockerfile: Dockerfile
+    container_name: eservices-iam
+    environment:
+      NODE_ENV: development
+      PORT: 3000
+      DATABASE_URL: postgresql://postgres:postgres123@postgres:5432/iam_db
+      REDIS_URL: redis://:redis123@redis:6379
+      JWT_SECRET: eservices-jwt-secret-key-2024
+      JWT_EXPIRES_IN: 24h
+    ports:
+      - "3010:3000"
+    depends_on:
+      postgres:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+    networks:
+      - eservices-network
+    volumes:
+      - ./services/iam-service:/app
+      - /app/node_modules
+    restart: unless-stopped
+
+  # Service Directory Service (Node.js)
+  servicedirectory-service:
+    build:
+      context: ./services/servicedirectory-service
+      dockerfile: Dockerfile
+    container_name: eservices-servicedirectory
+    environment:
+      NODE_ENV: development
+      PORT: 3000
+      MONGODB_URI: mongodb://admin:admin123@mongodb:27017/servicedirectory?authSource=admin
+      REDIS_URL: redis://:redis123@redis:6379
+    ports:
+      - "3011:3000"
+    depends_on:
+      mongodb:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+    networks:
+      - eservices-network
+    volumes:
+      - ./services/servicedirectory-service:/app
+      - /app/node_modules
+    restart: unless-stopped
+
+  # Appointment Booking Service (Go)
+  appointment-booking-service:
+    build:
+      context: ./services/appointment-booking-service
+      dockerfile: Dockerfile
+    container_name: eservices-appointments
+    environment:
+      GIN_MODE: debug
+      PORT: 8080
+      DATABASE_URL: postgresql://postgres:postgres123@postgres:5432/appointments_db?sslmode=disable
+      REDIS_URL: redis://:redis123@redis:6379
+      JWT_SECRET: eservices-jwt-secret-key-2024
+      IAM_SERVICE_URL: http://iam-service:3000
+      NOTIFICATION_SERVICE_URL: http://notification-service:3000
+    ports:
+      - "3012:8080"
+    depends_on:
+      postgres:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+      iam-service:
+        condition: service_started
+    networks:
+      - eservices-network
+    volumes:
+      - ./services/appointment-booking-service:/app
+    restart: unless-stopped
+
+  # Document Management Service (Python)
+  document-management-service:
+    build:
+      context: ./services/document-management-service
+      dockerfile: Dockerfile
+    container_name: eservices-documents
+    environment:
+      PYTHONPATH: /app
+      PORT: 8000
+      MINIO_ENDPOINT: minio:9000
+      MINIO_ACCESS_KEY: minioadmin
+      MINIO_SECRET_KEY: minioadmin123
+      MINIO_BUCKET_NAME: eservices-documents
+      JWT_SECRET: eservices-jwt-secret-key-2024
+      IAM_SERVICE_URL: http://iam-service:3000
+    ports:
+      - "3013:8000"
+    depends_on:
+      minio:
+        condition: service_healthy
+      iam-service:
+        condition: service_started
+    networks:
+      - eservices-network
+    volumes:
+      - ./services/document-management-service:/app
+    restart: unless-stopped
+
+  # Payment Service (Node.js)
+  payment-service:
+    build:
+      context: ./services/payment-service
+      dockerfile: Dockerfile
+    container_name: eservices-payments
+    environment:
+      NODE_ENV: development
+      PORT: 3000
+      DATABASE_URL: postgresql://postgres:postgres123@postgres:5432/payments_db
+      REDIS_URL: redis://:redis123@redis:6379
+      JWT_SECRET: eservices-jwt-secret-key-2024
+      PAYMENT_GATEWAY_URL: https://sandbox.paymentgateway.lk
+      PAYMENT_GATEWAY_KEY: sandbox_key_123
+      IAM_SERVICE_URL: http://iam-service:3000
+      NOTIFICATION_SERVICE_URL: http://notification-service:3000
+    ports:
+      - "3014:3000"
+    depends_on:
+      postgres:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+      iam-service:
+        condition: service_started
+    networks:
+      - eservices-network
+    volumes:
+      - ./services/payment-service:/app
+      - /app/node_modules
+    restart: unless-stopped
+
+  # Notification Service (Node.js)
+  notification-service:
+    build:
+      context: ./services/notification-service
+      dockerfile: Dockerfile
+    container_name: eservices-notifications
+    environment:
+      NODE_ENV: development
+      PORT: 3000
+      RABBITMQ_URL: amqp://admin:admin123@rabbitmq:5672
+      REDIS_URL: redis://:redis123@redis:6379
+      EMAIL_SERVICE: smtp
+      SMTP_HOST: smtp.gmail.com
+      SMTP_PORT: 587
+      SMTP_USER: noreply@eservices.gov.lk
+      SMTP_PASS: your-email-password
+      SMS_SERVICE: dialog
+      SMS_API_KEY: your-sms-api-key
+    ports:
+      - "3015:3000"
+    depends_on:
+      rabbitmq:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+    networks:
+      - eservices-network
+    volumes:
+      - ./services/notification-service:/app
+      - /app/node_modules
+    restart: unless-stopped
+
+  # ==================== FRONTEND APPLICATIONS ====================
+
+  # Citizen Portal (Next.js)
+  frontend-citizen:
+    build:
+      context: ./frontend-citizen
+      dockerfile: Dockerfile
+      target: development
+    container_name: eservices-citizen-portal
+    environment:
+      NODE_ENV: development
+      NEXT_PUBLIC_API_BASE_URL: http://localhost:8080/api
+      NEXT_PUBLIC_IAM_SERVICE_URL: http://localhost:3010
+      NEXT_PUBLIC_SERVICEDIRECTORY_URL: http://localhost:3011
+      NEXT_PUBLIC_APPOINTMENTS_URL: http://localhost:3012
+      NEXT_PUBLIC_DOCUMENTS_URL: http://localhost:3013
+      NEXT_PUBLIC_PAYMENTS_URL: http://localhost:3014
+      NEXT_PUBLIC_NOTIFICATIONS_URL: http://localhost:3015
+    ports:
+      - "3000:3000"
+    depends_on:
+      - iam-service
+      - servicedirectory-service
+      - appointment-booking-service
+    networks:
+      - eservices-network
+    volumes:
+      - ./frontend-citizen:/app
+      - /app/node_modules
+      - /app/.next
+    restart: unless-stopped
+
+  # Officer Dashboard (Next.js)
+  frontend-officer:
+    build:
+      context: ./frontend-officer
+      dockerfile: Dockerfile
+      target: development
+    container_name: eservices-officer-dashboard
+    environment:
+      NODE_ENV: development
+      NEXT_PUBLIC_API_BASE_URL: http://localhost:8080/api
+      NEXT_PUBLIC_IAM_SERVICE_URL: http://localhost:3010
+      NEXT_PUBLIC_SERVICEDIRECTORY_URL: http://localhost:3011
+      NEXT_PUBLIC_APPOINTMENTS_URL: http://localhost:3012
+      NEXT_PUBLIC_DOCUMENTS_URL: http://localhost:3013
+      NEXT_PUBLIC_PAYMENTS_URL: http://localhost:3014
+      NEXT_PUBLIC_NOTIFICATIONS_URL: http://localhost:3015
+    ports:
+      - "3001:3000"
+    depends_on:
+      - iam-service
+      - servicedirectory-service
+      - appointment-booking-service
+    networks:
+      - eservices-network
+    volumes:
+      - ./frontend-officer:/app
+      - /app/node_modules
+      - /app/.next
+    restart: unless-stopped
+
+  # ==================== API GATEWAY ====================
+
+  # API Gateway (Nginx)
+  api-gateway:
+    image: nginx:alpine
+    container_name: eservices-api-gateway
+    ports:
+      - "8080:80"
+    volumes:
+      - ./api-gateway/nginx.conf:/etc/nginx/nginx.conf
+      - ./api-gateway/cors.conf:/etc/nginx/cors.conf
+    depends_on:
+      - iam-service
+      - servicedirectory-service
+      - appointment-booking-service
+      - document-management-service
+      - payment-service
+      - notification-service
+    networks:
+      - eservices-network
+    restart: unless-stopped
+
+volumes:
+  postgres_data:
+  mongodb_data:
+  redis_data:
+  rabbitmq_data:
+  minio_data:
+
+networks:
+  eservices-network:
+    driver: bridge
+    ipam:
+      config:
+        - subnet: 172.20.0.0/16
