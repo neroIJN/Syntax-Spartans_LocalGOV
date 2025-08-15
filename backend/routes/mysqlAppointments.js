@@ -14,7 +14,16 @@ const {
 
 const { protectMySQL } = require('../middleware/auth');
 
-// Apply authentication middleware to all routes
+// Health check route (no auth required)
+router.get('/health', (req, res) => {
+  res.json({
+    success: true,
+    message: 'Appointments API is working',
+    timestamp: new Date().toISOString()
+  });
+});
+
+// Apply authentication middleware to all other routes
 router.use(protectMySQL);
 
 // Dashboard route

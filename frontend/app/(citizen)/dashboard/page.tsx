@@ -224,17 +224,22 @@ export default function Dashboard() {
         const safeNotifications = Array.isArray(notificationsResponse.notifications) ? notificationsResponse.notifications : [];
         const safeDocuments = Array.isArray(documentsData) ? documentsData : [];
 
+        console.log('Safe appointments data:', safeAppointments);
+
         // Transform appointment data to match interface
-        const transformedAppointments = safeAppointments.map((apt: any) => ({
-          id: apt.id.toString(),
-          service: apt.serviceType || apt.service || 'Unknown Service',
-          department: apt.department || 'Government Department',
-          date: apt.appointmentDate || apt.date,
-          time: apt.appointmentTime || apt.time,
-          status: apt.status,
-          location: apt.location || 'Government Office',
-          officerName: apt.officerName
-        }));
+        const transformedAppointments = safeAppointments.map((apt: any) => {
+          console.log('Processing appointment:', apt);
+          return {
+            id: apt.id.toString(),
+            service: apt.serviceName || apt.serviceType || apt.service || 'Unknown Service',
+            department: apt.department || 'Government Department',
+            date: apt.appointmentDate || apt.date,
+            time: apt.timeSlot || apt.appointmentTime || apt.time,
+            status: apt.status,
+            location: apt.location || 'Government Office',
+            officerName: apt.officerName
+          };
+        });
 
         // Transform notification data to match interface
         const transformedNotifications = safeNotifications.map((notif: any) => ({
@@ -587,6 +592,119 @@ export default function Dashboard() {
                 <div className="absolute bottom-4 left-4 w-16 h-16 bg-white/5 rounded-full translate-y-8 -translate-x-8"></div>
               </Link>
             ))}
+          </div>
+        </div>
+
+        {/* Popular Free Services */}
+        <div className="mb-10">
+          <div className="flex items-center justify-between mb-8">
+            <h2 className="text-2xl font-bold text-white drop-shadow-lg">Popular Free Services</h2>
+            <Link 
+              href="/appointments/book?filter=free" 
+              className="text-green-200 hover:text-green-100 font-semibold flex items-center transition-colors duration-200"
+            >
+              View All Free Services
+              <ArrowRightIcon className="ml-2 h-5 w-5" />
+            </Link>
+          </div>
+          
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+            {/* Community Health Consultation */}
+            <Link
+              href="/appointments/book?service=community-health-consultation"
+              className="group bg-white/10 backdrop-blur-md rounded-2xl shadow-2xl border border-white/20 p-6 hover:bg-white/15 transition-all duration-300 hover:scale-105"
+            >
+              <div className="flex items-start justify-between mb-4">
+                <div className="flex items-center">
+                  <div className="w-12 h-12 bg-green-500/20 rounded-xl flex items-center justify-center mr-3">
+                    <span className="text-2xl">🏥</span>
+                  </div>
+                  <div>
+                    <h3 className="text-lg font-bold text-white">Health Consultation</h3>
+                    <p className="text-sm text-blue-200">Public Health Dept.</p>
+                  </div>
+                </div>
+                <span className="bg-green-500/20 text-green-200 px-2 py-1 rounded-full text-xs font-semibold border border-green-400/30">
+                  FREE
+                </span>
+              </div>
+              <p className="text-blue-100 text-sm mb-4">Free health consultation and basic medical advice from community health officers.</p>
+              <div className="flex items-center text-green-200 text-sm font-semibold">
+                Book Appointment
+                <ArrowRightIcon className="ml-2 h-4 w-4 group-hover:translate-x-1 transition-transform duration-200" />
+              </div>
+            </Link>
+
+            {/* Legal Aid Consultation */}
+            <Link
+              href="/appointments/book?service=legal-aid-consultation"
+              className="group bg-white/10 backdrop-blur-md rounded-2xl shadow-2xl border border-white/20 p-6 hover:bg-white/15 transition-all duration-300 hover:scale-105"
+            >
+              <div className="flex items-start justify-between mb-4">
+                <div className="flex items-center">
+                  <div className="w-12 h-12 bg-green-500/20 rounded-xl flex items-center justify-center mr-3">
+                    <span className="text-2xl">⚖️</span>
+                  </div>
+                  <div>
+                    <h3 className="text-lg font-bold text-white">Legal Aid</h3>
+                    <p className="text-sm text-blue-200">Legal Aid Commission</p>
+                  </div>
+                </div>
+                <span className="bg-green-500/20 text-green-200 px-2 py-1 rounded-full text-xs font-semibold border border-green-400/30">
+                  FREE
+                </span>
+              </div>
+              <p className="text-blue-100 text-sm mb-4">Free legal advice and consultation for citizens who cannot afford legal services.</p>
+              <div className="flex items-center text-green-200 text-sm font-semibold">
+                Book Appointment
+                <ArrowRightIcon className="ml-2 h-4 w-4 group-hover:translate-x-1 transition-transform duration-200" />
+              </div>
+            </Link>
+
+            {/* Job Placement Consultation */}
+            <Link
+              href="/appointments/book?service=job-placement-consultation"
+              className="group bg-white/10 backdrop-blur-md rounded-2xl shadow-2xl border border-white/20 p-6 hover:bg-white/15 transition-all duration-300 hover:scale-105"
+            >
+              <div className="flex items-start justify-between mb-4">
+                <div className="flex items-center">
+                  <div className="w-12 h-12 bg-green-500/20 rounded-xl flex items-center justify-center mr-3">
+                    <span className="text-2xl">💼</span>
+                  </div>
+                  <div>
+                    <h3 className="text-lg font-bold text-white">Job Placement</h3>
+                    <p className="text-sm text-blue-200">Employment Services</p>
+                  </div>
+                </div>
+                <span className="bg-green-500/20 text-green-200 px-2 py-1 rounded-full text-xs font-semibold border border-green-400/30">
+                  FREE
+                </span>
+              </div>
+              <p className="text-blue-100 text-sm mb-4">Free consultation and assistance with job placement and career guidance.</p>
+              <div className="flex items-center text-green-200 text-sm font-semibold">
+                Book Appointment
+                <ArrowRightIcon className="ml-2 h-4 w-4 group-hover:translate-x-1 transition-transform duration-200" />
+              </div>
+            </Link>
+          </div>
+
+          {/* Free Services Summary */}
+          <div className="mt-6 bg-green-600/20 border border-green-400/30 rounded-xl p-4 backdrop-blur-sm">
+            <div className="flex items-center justify-between">
+              <div className="flex items-center">
+                <span className="text-2xl mr-3">🆓</span>
+                <div>
+                  <p className="text-green-200 font-semibold">20+ Free Government Services Available</p>
+                  <p className="text-green-300 text-sm">No fees required • Walk-in consultations • Expert guidance</p>
+                </div>
+              </div>
+              <Link 
+                href="/appointments/book"
+                className="bg-green-600/30 hover:bg-green-500/40 text-green-100 px-4 py-2 rounded-lg font-semibold transition-all duration-200 border border-green-400/30"
+              >
+                Explore All
+              </Link>
+            </div>
           </div>
         </div>
 

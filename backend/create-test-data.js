@@ -49,6 +49,59 @@ const createTestData = async () => {
       description: 'Request for certified copy of birth certificate'
     });
 
+    // Add free service appointments
+    const appointment3 = await MySQLAppointment.create({
+      userId: user.id,
+      serviceName: 'Community Health Consultation',
+      department: 'Public Health Department',
+      appointmentDate: new Date(Date.now() + 3 * 24 * 60 * 60 * 1000), // 3 days from now
+      timeSlot: '9:00 AM',
+      status: 'confirmed',
+      location: 'Health Center',
+      description: 'Free health consultation and basic medical advice',
+      queueNumber: 5,
+      estimatedWaitTime: 15
+    });
+
+    const appointment4 = await MySQLAppointment.create({
+      userId: user.id,
+      serviceName: 'Legal Aid Consultation',
+      department: 'Legal Aid Commission',
+      appointmentDate: new Date(Date.now() + 10 * 24 * 60 * 60 * 1000), // 10 days from now
+      timeSlot: '11:00 AM',
+      status: 'confirmed',
+      location: 'Legal Aid Office',
+      description: 'Free legal advice and consultation',
+      queueNumber: 2,
+      estimatedWaitTime: 45
+    });
+
+    const appointment5 = await MySQLAppointment.create({
+      userId: user.id,
+      serviceName: 'Social Welfare Benefits Consultation',
+      department: 'Social Welfare Department',
+      appointmentDate: new Date(Date.now() + 21 * 24 * 60 * 60 * 1000), // 21 days from now
+      timeSlot: '1:30 PM',
+      status: 'pending',
+      location: 'Welfare Office',
+      description: 'Consultation about available social welfare programs',
+      queueNumber: 8,
+      estimatedWaitTime: 30
+    });
+
+    const appointment6 = await MySQLAppointment.create({
+      userId: user.id,
+      serviceName: 'Job Placement Consultation',
+      department: 'Employment Services',
+      appointmentDate: new Date(Date.now() + 5 * 24 * 60 * 60 * 1000), // 5 days from now
+      timeSlot: '3:00 PM',
+      status: 'confirmed',
+      location: 'Employment Center',
+      description: 'Free job placement assistance and career guidance',
+      queueNumber: 1,
+      estimatedWaitTime: 0
+    });
+
     console.log('Created test appointments');
 
     // Create test notifications
@@ -64,6 +117,36 @@ const createTestData = async () => {
 
     const notification2 = await MySQLNotification.create({
       userId: user.id,
+      title: 'Free Health Consultation Confirmed',
+      message: 'Your free community health consultation is confirmed for ' + appointment3.appointmentDate.toDateString() + ' at 9:00 AM',
+      type: 'success',
+      relatedType: 'appointment',
+      relatedId: appointment3.id,
+      priority: 'high'
+    });
+
+    const notification3 = await MySQLNotification.create({
+      userId: user.id,
+      title: 'Legal Aid Appointment Ready',
+      message: 'Your free legal aid consultation appointment is scheduled. Please bring relevant documents.',
+      type: 'info',
+      relatedType: 'appointment',
+      relatedId: appointment4.id,
+      priority: 'normal'
+    });
+
+    const notification4 = await MySQLNotification.create({
+      userId: user.id,
+      title: 'Job Placement Services Available',
+      message: 'Your job placement consultation is confirmed. Free career guidance and placement assistance available.',
+      type: 'success',
+      relatedType: 'appointment',
+      relatedId: appointment6.id,
+      priority: 'normal'
+    });
+
+    const notification5 = await MySQLNotification.create({
+      userId: user.id,
       title: 'Document Verification Pending',
       message: 'Your uploaded utility bill document is pending verification by our staff',
       type: 'warning',
@@ -71,10 +154,10 @@ const createTestData = async () => {
       priority: 'normal'
     });
 
-    const notification3 = await MySQLNotification.create({
+    const notification6 = await MySQLNotification.create({
       userId: user.id,
-      title: 'New Service Available',
-      message: 'Online Driving License Renewal is now available through our digital platform',
+      title: 'New Free Services Available',
+      message: 'Additional free consultation services are now available: Agricultural Extension, Environmental Consultation, and more.',
       type: 'info',
       relatedType: 'system',
       priority: 'low',

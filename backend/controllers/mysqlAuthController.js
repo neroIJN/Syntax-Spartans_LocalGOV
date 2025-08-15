@@ -142,6 +142,7 @@ const register = async (req, res) => {
 const login = async (req, res) => {
   try {
     const { email, password } = req.body;
+    console.log('Login attempt for email:', email);
 
     // Validate email and password
     if (!email || !password) {
@@ -156,6 +157,16 @@ const login = async (req, res) => {
       where: { email, isActive: true }
     });
 
+    console.log('User found:', !!user);
+    if (user) {
+      console.log('User details:', {
+        id: user.id,
+        email: user.email,
+        isActive: user.isActive,
+        passwordHash: user.password ? 'exists' : 'missing'
+      });
+    }
+
     if (!user) {
       return res.status(401).json({
         success: false,
@@ -164,7 +175,9 @@ const login = async (req, res) => {
     }
 
     // Check if password matches
+    console.log('Comparing password...');
     const isMatch = await user.comparePassword(password);
+    console.log('Password match result:', isMatch);
 
     if (!isMatch) {
       return res.status(401).json({

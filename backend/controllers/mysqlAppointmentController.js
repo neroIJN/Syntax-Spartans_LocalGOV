@@ -29,14 +29,7 @@ const getAppointments = async (req, res) => {
       where: whereClause,
       order: [['appointmentDate', upcoming === 'true' ? 'ASC' : 'DESC']],
       limit: parseInt(limit),
-      offset: (parseInt(page) - 1) * parseInt(limit),
-      include: [
-        {
-          model: MySQLUser,
-          as: 'user',
-          attributes: ['id', 'firstName', 'lastName', 'email']
-        }
-      ]
+      offset: (parseInt(page) - 1) * parseInt(limit)
     });
 
     res.json({
@@ -67,14 +60,7 @@ const getAppointment = async (req, res) => {
       where: {
         id: req.params.id,
         userId: req.user.id
-      },
-      include: [
-        {
-          model: MySQLUser,
-          as: 'user',
-          attributes: ['id', 'firstName', 'lastName', 'email', 'phoneNumber']
-        }
-      ]
+      }
     });
 
     if (!appointment) {

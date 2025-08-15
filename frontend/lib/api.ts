@@ -14,22 +14,39 @@ const apiClient = axios.create({
 apiClient.interceptors.request.use(
   (config) => {
     const token = localStorage.getItem('authToken');
+    console.log('API Request:', config.method?.toUpperCase(), config.url)
+    console.log('Auth token present:', !!token)
     if (token) {
       config.headers.Authorization = `Bearer ${token}`;
+      console.log('Added Authorization header')
+    } else {
+      console.log('No auth token found in localStorage')
     }
     return config;
   },
   (error) => {
+    console.error('Request interceptor error:', error)
     return Promise.reject(error);
   }
 );
 
 // Add response interceptor for error handling
 apiClient.interceptors.response.use(
-  (response) => response,
+  (response) => {
+    console.log('API Response success:', response.status, response.config.url)
+    return response;
+  },
   (error) => {
+    console.error('API Response error:', {
+      status: error.response?.status,
+      statusText: error.response?.statusText,
+      data: error.response?.data,
+      url: error.config?.url,
+      method: error.config?.method
+    })
     if (error.response?.status === 401) {
       // Token expired or invalid
+      console.log('401 Unauthorized - clearing auth token and redirecting to login')
       localStorage.removeItem('authToken');
       window.location.href = '/auth/login';
     }
@@ -98,6 +115,122 @@ export const dashboardAPI = {
       return response.data.count || 0;
     } catch (error) {
       console.error('Failed to fetch unread count:', error);
+      throw error;
+    }
+  }
+};
+
+// Appointment API services
+export const appointmentAPI = {
+  // Get all user appointments with filtering
+  getAllAppointments: async (filters?: { status?: string; page?: number; limit?: number; upcoming?: boolean }) => {
+    try {
+      const params = new URLSearchParams();
+      if (filters?.status && filters.status !== 'All') params.append('status', filters.status.toLowerCase());
+      if (filters?.page) params.append('page', filters.page.toString());
+      if (filters?.limit) params.append('limit', filters.limit.toString());
+      if (filters?.upcoming) params.append('upcoming', filters.upcoming.toString());
+
+      const response = await apiClient.get(`/mysql/appointments?${params.toString()}`);
+      console.log('All appointments API response:', response.data);
+      return response.data;
+    } catch (error) {
+      console.error('Failed to fetch all appointments:', error);
+      throw error;
+    }
+  },
+
+  // Get single appointment
+  getAppointment: async (appointmentId: string) => {
+    try {
+      const response = await apiClient.get(`/mysql/appointments/${appointmentId}`);
+      console.log('Single appointment API response:', response.data);
+      return response.data;
+    } catch (error) {
+      console.error('Failed to fetch appointment:', error);
+      throw error;
+    }
+  },
+
+  // Create new appointment
+  createAppointment: async (appointmentData: {
+    serviceName: string;
+    department: string;
+    appointmentDate: string;
+    timeSlot: string;
+    location?: string;
+    description?: string;
+    priority?: string;
+  }) => {
+    try {
+      console.log('Creating appointment with data:', appointmentData);
+      const response = await apiClient.post('/mysql/appointments', appointmentData);
+      console.log('Create appointment API response:', response.data);
+      return response.data;
+    } catch (error) {
+      console.error('Failed to create appointment:', error);
+      throw error;
+    }
+  },
+
+  // Update appointment
+  updateAppointment: async (appointmentId: string, updateData: {
+    appointmentDate?: string;
+    timeSlot?: string;
+    description?: string;
+    priority?: string;
+  }) => {
+    try {
+      const response = await apiClient.put(`/mysql/appointments/${appointmentId}`, updateData);
+      console.log('Update appointment API response:', response.data);
+      return response.data;
+    } catch (error) {
+      console.error('Failed to update appointment:', error);
+      throw error;
+    }
+  },
+
+  // Cancel appointment
+  cancelAppointment: async (appointmentId: string, reason?: string) => {
+    try {
+      const response = await apiClient.delete(`/mysql/appointments/${appointmentId}`, {
+        data: { reason }
+      });
+      console.log('Cancel appointment API response:', response.data);
+      return response.data;
+    } catch (error) {
+      console.error('Failed to cancel appointment:', error);
+      throw error;
+    }
+  },
+
+  // Reschedule appointment
+  rescheduleAppointment: async (appointmentId: string, newDate: string, newTime: string) => {
+    try {
+      const response = await apiClient.put(`/mysql/appointments/${appointmentId}/reschedule`, {
+        appointmentDate: newDate,
+        timeSlot: newTime
+      });
+      console.log('Reschedule appointment API response:', response.data);
+      return response.data;
+    } catch (error) {
+      console.error('Failed to reschedule appointment:', error);
+      throw error;
+    }
+  },
+
+  // Get available time slots for a date (placeholder for now)
+  getAvailableSlots: async (date: string, department?: string) => {
+    try {
+      const params = new URLSearchParams();
+      params.append('date', date);
+      if (department) params.append('department', department);
+
+      const response = await apiClient.get(`/mysql/appointments/slots?${params.toString()}`);
+      console.log('Available slots API response:', response.data);
+      return response.data;
+    } catch (error) {
+      console.error('Failed to fetch available slots:', error);
       throw error;
     }
   }

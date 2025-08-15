@@ -121,10 +121,7 @@ const MySQLUser = sequelize.define('User', {
       fields: ['nicNumber']
     },
     {
-      fields: ['userType']
-    },
-    {
-      fields: ['isActive']
+      fields: ['userType', 'isActive'] // Combined index instead of separate ones
     }
   ]
 });
