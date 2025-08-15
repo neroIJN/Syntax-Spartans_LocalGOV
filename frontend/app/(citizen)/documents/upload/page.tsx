@@ -1,6 +1,7 @@
 'use client'
 
 import { useState, useRef } from 'react'
+import { useRouter } from 'next/navigation'
 import { 
   ArrowUpTrayIcon,
   DocumentTextIcon,
@@ -11,9 +12,13 @@ import {
   EyeIcon,
   TrashIcon,
   PlusIcon,
-  CloudArrowUpIcon
+  CloudArrowUpIcon,
+  ArrowLeftIcon,
+  TagIcon,
+  FolderIcon,
+  CalendarDaysIcon
 } from '@heroicons/react/24/outline'
-import DashboardLayout from '@/components/DashboardLayout'
+import DashboardLayout from '../../../../components/DashboardLayout'
 
 interface UploadedFile {
   id: string
@@ -28,6 +33,7 @@ interface UploadedFile {
 }
 
 export default function UploadDocumentsPage() {
+  const router = useRouter()
   const [uploadedFiles, setUploadedFiles] = useState<UploadedFile[]>([])
   const [selectedCategory, setSelectedCategory] = useState('')
   const [dragActive, setDragActive] = useState(false)
@@ -184,208 +190,292 @@ export default function UploadDocumentsPage() {
 
   return (
     <DashboardLayout>
-      <div className="px-4 sm:px-6 lg:px-8 py-10 bg-gradient-to-br from-slate-50 via-emerald-50 to-blue-100 min-h-screen">
+      <div className="px-4 sm:px-6 lg:px-8 py-8 scroll-container fade-in">
         {/* Header */}
-        <div className="mb-8">
-          <h1 className="text-4xl font-bold text-slate-900 mb-4">Upload Documents</h1>
-          <p className="text-xl text-slate-700">Securely upload your documents for government services and applications.</p>
-        </div>
-
-        {/* Upload Guidelines */}
-        <div className="mb-8 bg-blue-50 border-2 border-blue-200 rounded-2xl p-6">
-          <h2 className="text-xl font-bold text-blue-900 mb-4">Upload Guidelines</h2>
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-4 text-blue-800">
+        <div className="mb-8 slide-in-up">
+          <div className="flex items-center gap-4 mb-4">
+            <button
+              onClick={() => router.back()}
+              className="p-2 text-white/70 hover:text-white hover:bg-white/10 rounded-lg transition-smooth hover-lift"
+            >
+              <ArrowLeftIcon className="h-6 w-6" />
+            </button>
             <div>
-              <h3 className="font-semibold mb-2">Supported Formats:</h3>
-              <ul className="text-sm space-y-1">
-                <li>• PDF documents</li>
-                <li>• Images (JPEG, PNG, GIF)</li>
-                <li>• Word documents (DOC, DOCX)</li>
-              </ul>
-            </div>
-            <div>
-              <h3 className="font-semibold mb-2">Requirements:</h3>
-              <ul className="text-sm space-y-1">
-                <li>• Maximum file size: 10MB</li>
-                <li>• Clear, readable scans</li>
-                <li>• Original documents preferred</li>
-              </ul>
+              <h1 className="text-4xl font-bold text-white mb-2 drop-shadow-lg">Upload Documents</h1>
+              <p className="text-xl text-blue-100">Securely upload your documents for government services and applications.</p>
             </div>
           </div>
         </div>
 
-        {/* Category Selection */}
-        <div className="mb-8 bg-white rounded-2xl shadow-xl border-2 border-emerald-100 overflow-hidden">
-          <div className="px-8 py-6 border-b border-slate-200 bg-gradient-to-r from-slate-50 to-emerald-50">
-            <h2 className="text-2xl font-bold text-slate-900">Select Document Category</h2>
-          </div>
-          <div className="p-8">
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-              {documentCategories.map((category) => (
-                <button
-                  key={category.id}
-                  onClick={() => setSelectedCategory(category.id)}
-                  className={`p-4 rounded-xl border-2 text-left transition-all duration-200 ${
-                    selectedCategory === category.id
-                      ? 'border-emerald-500 bg-emerald-50 shadow-lg'
-                      : 'border-slate-300 bg-slate-50 hover:border-emerald-300 hover:bg-emerald-50'
-                  }`}
-                >
-                  <h3 className="font-bold text-slate-900 mb-1">{category.name}</h3>
-                  <p className="text-sm text-slate-600">{category.description}</p>
-                </button>
-              ))}
+        <div className="max-w-6xl mx-auto">
+          {/* Upload Guidelines */}
+          <div className="mb-8 slide-in-right bg-white/5 backdrop-blur-sm border border-white/10 rounded-2xl p-6">
+            <h2 className="text-xl font-bold text-white mb-4 drop-shadow-sm">Upload Guidelines</h2>
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-6 text-blue-200">
+              <div>
+                <h3 className="font-semibold mb-3 text-blue-100">Supported Formats:</h3>
+                <ul className="text-sm space-y-2">
+                  <li className="flex items-center">
+                    <div className="w-2 h-2 bg-green-400 rounded-full mr-3"></div>
+                    PDF documents (.pdf)
+                  </li>
+                  <li className="flex items-center">
+                    <div className="w-2 h-2 bg-green-400 rounded-full mr-3"></div>
+                    Images (JPEG, PNG, GIF)
+                  </li>
+                  <li className="flex items-center">
+                    <div className="w-2 h-2 bg-green-400 rounded-full mr-3"></div>
+                    Word documents (DOC, DOCX)
+                  </li>
+                </ul>
+              </div>
+              <div>
+                <h3 className="font-semibold mb-3 text-blue-100">Requirements:</h3>
+                <ul className="text-sm space-y-2">
+                  <li className="flex items-center">
+                    <div className="w-2 h-2 bg-yellow-400 rounded-full mr-3"></div>
+                    Maximum file size: 10MB
+                  </li>
+                  <li className="flex items-center">
+                    <div className="w-2 h-2 bg-yellow-400 rounded-full mr-3"></div>
+                    Clear, readable scans
+                  </li>
+                  <li className="flex items-center">
+                    <div className="w-2 h-2 bg-yellow-400 rounded-full mr-3"></div>
+                    Original documents preferred
+                  </li>
+                </ul>
+              </div>
             </div>
           </div>
-        </div>
 
-        {/* Upload Area */}
-        {selectedCategory && (
-          <div className="mb-8 bg-white rounded-2xl shadow-xl border-2 border-blue-100 overflow-hidden">
-            <div className="px-8 py-6 border-b border-slate-200 bg-gradient-to-r from-slate-50 to-blue-50">
-              <h2 className="text-2xl font-bold text-slate-900">
-                Upload {getCategoryName(selectedCategory)}
-              </h2>
+          {/* Category Selection */}
+          <div className="mb-8 slide-in-left bg-white/10 backdrop-blur-md rounded-2xl shadow-2xl border border-white/20 overflow-hidden hover-lift transition-smooth">
+            <div className="px-8 py-6 border-b border-white/20 bg-white/5">
+              <h2 className="text-2xl font-bold text-white drop-shadow-sm">Select Document Category</h2>
+              <p className="text-blue-200 mt-2">Choose the appropriate category for your documents</p>
             </div>
             <div className="p-8">
-              <div
-                className={`relative border-2 border-dashed rounded-2xl p-12 text-center transition-all duration-300 ${
-                  dragActive
-                    ? 'border-blue-500 bg-blue-50'
-                    : 'border-slate-300 hover:border-blue-400 hover:bg-blue-50'
-                }`}
-                onDragEnter={handleDrag}
-                onDragLeave={handleDrag}
-                onDragOver={handleDrag}
-                onDrop={handleDrop}
-              >
-                <input
-                  ref={fileInputRef}
-                  type="file"
-                  multiple
-                  accept=".pdf,.doc,.docx,.jpg,.jpeg,.png,.gif"
-                  onChange={handleFileSelect}
-                  className="absolute inset-0 w-full h-full opacity-0 cursor-pointer"
-                />
-                
-                <div className="space-y-4">
-                  <CloudArrowUpIcon className="mx-auto h-16 w-16 text-blue-500" />
-                  <div>
-                    <p className="text-xl font-semibold text-slate-900">
-                      Drag and drop files here, or click to browse
-                    </p>
-                    <p className="text-slate-600 mt-2">
-                      Upload multiple files at once. Maximum 10MB per file.
-                    </p>
-                  </div>
+              <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                {documentCategories.map((category) => (
                   <button
-                    onClick={() => fileInputRef.current?.click()}
-                    className="inline-flex items-center px-6 py-3 bg-blue-600 hover:bg-blue-700 text-white font-semibold rounded-xl shadow-lg hover:shadow-xl transition-all duration-200"
+                    key={category.id}
+                    onClick={() => setSelectedCategory(category.id)}
+                    className={`p-6 rounded-xl border-2 text-left transition-smooth hover-lift ${
+                      selectedCategory === category.id
+                        ? 'border-blue-400 bg-blue-600/30 shadow-lg backdrop-blur-sm text-white'
+                        : 'border-white/30 bg-white/5 hover:border-blue-400/50 hover:bg-white/10 backdrop-blur-sm text-blue-100 hover:text-white'
+                    }`}
                   >
-                    <PlusIcon className="h-5 w-5 mr-2" />
-                    Select Files
+                    <h3 className="font-bold text-lg mb-2">{category.name}</h3>
+                    <p className="text-sm opacity-80">{category.description}</p>
+                  </button>
+                ))}
+              </div>
+            </div>
+          </div>
+
+          {/* Upload Area */}
+          {selectedCategory && (
+            <div className="mb-8 slide-in-up bg-white/10 backdrop-blur-md rounded-2xl shadow-2xl border border-white/20 overflow-hidden hover-lift transition-smooth">
+              <div className="px-8 py-6 border-b border-white/20 bg-white/5">
+                <h2 className="text-2xl font-bold text-white drop-shadow-sm">
+                  Upload {getCategoryName(selectedCategory)}
+                </h2>
+                <p className="text-blue-200 mt-2">Drag and drop files or click to browse</p>
+              </div>
+              <div className="p-8">
+                <div
+                  className={`relative border-2 border-dashed rounded-2xl p-12 text-center transition-smooth ${
+                    dragActive
+                      ? 'border-blue-400 bg-blue-500/20 backdrop-blur-sm'
+                      : 'border-white/30 hover:border-blue-400/50 hover:bg-white/5 backdrop-blur-sm'
+                  }`}
+                  onDragEnter={handleDrag}
+                  onDragLeave={handleDrag}
+                  onDragOver={handleDrag}
+                  onDrop={handleDrop}
+                >
+                  <input
+                    ref={fileInputRef}
+                    type="file"
+                    multiple
+                    accept=".pdf,.doc,.docx,.jpg,.jpeg,.png,.gif"
+                    onChange={handleFileSelect}
+                    className="absolute inset-0 w-full h-full opacity-0 cursor-pointer"
+                  />
+                  
+                  <div className="space-y-6">
+                    <div className="w-20 h-20 bg-blue-500/20 backdrop-blur-sm rounded-2xl flex items-center justify-center mx-auto border border-blue-400/30">
+                      <CloudArrowUpIcon className="h-12 w-12 text-blue-400" />
+                    </div>
+                    <div>
+                      <p className="text-2xl font-bold text-white mb-2 drop-shadow-sm">
+                        Drag and drop files here
+                      </p>
+                      <p className="text-blue-200 mb-6">
+                        or click the button below to browse files
+                      </p>
+                      <p className="text-sm text-blue-300">
+                        Upload multiple files at once • Maximum 10MB per file
+                      </p>
+                    </div>
+                    <button
+                      onClick={() => fileInputRef.current?.click()}
+                      className="inline-flex items-center px-8 py-4 bg-gradient-to-r from-blue-600 to-blue-700 hover:from-blue-700 hover:to-blue-800 text-white font-semibold rounded-xl shadow-lg hover:shadow-xl transition-smooth hover-lift"
+                    >
+                      <PlusIcon className="h-6 w-6 mr-3" />
+                      Select Files
+                    </button>
+                  </div>
+                </div>
+              </div>
+            </div>
+          )}
+
+          {/* Uploaded Files */}
+          {uploadedFiles.length > 0 && (
+            <div className="slide-in-up bg-white/10 backdrop-blur-md rounded-2xl shadow-2xl border border-white/20 overflow-hidden hover-lift transition-smooth">
+              <div className="px-8 py-6 border-b border-white/20 bg-white/5">
+                <h2 className="text-2xl font-bold text-white drop-shadow-sm">
+                  Uploaded Files ({uploadedFiles.length})
+                </h2>
+                <p className="text-blue-200 mt-2">Review and manage your uploaded documents</p>
+              </div>
+              <div className="p-8">
+                <div className="space-y-4">
+                  {uploadedFiles.map((file) => (
+                    <div
+                      key={file.id}
+                      className="flex items-center p-6 bg-white/5 backdrop-blur-sm rounded-xl border border-white/20 hover:bg-white/10 transition-smooth"
+                    >
+                      {/* File Icon/Preview */}
+                      <div className="flex-shrink-0 mr-6">
+                        {file.preview ? (
+                          <div className="relative">
+                            <img
+                              src={file.preview}
+                              alt={file.name}
+                              className="w-16 h-16 object-cover rounded-xl border border-white/20"
+                            />
+                            <div className="absolute inset-0 bg-gradient-to-t from-black/20 to-transparent rounded-xl"></div>
+                          </div>
+                        ) : (
+                          <div className="w-16 h-16 bg-blue-500/20 backdrop-blur-sm rounded-xl flex items-center justify-center border border-blue-400/30">
+                            {getFileIcon(file.type)}
+                          </div>
+                        )}
+                      </div>
+
+                      {/* File Info */}
+                      <div className="flex-1 min-w-0">
+                        <p className="text-lg font-semibold text-white truncate drop-shadow-sm">{file.name}</p>
+                        <div className="flex items-center space-x-6 text-sm text-blue-200 mt-2">
+                          <span className="flex items-center">
+                            <TagIcon className="h-4 w-4 mr-1" />
+                            {formatFileSize(file.size)}
+                          </span>
+                          <span className="flex items-center">
+                            <FolderIcon className="h-4 w-4 mr-1" />
+                            {getCategoryName(file.category)}
+                          </span>
+                          <span className="flex items-center">
+                            <CalendarDaysIcon className="h-4 w-4 mr-1" />
+                            {file.uploadDate.toLocaleDateString()}
+                          </span>
+                        </div>
+                        
+                        {/* Progress Bar */}
+                        {file.status === 'uploading' && (
+                          <div className="mt-4">
+                            <div className="flex justify-between text-sm text-blue-200 mb-2">
+                              <span>Uploading...</span>
+                              <span>{Math.round(file.progress)}%</span>
+                            </div>
+                            <div className="bg-white/20 rounded-full h-2 backdrop-blur-sm">
+                              <div
+                                className="bg-gradient-to-r from-blue-500 to-blue-600 h-2 rounded-full transition-all duration-300 shadow-sm"
+                                style={{ width: `${file.progress}%` }}
+                              ></div>
+                            </div>
+                          </div>
+                        )}
+                      </div>
+
+                      {/* Status and Actions */}
+                      <div className="flex items-center space-x-4 ml-6">
+                        <div className="flex items-center">
+                          {getStatusIcon(file.status)}
+                          <span className="ml-2 text-sm text-blue-200">
+                            {file.status === 'uploading' ? 'Uploading' : 
+                             file.status === 'completed' ? 'Completed' : 'Error'}
+                          </span>
+                        </div>
+                        
+                        {file.status === 'completed' && (
+                          <button
+                            className="p-2 text-blue-300 hover:text-white hover:bg-white/10 rounded-lg transition-smooth"
+                            title="View file"
+                          >
+                            <EyeIcon className="h-5 w-5" />
+                          </button>
+                        )}
+                        
+                        <button
+                          onClick={() => removeFile(file.id)}
+                          className="p-2 text-red-300 hover:text-white hover:bg-red-500/20 rounded-lg transition-smooth"
+                          title="Remove file"
+                        >
+                          <TrashIcon className="h-5 w-5" />
+                        </button>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+
+                {/* Upload Summary */}
+                {uploadedFiles.some(f => f.status === 'completed') && (
+                  <div className="mt-8 p-6 bg-green-500/20 border border-green-400/30 rounded-xl backdrop-blur-sm">
+                    <div className="flex items-center">
+                      <div className="w-12 h-12 bg-green-500/20 backdrop-blur-sm rounded-xl flex items-center justify-center border border-green-400/30 mr-4">
+                        <CheckCircleIcon className="h-6 w-6 text-green-400" />
+                      </div>
+                      <div>
+                        <p className="font-bold text-green-100 text-lg">
+                          {uploadedFiles.filter(f => f.status === 'completed').length} files uploaded successfully
+                        </p>
+                        <p className="text-green-200 text-sm mt-1">
+                          Your documents have been securely stored and will be processed for your applications.
+                        </p>
+                      </div>
+                    </div>
+                  </div>
+                )}
+
+                {/* Action Buttons */}
+                <div className="mt-8 flex flex-col sm:flex-row gap-4 justify-center">
+                  <button
+                    onClick={() => router.push('/documents')}
+                    className="inline-flex items-center px-8 py-4 bg-gradient-to-r from-purple-600 to-purple-700 hover:from-purple-700 hover:to-purple-800 text-white font-semibold rounded-xl shadow-lg hover:shadow-xl transition-smooth hover-lift"
+                  >
+                    <FolderIcon className="h-6 w-6 mr-3" />
+                    View All Documents
+                  </button>
+                  <button
+                    onClick={() => {
+                      setUploadedFiles([])
+                      setSelectedCategory('')
+                    }}
+                    className="inline-flex items-center px-8 py-4 bg-gradient-to-r from-blue-600 to-blue-700 hover:from-blue-700 hover:to-blue-800 text-white font-semibold rounded-xl shadow-lg hover:shadow-xl transition-smooth hover-lift"
+                  >
+                    <PlusIcon className="h-6 w-6 mr-3" />
+                    Upload More Documents
                   </button>
                 </div>
               </div>
             </div>
-          </div>
-        )}
-
-        {/* Uploaded Files */}
-        {uploadedFiles.length > 0 && (
-          <div className="bg-white rounded-2xl shadow-xl border-2 border-purple-100 overflow-hidden">
-            <div className="px-8 py-6 border-b border-slate-200 bg-gradient-to-r from-slate-50 to-purple-50">
-              <h2 className="text-2xl font-bold text-slate-900">
-                Uploaded Files ({uploadedFiles.length})
-              </h2>
-            </div>
-            <div className="p-8">
-              <div className="space-y-4">
-                {uploadedFiles.map((file) => (
-                  <div
-                    key={file.id}
-                    className="flex items-center p-4 bg-slate-50 rounded-xl border border-slate-200"
-                  >
-                    {/* File Icon/Preview */}
-                    <div className="flex-shrink-0 mr-4">
-                      {file.preview ? (
-                        <img
-                          src={file.preview}
-                          alt={file.name}
-                          className="w-12 h-12 object-cover rounded-lg"
-                        />
-                      ) : (
-                        getFileIcon(file.type)
-                      )}
-                    </div>
-
-                    {/* File Info */}
-                    <div className="flex-1 min-w-0">
-                      <p className="text-lg font-semibold text-slate-900 truncate">{file.name}</p>
-                      <div className="flex items-center space-x-4 text-sm text-slate-600">
-                        <span>{formatFileSize(file.size)}</span>
-                        <span>{getCategoryName(file.category)}</span>
-                        <span>{file.uploadDate.toLocaleDateString()}</span>
-                      </div>
-                      
-                      {/* Progress Bar */}
-                      {file.status === 'uploading' && (
-                        <div className="mt-2">
-                          <div className="bg-slate-200 rounded-full h-2">
-                            <div
-                              className="bg-blue-600 h-2 rounded-full transition-all duration-300"
-                              style={{ width: `${file.progress}%` }}
-                            ></div>
-                          </div>
-                          <p className="text-xs text-slate-500 mt-1">{Math.round(file.progress)}% uploaded</p>
-                        </div>
-                      )}
-                    </div>
-
-                    {/* Status and Actions */}
-                    <div className="flex items-center space-x-2 ml-4">
-                      {getStatusIcon(file.status)}
-                      
-                      {file.status === 'completed' && (
-                        <button
-                          className="p-2 text-blue-600 hover:bg-blue-100 rounded-lg transition-colors duration-200"
-                          title="View file"
-                        >
-                          <EyeIcon className="h-5 w-5" />
-                        </button>
-                      )}
-                      
-                      <button
-                        onClick={() => removeFile(file.id)}
-                        className="p-2 text-red-600 hover:bg-red-100 rounded-lg transition-colors duration-200"
-                        title="Remove file"
-                      >
-                        <TrashIcon className="h-5 w-5" />
-                      </button>
-                    </div>
-                  </div>
-                ))}
-              </div>
-
-              {/* Upload Summary */}
-              {uploadedFiles.some(f => f.status === 'completed') && (
-                <div className="mt-6 p-4 bg-emerald-50 border border-emerald-200 rounded-xl">
-                  <div className="flex items-center">
-                    <CheckCircleIcon className="h-6 w-6 text-emerald-600 mr-3" />
-                    <div>
-                      <p className="font-semibold text-emerald-900">
-                        {uploadedFiles.filter(f => f.status === 'completed').length} files uploaded successfully
-                      </p>
-                      <p className="text-emerald-700 text-sm">
-                        Your documents have been securely stored and will be processed for your applications.
-                      </p>
-                    </div>
-                  </div>
-                </div>
-              )}
-            </div>
-          </div>
-        )}
+          )}
+        </div>
       </div>
     </DashboardLayout>
   )
