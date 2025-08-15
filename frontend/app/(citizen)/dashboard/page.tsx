@@ -22,33 +22,45 @@ import Image from 'next/image';
 import DashboardLayout from '@/components/DashboardLayout';
 import AuthGuard from '@/components/AuthGuard';
 import { useAuth } from '@/hooks/useAuth';
+import { dashboardAPI } from '@/lib/api';
 
 interface Appointment {
   id: string;
   service: string;
+  serviceType?: string;
   department: string;
   date: string;
   time: string;
+  appointmentDate?: string;
+  appointmentTime?: string;
   status: 'confirmed' | 'pending' | 'completed' | 'cancelled';
   location: string;
+  officerName?: string;
 }
 
 interface Document {
   id: string;
   name: string;
-  type: string;
-  uploadDate: string;
+  fileType?: string;
+  type?: string;
+  uploadDate?: string;
+  createdAt?: string;
   status: 'verified' | 'pending' | 'rejected';
-  size: string;
+  fileSize?: number;
+  size?: string;
+  category?: string;
 }
 
 interface Notification {
   id: string;
   title: string;
   message: string;
-  time: string;
+  time?: string;
+  createdAt?: string;
   type: 'info' | 'warning' | 'success';
+  notificationType?: string;
   read: boolean;
+  isRead?: boolean;
 }
 
 export default function Dashboard() {
@@ -160,80 +172,126 @@ export default function Dashboard() {
     setIsAutoPlaying(false);
   };
 
-  const [upcomingAppointments, setUpcomingAppointments] = useState<Appointment[]>([
-    {
-      id: '1',
-      service: 'National ID Renewal',
-      department: 'Department of Registration of Persons',
-      date: '2025-08-20',
-      time: '10:30 AM',
-      status: 'confirmed',
-      location: 'Colombo District Office'
-    },
-    {
-      id: '2',
-      service: 'Birth Certificate Copy',
-      department: 'Registrar General\'s Department',
-      date: '2025-08-25',
-      time: '2:00 PM',
-      status: 'pending',
-      location: 'Gampaha District Office'
-    }
-  ]);
+  const [upcomingAppointments, setUpcomingAppointments] = useState<Appointment[]>([]);
+  const [recentDocuments, setRecentDocuments] = useState<Document[]>([]);
+  const [notifications, setNotifications] = useState<Notification[]>([]);
+  const [unreadCount, setUnreadCount] = useState(0);
+  const [isLoading, setIsLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
 
-  const [recentDocuments, setRecentDocuments] = useState<Document[]>([
-    {
-      id: '1',
-      name: 'National ID Copy',
-      type: 'PDF',
-      uploadDate: '2025-08-10',
-      status: 'verified',
-      size: '2.4 MB'
-    },
-    {
-      id: '2',
-      name: 'Utility Bill',
-      type: 'PDF',
-      uploadDate: '2025-08-12',
-      status: 'pending',
-      size: '1.8 MB'
-    },
-    {
-      id: '3',
-      name: 'Passport Photo',
-      type: 'JPG',
-      uploadDate: '2025-08-14',
-      status: 'verified',
-      size: '856 KB'
-    }
-  ]);
+  // Fetch dashboard data from backend
+  useEffect(() => {
+    const fetchDashboardData = async () => {
+      if (!user) return;
 
-  const [notifications, setNotifications] = useState<Notification[]>([
-    {
-      id: '1',
-      title: 'Appointment Confirmed',
-      message: 'Your National ID renewal appointment has been confirmed for Aug 20, 2025',
-      time: '2 hours ago',
-      type: 'success',
-      read: false
-    },
-    {
-      id: '2',
-      title: 'Document Verification',
-      message: 'Your utility bill document is pending verification',
-      time: '1 day ago',
-      type: 'warning',
-      read: false
-    },
-    {
-      id: '3',
-      title: 'New Service Available',
-      message: 'Online Driving License Renewal is now available',
-      time: '3 days ago',
-      type: 'info',
-      read: true
+      try {
+        setIsLoading(true);
+        setError(null);
+
+        // Fetch all dashboard data in parallel
+        const [appointmentsData, notificationsData, documentsData, unreadCountData] = await Promise.all([
+          dashboardAPI.getAppointments().catch(err => {
+            console.warn('Failed to fetch appointments:', err);
+            return [];
+          }),
+          dashboardAPI.getNotifications().catch(err => {
+            console.warn('Failed to fetch notifications:', err);
+            return [];
+          }),
+          dashboardAPI.getDocuments().catch(err => {
+            console.warn('Failed to fetch documents:', err);
+            return [];
+          }),
+          dashboardAPI.getUnreadCount().catch(err => {
+            console.warn('Failed to fetch unread count:', err);
+            return 0;
+          })
+        ]);
+
+        // Transform appointment data to match interface
+        const transformedAppointments = appointmentsData.map((apt: any) => ({
+          id: apt.id.toString(),
+          service: apt.serviceType || apt.service || 'Unknown Service',
+          department: apt.department || 'Government Department',
+          date: apt.appointmentDate || apt.date,
+          time: apt.appointmentTime || apt.time,
+          status: apt.status,
+          location: apt.location || 'Government Office',
+          officerName: apt.officerName
+        }));
+
+        // Transform notification data to match interface
+        const transformedNotifications = notificationsData.map((notif: any) => ({
+          id: notif.id.toString(),
+          title: notif.title,
+          message: notif.message,
+          time: notif.createdAt ? getTimeAgo(notif.createdAt) : 'Recently',
+          type: getNotificationType(notif.notificationType || notif.type),
+          read: notif.isRead !== undefined ? notif.isRead : notif.read
+        }));
+
+        // Transform document data to match interface
+        const transformedDocuments = documentsData.map((doc: any) => ({
+          id: doc.id.toString(),
+          name: doc.name,
+          fileType: doc.fileType,
+          type: doc.fileType || doc.type,
+          uploadDate: doc.createdAt,
+          createdAt: doc.createdAt,
+          status: doc.status,
+          fileSize: doc.fileSize,
+          size: doc.fileSize ? `${Math.round(doc.fileSize / 1024)} KB` : 'Unknown',
+          category: doc.category
+        }));
+
+        setUpcomingAppointments(transformedAppointments);
+        setNotifications(transformedNotifications);
+        setRecentDocuments(transformedDocuments);
+        setUnreadCount(unreadCountData);
+      } catch (err) {
+        console.error('Error fetching dashboard data:', err);
+        setError('Failed to load dashboard data. Please try refreshing the page.');
+      } finally {
+        setIsLoading(false);
+      }
+    };
+
+    fetchDashboardData();
+  }, [user]);
+
+  // Helper function to get time ago
+  const getTimeAgo = (dateString: string) => {
+    const date = new Date(dateString);
+    const now = new Date();
+    const diffInMs = now.getTime() - date.getTime();
+    const diffInMinutes = Math.floor(diffInMs / (1000 * 60));
+    const diffInHours = Math.floor(diffInMinutes / 60);
+    const diffInDays = Math.floor(diffInHours / 24);
+
+    if (diffInMinutes < 60) {
+      return `${diffInMinutes} minutes ago`;
+    } else if (diffInHours < 24) {
+      return `${diffInHours} hours ago`;
+    } else {
+      return `${diffInDays} days ago`;
     }
-  ]);
+  };
+
+  // Helper function to normalize notification type
+  const getNotificationType = (type: string): 'info' | 'warning' | 'success' => {
+    switch (type?.toLowerCase()) {
+      case 'appointment':
+      case 'success':
+        return 'success';
+      case 'reminder':
+      case 'warning':
+        return 'warning';
+      case 'announcement':
+      case 'info':
+      default:
+        return 'info';
+    }
+  };
 
   const quickActions = [
     {
@@ -290,18 +348,33 @@ export default function Dashboard() {
     }
   };
 
-  const markNotificationAsRead = (id: string) => {
-    setNotifications(notifications.map(notif => 
-      notif.id === id ? { ...notif, read: true } : notif
-    ));
+  const markNotificationAsRead = async (id: string) => {
+    try {
+      await dashboardAPI.markNotificationAsRead(id);
+      setNotifications(notifications.map(notif => 
+        notif.id === id ? { ...notif, read: true } : notif
+      ));
+      // Update unread count
+      setUnreadCount(prev => Math.max(0, prev - 1));
+    } catch (error) {
+      console.error('Failed to mark notification as read:', error);
+    }
   };
-
-  const unreadCount = notifications.filter(n => !n.read).length;
 
   return (
     <AuthGuard>
       <DashboardLayout>
         <div className="px-4 sm:px-6 lg:px-8 py-8">
+        {/* Error Display */}
+        {error && (
+          <div className="mb-8 bg-red-500/20 backdrop-blur-md rounded-2xl border border-red-300/20 p-6">
+            <div className="flex items-center space-x-3">
+              <ExclamationTriangleIcon className="h-6 w-6 text-red-400" />
+              <p className="text-red-100 font-medium">{error}</p>
+            </div>
+          </div>
+        )}
+
         {/* Welcome Section */}
         <div className="mb-8">
           <div className="bg-white/10 backdrop-blur-md rounded-2xl shadow-2xl border border-white/20 overflow-hidden">
@@ -447,10 +520,9 @@ export default function Dashboard() {
                       : 'bg-white/60 hover:bg-white/80'
                   }`}
                 />
-              ))}
-            </div>
-            
-            {/* Auto-play Indicator */}
+                  ))}
+                )}
+              </div>            {/* Auto-play Indicator */}
             <div className="absolute top-4 right-4 z-10">
               <button
                 onClick={() => setIsAutoPlaying(!isAutoPlaying)}
@@ -517,7 +589,12 @@ export default function Dashboard() {
                 </Link>
               </div>
               <div className="divide-y divide-white/10">
-                {upcomingAppointments.length > 0 ? (
+                {isLoading ? (
+                  <div className="p-12 text-center">
+                    <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-white mx-auto mb-4"></div>
+                    <p className="text-white/80 font-medium">Loading appointments...</p>
+                  </div>
+                ) : upcomingAppointments.length > 0 ? (
                   upcomingAppointments.map((appointment) => (
                     <div key={appointment.id} className="p-8 hover:bg-white/5 transition-all duration-200 border-l-4 border-transparent hover:border-blue-400">
                       <div className="flex items-start justify-between">
@@ -590,7 +667,12 @@ export default function Dashboard() {
                 </div>
               </div>
               <div className="max-h-96 overflow-y-auto">
-                {notifications.slice(0, 5).map((notification) => (
+                {isLoading ? (
+                  <div className="p-12 text-center">
+                    <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-white mx-auto mb-4"></div>
+                    <p className="text-white/80 font-medium">Loading notifications...</p>
+                  </div>
+                ) : notifications.slice(0, 5).map((notification) => (
                   <div 
                     key={notification.id} 
                     className={`p-6 border-b border-white/10 last:border-b-0 cursor-pointer hover:bg-white/5 transition-all duration-200 ${!notification.read ? 'bg-white/10 border-l-4 border-purple-400' : ''}`}
@@ -635,7 +717,13 @@ export default function Dashboard() {
                 </Link>
               </div>
               <div className="divide-y divide-white/10">
-                {recentDocuments.map((document) => (
+                {isLoading ? (
+                  <div className="p-12 text-center">
+                    <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-white mx-auto mb-4"></div>
+                    <p className="text-white/80 font-medium">Loading documents...</p>
+                  </div>
+                ) : recentDocuments.length > 0 ? (
+                  recentDocuments.map((document) => (
                   <div key={document.id} className="p-6 hover:bg-white/5 transition-all duration-200 border-l-4 border-transparent hover:border-emerald-400">
                     <div className="flex items-center justify-between">
                       <div className="flex items-center space-x-4">
@@ -647,7 +735,7 @@ export default function Dashboard() {
                             {document.name}
                           </p>
                           <p className="text-sm text-blue-200 font-medium">
-                            {document.type} • {document.size} • {new Date(document.uploadDate).toLocaleDateString()}
+                            {document.fileType || document.type} • {document.size || `${Math.round((document.fileSize || 0) / 1024)} KB`} • {new Date(document.uploadDate || document.createdAt || Date.now()).toLocaleDateString()}
                           </p>
                         </div>
                       </div>
@@ -656,7 +744,20 @@ export default function Dashboard() {
                       </span>
                     </div>
                   </div>
-                ))}
+                  ))
+                ) : (
+                  <div className="p-12 text-center">
+                    <DocumentTextIcon className="h-16 w-16 text-white/40 mx-auto mb-6" />
+                    <p className="text-xl text-white/80 font-medium mb-4">No recent documents</p>
+                    <Link 
+                      href="/documents/upload" 
+                      className="inline-flex items-center bg-emerald-600 hover:bg-emerald-700 text-white px-6 py-3 rounded-lg font-semibold transition-colors duration-200 shadow-lg"
+                    >
+                      <PlusIcon className="h-5 w-5 mr-2" />
+                      Upload document
+                    </Link>
+                  </div>
+                )}
               </div>
             </div>
           </div>

@@ -59,6 +59,11 @@ const serviceRoutes = require('./routes/services');
 const notificationRoutes = require('./routes/notifications');
 const paymentRoutes = require('./routes/payments');
 
+// MySQL Routes
+const mysqlAppointmentRoutes = require('./routes/mysqlAppointments');
+const mysqlNotificationRoutes = require('./routes/mysqlNotifications');
+const mysqlDocumentRoutes = require('./routes/mysqlDocuments');
+
 // API Routes
 app.use('/api/auth', authRoutes); // MongoDB authentication
 app.use('/api/auth/mysql', mysqlAuthRoutes); // MySQL authentication
@@ -68,6 +73,11 @@ app.use('/api/documents', documentRoutes);
 app.use('/api/services', serviceRoutes);
 app.use('/api/notifications', notificationRoutes);
 app.use('/api/payments', paymentRoutes);
+
+// MySQL API Routes
+app.use('/api/mysql/appointments', mysqlAppointmentRoutes);
+app.use('/api/mysql/notifications', mysqlNotificationRoutes);
+app.use('/api/mysql/documents', mysqlDocumentRoutes);
 
 // Health check endpoint
 app.get('/api/health', (req, res) => {
