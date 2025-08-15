@@ -73,9 +73,9 @@ export default function RootLayout({
   children: React.ReactNode
 }) {
   return (
-    <html lang="en" className={`${inter.variable} ${roboto.variable}`}>
-      <body className="min-h-screen bg-neutral-50 antialiased">
-        <div id="root" className="min-h-screen flex flex-col">
+    <html lang="en" className={`${inter.variable} ${roboto.variable} scroll-smooth`}>
+      <body className="min-h-screen bg-neutral-50 antialiased transition-smooth">
+        <div id="root" className="min-h-screen flex flex-col scroll-container">
           {children}
         </div>
       </body>

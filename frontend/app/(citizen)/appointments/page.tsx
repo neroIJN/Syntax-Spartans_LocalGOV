@@ -167,34 +167,34 @@ export default function AppointmentsPage() {
 
   return (
     <DashboardLayout>
-      <div className="px-4 sm:px-6 lg:px-8 py-8">
+      <div className="px-4 sm:px-6 lg:px-8 py-8 scroll-container fade-in">
         {/* Header */}
-        <div className="mb-8 flex flex-col lg:flex-row lg:items-center lg:justify-between">
+        <div className="mb-8 flex flex-col lg:flex-row lg:items-center lg:justify-between slide-in-up">
           <div className="mb-4 lg:mb-0">
             <h1 className="text-4xl font-bold text-white mb-4 drop-shadow-lg">My Appointments</h1>
             <p className="text-xl text-blue-100">Manage your scheduled appointments and view appointment history.</p>
           </div>
           <button
             onClick={() => router.push('/appointments/book')}
-            className="inline-flex items-center px-6 py-3 bg-gradient-to-r from-blue-600 to-blue-700 hover:from-blue-700 hover:to-blue-800 text-white font-semibold rounded-xl shadow-lg hover:shadow-xl transition-all duration-200 transform hover:scale-105"
+            className="inline-flex items-center px-6 py-3 bg-gradient-to-r from-blue-600 to-blue-700 hover:from-blue-700 hover:to-blue-800 text-white font-semibold rounded-xl shadow-lg hover:shadow-xl transition-smooth hover-lift"
           >
-            <PlusIcon className="h-5 w-5 mr-2" />
+            <PlusIcon className="h-5 w-5 mr-2 transition-smooth" />
             Book New Appointment
           </button>
         </div>
 
         {/* Quick Stats */}
-        <div className="grid grid-cols-1 md:grid-cols-4 gap-6 mb-8">
+        <div className="grid grid-cols-1 md:grid-cols-4 gap-6 mb-8 slide-in-right">
           {[
             { label: 'Total Appointments', value: appointments.length, color: 'bg-blue-500', icon: CalendarDaysIcon },
             { label: 'Upcoming', value: upcomingAppointments.length, color: 'bg-emerald-500', icon: ClockIcon },
             { label: 'Completed', value: appointments.filter(a => a.status === 'Completed').length, color: 'bg-purple-500', icon: CheckCircleIcon },
             { label: 'Cancelled', value: appointments.filter(a => a.status === 'Cancelled').length, color: 'bg-red-500', icon: XMarkIcon }
           ].map((stat, index) => (
-            <div key={index} className="bg-white/10 backdrop-blur-md rounded-2xl shadow-2xl border border-white/20 p-6">
+            <div key={index} className="bg-white/10 backdrop-blur-md rounded-2xl shadow-2xl border border-white/20 p-6 hover-lift transition-smooth">
               <div className="flex items-center">
-                <div className={`w-12 h-12 ${stat.color} rounded-xl flex items-center justify-center mr-4 shadow-lg`}>
-                  <stat.icon className="h-6 w-6 text-white" />
+                <div className={`w-12 h-12 ${stat.color} rounded-xl flex items-center justify-center mr-4 shadow-lg hover-lift`}>
+                  <stat.icon className="h-6 w-6 text-white transition-smooth" />
                 </div>
                 <div>
                   <p className="text-sm font-semibold text-blue-100">{stat.label}</p>

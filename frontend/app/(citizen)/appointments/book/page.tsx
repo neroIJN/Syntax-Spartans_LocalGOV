@@ -10,9 +10,11 @@ import {
   ArrowLeftIcon,
   CheckCircleIcon,
   UserIcon,
-  XMarkIcon
+  XMarkIcon,
+  CreditCardIcon
 } from '@heroicons/react/24/outline'
-import DashboardLayout from '@/components/DashboardLayout'
+import DashboardLayout from '../../../../components/DashboardLayout'
+import { services, getServiceById, calculateTotalFee } from '../../../../lib/services'
 
 export default function BookAppointmentPage() {
   const router = useRouter()
@@ -24,44 +26,8 @@ export default function BookAppointmentPage() {
   const [selectedDate, setSelectedDate] = useState('')
   const [selectedTime, setSelectedTime] = useState('')
 
-  // Mock services
-  const services = [
-    {
-      id: 'national-id',
-      name: 'National Identity Card Application',
-      department: 'Divisional Secretariat',
-      duration: '1 hour',
-      fee: 'Rs. 25.00'
-    },
-    {
-      id: 'birth-certificate',
-      name: 'Birth Certificate Application',
-      department: 'Grama Niladhari Office',
-      duration: '30 minutes',
-      fee: 'Rs. 15.00'
-    },
-    {
-      id: 'marriage-registration',
-      name: 'Marriage Registration',
-      department: 'Grama Niladhari Office',
-      duration: '1 hour',
-      fee: 'Rs. 50.00'
-    },
-    {
-      id: 'land-registration',
-      name: 'Land Registration Inquiry',
-      department: 'Divisional Secretariat',
-      duration: '1.5 hours',
-      fee: 'Rs. 75.00'
-    },
-    {
-      id: 'business-registration',
-      name: 'Business Registration',
-      department: 'Divisional Secretariat',
-      duration: '1 hour',
-      fee: 'Rs. 100.00'
-    }
-  ]
+  // Mock services - now using the service configuration
+  // (Remove this mock data as we're importing from services.ts)
 
   // Mock available times with queue information
   const getAvailableTimesForDate = (date: string) => {
@@ -144,8 +110,21 @@ export default function BookAppointmentPage() {
   }
 
   const handleConfirmAppointment = () => {
-    // Here you would typically call an API to book the appointment
-    router.push('/appointments/confirm')
+    const service = getServiceById(selectedService)
+    if (!service) return
+    
+    const fees = calculateTotalFee(selectedService)
+    const appointmentId = 'APT-' + Date.now()
+    
+    // If service requires payment, go to payment page
+    if (fees.total > 0) {
+      const paymentUrl = `/payment?serviceId=${selectedService}&date=${selectedDate}&time=${selectedTime}&appointmentId=${appointmentId}`
+      router.push(paymentUrl)
+    } else {
+      // If service is free, go directly to confirmation
+      const confirmUrl = `/appointments/confirm?serviceId=${selectedService}&date=${selectedDate}&time=${selectedTime}&appointmentId=${appointmentId}`
+      router.push(confirmUrl)
+    }
   }
 
   const canProceed = () => {
@@ -230,7 +209,15 @@ export default function BookAppointmentPage() {
                       <div className="space-y-2 text-blue-100">
                         <p>Department: {service.department}</p>
                         <p>Duration: {service.duration}</p>
-                        <p>Fee: {service.fee}</p>
+                        <div className="flex items-center justify-between">
+                          <p>Fee: {service.fee > 0 ? `Rs. ${service.fee.toLocaleString()}` : 'Free'}</p>
+                          {service.fee === 0 && (
+                            <span className="bg-green-500/20 text-green-200 px-2 py-1 rounded-full text-xs font-semibold border border-green-400/30">
+                              No Fee
+                            </span>
+                          )}
+                        </div>
+                        <p className="text-sm text-blue-200 mt-2">{service.description}</p>
                       </div>
                     </button>
                   ))}
@@ -464,14 +451,45 @@ export default function BookAppointmentPage() {
               <button
                 onClick={handleConfirmAppointment}
                 disabled={!canProceed()}
-                className={`inline-flex items-center px-8 py-4 rounded-xl text-lg font-semibold transition-all duration-200 ${
+                className={`inline-flex items-center px-8 py-4 rounded-xl text-lg font-semibold transition-smooth hover-lift ${
                   canProceed()
-                    ? 'bg-gradient-to-r from-emerald-600 to-emerald-700 hover:from-emerald-700 hover:to-emerald-800 text-white shadow-lg transform hover:scale-105'
+                    ? (() => {
+                        const service = getServiceById(selectedService)
+                        const fees = calculateTotalFee(selectedService)
+                        return fees.total > 0
+                          ? 'bg-gradient-to-r from-emerald-600 to-emerald-700 hover:from-emerald-700 hover:to-emerald-800 text-white shadow-lg'
+                          : 'bg-gradient-to-r from-blue-600 to-blue-700 hover:from-blue-700 hover:to-blue-800 text-white shadow-lg'
+                      })()
                     : 'bg-white/20 text-blue-200 cursor-not-allowed backdrop-blur-md border border-white/20'
                 }`}
               >
-                Confirm Appointment
-                <CheckCircleIcon className="h-5 w-5 ml-2" />
+                {(() => {
+                  if (!canProceed()) return (
+                    <>
+                      <CheckCircleIcon className="h-5 w-5 mr-2" />
+                      Complete Selection
+                    </>
+                  )
+                  
+                  const service = getServiceById(selectedService)
+                  const fees = calculateTotalFee(selectedService)
+                  
+                  if (fees.total > 0) {
+                    return (
+                      <>
+                        <CreditCardIcon className="h-5 w-5 mr-2" />
+                        Proceed to Payment (Rs. {fees.total.toLocaleString()})
+                      </>
+                    )
+                  } else {
+                    return (
+                      <>
+                        <CheckCircleIcon className="h-5 w-5 mr-2" />
+                        Confirm Appointment (Free)
+                      </>
+                    )
+                  }
+                })()}
               </button>
             )}
           </div>
@@ -480,7 +498,7 @@ export default function BookAppointmentPage() {
           {(selectedService || selectedDate || selectedTime) && (
             <div className="mt-12 bg-blue-600/20 border border-blue-400/30 rounded-xl p-6 backdrop-blur-md">
               <h3 className="text-xl font-bold text-blue-100 mb-4">Appointment Summary</h3>
-              <div className="grid grid-cols-1 md:grid-cols-3 gap-4 text-blue-200">
+              <div className="grid grid-cols-1 md:grid-cols-4 gap-4 text-blue-200">
                 {selectedService && (
                   <div>
                     <span className="font-semibold">Service:</span>
@@ -497,6 +515,21 @@ export default function BookAppointmentPage() {
                   <div>
                     <span className="font-semibold">Time:</span>
                     <div className="text-white">{selectedTime}</div>
+                  </div>
+                )}
+                {selectedService && (
+                  <div>
+                    <span className="font-semibold">Fee:</span>
+                    <div className="text-white">
+                      {(() => {
+                        const fees = calculateTotalFee(selectedService)
+                        return fees.total > 0 ? (
+                          <span className="text-yellow-300">Rs. {fees.total.toLocaleString()}</span>
+                        ) : (
+                          <span className="text-green-300">Free</span>
+                        )
+                      })()}
+                    </div>
                   </div>
                 )}
               </div>

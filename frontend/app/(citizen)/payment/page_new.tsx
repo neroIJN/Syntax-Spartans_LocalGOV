@@ -1,6 +1,6 @@
 'use client'
 
-import { useState, useEffect } from 'react'
+import { useState } from 'react'
 import { useRouter, useSearchParams } from 'next/navigation'
 import { 
   CreditCardIcon,
@@ -8,19 +8,14 @@ import {
   ShieldCheckIcon,
   ArrowLeftIcon,
   ExclamationTriangleIcon,
-  CheckCircleIcon,
-  ExclamationCircleIcon
+  CheckCircleIcon
 } from '@heroicons/react/24/outline'
-import DashboardLayout from '../../../components/DashboardLayout'
-import { getServiceById, calculateTotalFee } from '../../../lib/services'
+import DashboardLayout from '@/components/DashboardLayout'
 
 export default function PaymentPage() {
   const router = useRouter()
   const searchParams = useSearchParams()
   const appointmentId = searchParams.get('appointmentId')
-  const serviceId = searchParams.get('serviceId')
-  const appointmentDate = searchParams.get('date')
-  const appointmentTime = searchParams.get('time')
   
   const [paymentMethod, setPaymentMethod] = useState('credit-card')
   const [formData, setFormData] = useState({
@@ -30,75 +25,20 @@ export default function PaymentPage() {
     cardholderName: ''
   })
   const [isProcessing, setIsProcessing] = useState(false)
-  const [serviceData, setServiceData] = useState<any>(null)
-  const [feeBreakdown, setFeeBreakdown] = useState({ appointmentFee: 0, serviceCharge: 0, total: 0 })
 
-  useEffect(() => {
-    // Check if service requires payment
-    if (serviceId) {
-      const service = getServiceById(serviceId)
-      if (service) {
-        setServiceData(service)
-        const fees = calculateTotalFee(serviceId)
-        setFeeBreakdown(fees)
-        
-        // If service is free, redirect to confirmation
-        if (fees.total === 0) {
-          const confirmUrl = `/appointments/confirm?serviceId=${serviceId}&date=${appointmentDate}&time=${appointmentTime}&appointmentId=${appointmentId || 'APT-' + Date.now()}`
-          router.push(confirmUrl)
-          return
-        }
-      }
-    }
-  }, [serviceId, appointmentDate, appointmentTime, appointmentId, router])
-
-  // Mock appointment data - will be replaced with actual data
+  // Mock appointment and fee data matching the screenshot
   const appointmentData = {
-    id: appointmentId || 'APT-' + Date.now(),
-    service: serviceData?.name || 'Service',
-    date: appointmentDate || '2025-08-20',
-    time: appointmentTime || '10:00 AM',
-    location: serviceData?.department || 'Government Office'
+    id: appointmentId || 'APT-001',
+    service: 'National Identity Card Renewal',
+    date: '2025-08-20',
+    time: '10:00 AM',
+    location: 'Colombo Divisional Secretariat'
   }
 
-  // Show loading if service data is not yet loaded
-  if (!serviceData && serviceId) {
-    return (
-      <DashboardLayout>
-        <div className="px-4 sm:px-6 lg:px-8 py-8 scroll-container fade-in">
-          <div className="max-w-4xl mx-auto text-center">
-            <div className="bg-white/10 backdrop-blur-md rounded-2xl shadow-2xl border border-white/20 p-12">
-              <div className="w-16 h-16 border-4 border-white/30 border-t-white rounded-full animate-spin mx-auto mb-4"></div>
-              <h2 className="text-2xl font-bold text-white mb-2">Loading Payment Information...</h2>
-              <p className="text-blue-200">Please wait while we process your appointment details.</p>
-            </div>
-          </div>
-        </div>
-      </DashboardLayout>
-    )
-  }
-
-  // If no service ID provided, show error
-  if (!serviceId) {
-    return (
-      <DashboardLayout>
-        <div className="px-4 sm:px-6 lg:px-8 py-8 scroll-container fade-in">
-          <div className="max-w-4xl mx-auto text-center">
-            <div className="bg-white/10 backdrop-blur-md rounded-2xl shadow-2xl border border-white/20 p-12">
-              <ExclamationCircleIcon className="h-16 w-16 text-red-400 mx-auto mb-4" />
-              <h2 className="text-2xl font-bold text-white mb-2">Invalid Payment Request</h2>
-              <p className="text-blue-200 mb-6">No service information found for this payment.</p>
-              <button
-                onClick={() => router.push('/appointments/book')}
-                className="bg-gradient-to-r from-blue-600 to-blue-700 hover:from-blue-700 hover:to-blue-800 text-white px-6 py-3 rounded-xl font-semibold transition-smooth"
-              >
-                Book New Appointment
-              </button>
-            </div>
-          </div>
-        </div>
-      </DashboardLayout>
-    )
+  const feeBreakdown = {
+    appointmentFee: 25.00,
+    serviceCharge: 2.50,
+    total: 27.50
   }
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -133,13 +73,9 @@ export default function PaymentPage() {
 
   const handlePayment = async () => {
     setIsProcessing(true)
-    
-    // Simulate payment processing
     setTimeout(() => {
       setIsProcessing(false)
-      // Redirect to confirmation page with payment success
-      const confirmUrl = `/appointments/confirm?serviceId=${serviceId}&date=${appointmentDate}&time=${appointmentTime}&appointmentId=${appointmentData.id}&paymentStatus=success&amount=${feeBreakdown.total}`
-      router.push(confirmUrl)
+      router.push('/payment/success?appointmentId=' + appointmentData.id)
     }, 3000)
   }
 
@@ -214,21 +150,21 @@ export default function PaymentPage() {
                 <div className="space-y-4">
                   <div className="flex justify-between items-center py-2">
                     <span className="text-blue-200">Appointment Fee</span>
-                    <span className="text-white font-medium">Rs. {feeBreakdown.appointmentFee.toLocaleString()}</span>
+                    <span className="text-white font-medium">${feeBreakdown.appointmentFee.toFixed(2)}</span>
                   </div>
                   
                   <div className="w-full h-px bg-white/20"></div>
                   
                   <div className="flex justify-between items-center py-2">
                     <span className="text-blue-200">Service Charge</span>
-                    <span className="text-white font-medium">Rs. {feeBreakdown.serviceCharge.toLocaleString()}</span>
+                    <span className="text-white font-medium">${feeBreakdown.serviceCharge.toFixed(2)}</span>
                   </div>
                   
                   <div className="w-full h-px bg-white/20"></div>
                   
                   <div className="flex justify-between items-center py-3 mt-4">
                     <span className="text-lg font-bold text-white">Total Amount</span>
-                    <span className="text-lg font-bold text-white">Rs. {feeBreakdown.total.toLocaleString()}</span>
+                    <span className="text-lg font-bold text-white">${feeBreakdown.total.toFixed(2)}</span>
                   </div>
                 </div>
               </div>
@@ -337,7 +273,7 @@ export default function PaymentPage() {
                       You will be redirected to your bank's secure payment portal
                     </p>
                     <p className="text-sm text-blue-300">
-                      Supported banks: Commercial Bank, People's Bank, Bank of Ceylon, HNB, Sampath Bank
+                      Supported banks: Commercial Bank, People's Bank, Bank of Ceylon, HNB
                     </p>
                   </div>
                 )}

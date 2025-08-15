@@ -119,6 +119,7 @@ module.exports = {
         'slide-up': 'slideUp 0.3s ease-out',
         'slide-down': 'slideDown 0.3s ease-out',
         'scale-up': 'scaleUp 0.2s ease-out',
+        'smooth-bounce': 'smoothBounce 2s infinite',
       },
       keyframes: {
         fadeIn: {
@@ -137,6 +138,26 @@ module.exports = {
           '0%': { transform: 'scale(0.95)', opacity: '0' },
           '100%': { transform: 'scale(1)', opacity: '1' },
         },
+        smoothBounce: {
+          '0%, 20%, 53%, 80%, 100%': { transform: 'translateY(0)' },
+          '40%, 43%': { transform: 'translateY(-15px)' },
+          '70%': { transform: 'translateY(-7px)' },
+          '90%': { transform: 'translateY(-3px)' },
+        },
+      },
+      transitionDuration: {
+        '350': '350ms',
+        '400': '400ms',
+        '600': '600ms',
+        '800': '800ms',
+        '900': '900ms',
+        '1200': '1200ms',
+      },
+      transitionTimingFunction: {
+        'smooth': 'cubic-bezier(0.4, 0, 0.2, 1)',
+        'smooth-in': 'cubic-bezier(0.4, 0, 1, 1)',
+        'smooth-out': 'cubic-bezier(0, 0, 0.2, 1)',
+        'smooth-in-out': 'cubic-bezier(0.4, 0, 0.2, 1)',
       },
       screens: {
         'xs': '475px',

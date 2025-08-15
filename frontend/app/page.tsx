@@ -2,14 +2,14 @@ import Link from 'next/link'
 
 export default function Home() {
   return (
-    <>
+    <div className="scroll-smooth-fast">
       {/* Navigation Header */}
-      <nav className="absolute top-0 left-0 right-0 z-50 bg-white/10 backdrop-blur-md border-b border-white/20">
+      <nav className="absolute top-0 left-0 right-0 z-50 bg-white/10 backdrop-blur-md border-b border-white/20 transition-smooth">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex items-center justify-between h-14 lg:h-16">
             {/* Logo and Brand */}
-            <div className="flex items-center gap-2">
-              <div className="w-7 h-7 sm:w-8 sm:h-8 bg-gradient-to-br from-blue-600 to-blue-800 rounded-lg flex items-center justify-center shadow-lg">
+            <div className="flex items-center gap-2 hover-lift">
+              <div className="w-7 h-7 sm:w-8 sm:h-8 bg-gradient-to-br from-blue-600 to-blue-800 rounded-lg flex items-center justify-center shadow-lg hover-lift">
                 <span className="text-white font-bold text-xs sm:text-sm">🏛️</span>
               </div>
               <span className="font-heading text-base sm:text-lg lg:text-xl font-bold tracking-wide text-white drop-shadow-lg">
@@ -18,22 +18,22 @@ export default function Home() {
             </div>
             {/* Desktop Navigation Links */}
             <div className="hidden lg:flex items-center gap-4">
-              <Link href="/" className="text-white/90 hover:text-white font-medium transition-colors text-sm px-3 py-1.5 rounded-lg hover:bg-white/10 backdrop-blur-sm">Home</Link>
-              <Link href="/services" className="text-white/90 hover:text-white font-medium transition-colors text-sm px-3 py-1.5 rounded-lg hover:bg-white/10 backdrop-blur-sm">Services</Link>
-              <Link href="/about" className="text-white/90 hover:text-white font-medium transition-colors text-sm px-3 py-1.5 rounded-lg hover:bg-white/10 backdrop-blur-sm">About</Link>
-              <Link href="/contact" className="text-white/90 hover:text-white font-medium transition-colors text-sm px-3 py-1.5 rounded-lg hover:bg-white/10 backdrop-blur-sm">Contact</Link>
+              <Link href="/" className="text-white/90 hover:text-white font-medium transition-smooth text-sm px-3 py-1.5 rounded-lg hover:bg-white/10 backdrop-blur-sm hover-lift">Home</Link>
+              <Link href="/services" className="text-white/90 hover:text-white font-medium transition-smooth text-sm px-3 py-1.5 rounded-lg hover:bg-white/10 backdrop-blur-sm hover-lift">Services</Link>
+              <Link href="/about" className="text-white/90 hover:text-white font-medium transition-smooth text-sm px-3 py-1.5 rounded-lg hover:bg-white/10 backdrop-blur-sm hover-lift">About</Link>
+              <Link href="/contact" className="text-white/90 hover:text-white font-medium transition-smooth text-sm px-3 py-1.5 rounded-lg hover:bg-white/10 backdrop-blur-sm hover-lift">Contact</Link>
               <div className="flex items-center gap-2 ml-2">
-                <Link href="/auth/login" className="text-white/90 hover:text-white font-medium transition-all duration-300 text-sm px-3 py-1.5 rounded-lg border border-white/30 hover:bg-white/10 backdrop-blur-sm">
+                <Link href="/auth/login" className="text-white/90 hover:text-white font-medium transition-smooth text-sm px-3 py-1.5 rounded-lg border border-white/30 hover:bg-white/10 backdrop-blur-sm hover-lift">
                   Sign In
                 </Link>
-                <Link href="/auth/register" className="bg-gradient-to-r from-blue-600 to-blue-700 text-white font-semibold px-4 py-1.5 rounded-lg shadow-lg hover:from-blue-700 hover:to-blue-800 hover:shadow-xl transform hover:scale-105 transition-all duration-300 text-sm">
+                <Link href="/auth/register" className="bg-gradient-to-r from-blue-600 to-blue-700 text-white font-semibold px-4 py-1.5 rounded-lg shadow-lg hover:from-blue-700 hover:to-blue-800 hover:shadow-xl transition-smooth hover-lift text-sm">
                   Get Started
                 </Link>
               </div>
             </div>
             {/* Mobile menu button */}
             <div className="lg:hidden">
-              <button className="text-white/90 hover:text-white p-1.5 rounded-lg focus:ring-2 focus:ring-white/30 hover:bg-white/10 transition-all duration-200">
+              <button className="text-white/90 hover:text-white p-1.5 rounded-lg focus:ring-2 focus:ring-white/30 hover:bg-white/10 transition-smooth hover-lift">
                 <svg className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 6h16M4 12h16M4 18h16" />
                 </svg>
@@ -44,10 +44,10 @@ export default function Home() {
       </nav>
 
       {/* Hero Section */}
-      <main className="relative min-h-screen overflow-hidden">
+      <main className="relative min-h-screen overflow-hidden scroll-container">
         {/* Background Image */}
         <div 
-          className="absolute inset-0 bg-cover bg-center bg-no-repeat"
+          className="absolute inset-0 bg-cover bg-center bg-no-repeat transition-smooth"
           style={{
             backgroundImage: `url('/Manage.jpg')`
           }}
@@ -140,17 +140,17 @@ export default function Home() {
         </div>
         
         {/* Scroll Indicator */}
-        <div className="absolute bottom-8 left-1/2 transform -translate-x-1/2 animate-bounce">
-          <svg className="w-6 h-6 text-white/70" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <div className="absolute bottom-8 left-1/2 transform -translate-x-1/2 animate-bounce hover-lift">
+          <svg className="w-6 h-6 text-white/70 transition-smooth" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 14l-7 7m0 0l-7-7m7 7V3" />
           </svg>
         </div>
       </main>
 
       {/* Features Section */}
-      <section className="py-20 bg-gradient-to-br from-slate-50 to-white">
+      <section className="py-20 bg-gradient-to-br from-slate-50 to-white scroll-container fade-in">
         <div className="container-custom">
-          <div className="text-center mb-16">
+          <div className="text-center mb-16 slide-in-up">
             <h3 className="text-3xl md:text-4xl font-bold text-slate-800 mb-4">
               Why Choose LocalGov?
             </h3>
@@ -160,8 +160,8 @@ export default function Home() {
           </div>
           
           <div className="grid md:grid-cols-3 gap-8">
-            <div className="text-center group">
-              <div className="w-16 h-16 bg-gradient-to-br from-blue-500 to-blue-600 rounded-xl flex items-center justify-center mx-auto mb-6 group-hover:scale-110 transition-transform duration-300 shadow-lg">
+            <div className="text-center group hover-lift">
+              <div className="w-16 h-16 bg-gradient-to-br from-blue-500 to-blue-600 rounded-xl flex items-center justify-center mx-auto mb-6 group-hover:scale-110 transition-smooth shadow-lg">
                 <svg className="w-8 h-8 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
                 </svg>
@@ -256,6 +256,6 @@ export default function Home() {
           </div>
         </div>
       </footer>
-    </>
+    </div>
   )
 }
