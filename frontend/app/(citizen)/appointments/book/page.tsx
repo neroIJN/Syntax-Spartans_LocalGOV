@@ -167,11 +167,11 @@ export default function BookAppointmentPage() {
 
   return (
     <DashboardLayout>
-      <div className="px-4 sm:px-6 lg:px-8 py-10 bg-gradient-to-br from-slate-50 via-blue-50 to-indigo-100 min-h-screen">
+      <div className="px-4 sm:px-6 lg:px-8 py-8">
         {/* Header */}
         <div className="mb-8">
-          <h1 className="text-4xl font-bold text-slate-900 mb-4">Schedule Appointment</h1>
-          <p className="text-xl text-slate-700">Select a service and then choose a date and time for your appointment.</p>
+          <h1 className="text-4xl font-bold text-white mb-4 drop-shadow-lg">Schedule Appointment</h1>
+          <p className="text-xl text-blue-100">Select a service and then choose a date and time for your appointment.</p>
         </div>
 
         {/* Progress Steps */}
@@ -183,10 +183,10 @@ export default function BookAppointmentPage() {
               { step: 3, title: 'Select Time', icon: ClockIcon }
             ].map((item) => (
               <div key={item.step} className="flex items-center">
-                <div className={`w-12 h-12 rounded-full flex items-center justify-center ${
+                <div className={`w-12 h-12 rounded-full flex items-center justify-center shadow-lg ${
                   currentStep >= item.step 
                     ? 'bg-blue-600 text-white' 
-                    : 'bg-slate-300 text-slate-600'
+                    : 'bg-white/20 backdrop-blur-md text-blue-200 border border-white/30'
                 }`}>
                   {currentStep > item.step ? (
                     <CheckCircleIcon className="h-6 w-6" />
@@ -195,12 +195,12 @@ export default function BookAppointmentPage() {
                   )}
                 </div>
                 <span className={`ml-3 text-lg font-semibold ${
-                  currentStep >= item.step ? 'text-slate-900' : 'text-slate-500'
+                  currentStep >= item.step ? 'text-white' : 'text-blue-200'
                 }`}>
                   {item.title}
                 </span>
                 {item.step < 3 && (
-                  <ArrowRightIcon className="h-6 w-6 text-slate-400 ml-8" />
+                  <ArrowRightIcon className="h-6 w-6 text-blue-300 ml-8" />
                 )}
               </div>
             ))}
@@ -210,9 +210,9 @@ export default function BookAppointmentPage() {
         <div className="max-w-6xl mx-auto">
           {/* Step 1: Service Selection */}
           {currentStep === 1 && (
-            <div className="bg-white rounded-2xl shadow-xl border-2 border-blue-100 overflow-hidden">
-              <div className="px-8 py-6 border-b border-slate-200 bg-gradient-to-r from-slate-50 to-blue-50">
-                <h2 className="text-2xl font-bold text-slate-900">Select a Service</h2>
+            <div className="bg-white/10 backdrop-blur-md rounded-2xl shadow-2xl border border-white/20 overflow-hidden">
+              <div className="px-8 py-6 border-b border-white/20 bg-white/5">
+                <h2 className="text-2xl font-bold text-white">Select a Service</h2>
               </div>
               <div className="p-8">
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
@@ -222,12 +222,12 @@ export default function BookAppointmentPage() {
                       onClick={() => setSelectedService(service.id)}
                       className={`p-6 rounded-xl border-2 text-left transition-all duration-200 ${
                         selectedService === service.id
-                          ? 'border-blue-500 bg-blue-50 shadow-lg'
-                          : 'border-slate-300 bg-slate-50 hover:border-blue-300 hover:bg-blue-50'
+                          ? 'border-blue-400 bg-blue-600/30 shadow-lg backdrop-blur-sm'
+                          : 'border-white/30 bg-white/10 hover:border-blue-400/50 hover:bg-white/15 backdrop-blur-sm'
                       }`}
                     >
-                      <h3 className="text-xl font-bold text-slate-900 mb-2">{service.name}</h3>
-                      <div className="space-y-2 text-slate-600">
+                      <h3 className="text-xl font-bold text-white mb-2">{service.name}</h3>
+                      <div className="space-y-2 text-blue-100">
                         <p>Department: {service.department}</p>
                         <p>Duration: {service.duration}</p>
                         <p>Fee: {service.fee}</p>
@@ -243,14 +243,14 @@ export default function BookAppointmentPage() {
           {currentStep === 2 && (
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
               {/* Current Month */}
-              <div className="bg-white rounded-2xl shadow-xl border-2 border-emerald-100 overflow-hidden">
-                <div className="px-8 py-6 border-b border-slate-200 bg-gradient-to-r from-slate-50 to-emerald-50">
-                  <h3 className="text-2xl font-bold text-slate-900">{currentMonth} 2024</h3>
+              <div className="bg-white/10 backdrop-blur-md rounded-2xl shadow-2xl border border-white/20 overflow-hidden">
+                <div className="px-8 py-6 border-b border-white/20 bg-white/5">
+                  <h3 className="text-2xl font-bold text-white">{currentMonth} 2024</h3>
                 </div>
                 <div className="p-6">
                   <div className="grid grid-cols-7 gap-2 mb-4">
                     {['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'].map(day => (
-                      <div key={day} className="text-center text-sm font-semibold text-slate-600 py-2">
+                      <div key={day} className="text-center text-sm font-semibold text-blue-200 py-2">
                         {day}
                       </div>
                     ))}
@@ -263,7 +263,7 @@ export default function BookAppointmentPage() {
                         className={`p-3 rounded-lg text-center transition-all duration-200 ${
                           selectedDate === dateObj.date
                             ? 'bg-emerald-600 text-white shadow-lg transform scale-105'
-                            : 'bg-slate-100 hover:bg-emerald-100 text-slate-900 hover:text-emerald-700'
+                            : 'bg-white/10 hover:bg-emerald-500/30 text-white hover:text-emerald-100 backdrop-blur-sm border border-white/20'
                         }`}
                       >
                         <div className="text-lg font-bold">{dateObj.day}</div>
@@ -275,14 +275,14 @@ export default function BookAppointmentPage() {
               </div>
 
               {/* Next Month */}
-              <div className="bg-white rounded-2xl shadow-xl border-2 border-purple-100 overflow-hidden">
-                <div className="px-8 py-6 border-b border-slate-200 bg-gradient-to-r from-slate-50 to-purple-50">
-                  <h3 className="text-2xl font-bold text-slate-900">{nextMonth} 2024</h3>
+              <div className="bg-white/10 backdrop-blur-md rounded-2xl shadow-2xl border border-white/20 overflow-hidden">
+                <div className="px-8 py-6 border-b border-white/20 bg-white/5">
+                  <h3 className="text-2xl font-bold text-white">{nextMonth} 2024</h3>
                 </div>
                 <div className="p-6">
                   <div className="grid grid-cols-7 gap-2 mb-4">
                     {['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'].map(day => (
-                      <div key={day} className="text-center text-sm font-semibold text-slate-600 py-2">
+                      <div key={day} className="text-center text-sm font-semibold text-blue-200 py-2">
                         {day}
                       </div>
                     ))}
@@ -295,7 +295,7 @@ export default function BookAppointmentPage() {
                         className={`p-3 rounded-lg text-center transition-all duration-200 ${
                           selectedDate === dateObj.date
                             ? 'bg-purple-600 text-white shadow-lg transform scale-105'
-                            : 'bg-slate-100 hover:bg-purple-100 text-slate-900 hover:text-purple-700'
+                            : 'bg-white/10 hover:bg-purple-500/30 text-white hover:text-purple-100 backdrop-blur-sm border border-white/20'
                         }`}
                       >
                         <div className="text-lg font-bold">{dateObj.day}</div>
@@ -310,10 +310,10 @@ export default function BookAppointmentPage() {
 
           {/* Step 3: Time Selection */}
           {currentStep === 3 && (
-            <div className="bg-white rounded-2xl shadow-xl border-2 border-purple-100 overflow-hidden">
-              <div className="px-8 py-6 border-b border-slate-200 bg-gradient-to-r from-slate-50 to-purple-50">
-                <h2 className="text-2xl font-bold text-slate-900">Available Times</h2>
-                <p className="text-slate-600 mt-2">
+            <div className="bg-white/10 backdrop-blur-md rounded-2xl shadow-2xl border border-white/20 overflow-hidden">
+              <div className="px-8 py-6 border-b border-white/20 bg-white/5">
+                <h2 className="text-2xl font-bold text-white">Available Times</h2>
+                <p className="text-blue-100 mt-2">
                   Selected Date: {selectedDate ? new Date(selectedDate).toLocaleDateString('en-US', { 
                     weekday: 'long', 
                     year: 'numeric', 
@@ -327,19 +327,19 @@ export default function BookAppointmentPage() {
                 <div className="mb-6 flex flex-wrap gap-4 text-sm">
                   <div className="flex items-center">
                     <div className="w-4 h-4 bg-emerald-500 rounded mr-2"></div>
-                    <span>Available</span>
+                    <span className="text-blue-100">Available</span>
                   </div>
                   <div className="flex items-center">
                     <div className="w-4 h-4 bg-yellow-500 rounded mr-2"></div>
-                    <span>Queue</span>
+                    <span className="text-blue-100">Queue</span>
                   </div>
                   <div className="flex items-center">
                     <div className="w-4 h-4 bg-red-500 rounded mr-2"></div>
-                    <span>Unavailable</span>
+                    <span className="text-blue-100">Unavailable</span>
                   </div>
                   <div className="flex items-center">
                     <div className="w-4 h-4 bg-purple-600 rounded mr-2"></div>
-                    <span>Selected</span>
+                    <span className="text-blue-100">Selected</span>
                   </div>
                 </div>
 
@@ -347,14 +347,14 @@ export default function BookAppointmentPage() {
                   {availableTimes.map((timeSlot) => (
                     <div
                       key={timeSlot.time}
-                      className={`relative rounded-xl border-2 transition-all duration-200 ${
+                      className={`relative rounded-xl border transition-all duration-200 backdrop-blur-md ${
                         !timeSlot.available
-                          ? 'border-red-300 bg-red-50 cursor-not-allowed opacity-75'
+                          ? 'border-red-400/30 bg-red-600/20 cursor-not-allowed opacity-75'
                           : selectedTime === timeSlot.time
-                          ? 'border-purple-500 bg-purple-600 text-white shadow-lg transform scale-105'
+                          ? 'border-purple-400 bg-purple-600/30 text-white shadow-lg transform scale-105'
                           : timeSlot.queue > 0
-                          ? 'border-yellow-300 bg-yellow-50 hover:border-yellow-400 cursor-pointer'
-                          : 'border-emerald-300 bg-emerald-50 hover:border-emerald-400 cursor-pointer'
+                          ? 'border-yellow-400/30 bg-yellow-500/20 hover:bg-yellow-500/30 cursor-pointer'
+                          : 'border-emerald-400/30 bg-emerald-500/20 hover:bg-emerald-500/30 cursor-pointer'
                       }`}
                     >
                       <button
@@ -365,22 +365,22 @@ export default function BookAppointmentPage() {
                         {/* Time */}
                         <div className="flex items-center justify-between mb-2">
                           <span className={`text-lg font-bold ${
-                            selectedTime === timeSlot.time ? 'text-white' : 'text-slate-900'
+                            selectedTime === timeSlot.time ? 'text-white' : 'text-white'
                           }`}>
                             {timeSlot.time}
                           </span>
                           
                           {/* Status Badge */}
                           {!timeSlot.available ? (
-                            <span className="px-2 py-1 bg-red-200 text-red-800 text-xs rounded-full font-semibold">
+                            <span className="px-2 py-1 bg-red-500/30 text-red-100 text-xs rounded-full font-semibold border border-red-400/30">
                               Unavailable
                             </span>
                           ) : timeSlot.queue === 0 ? (
-                            <span className="px-2 py-1 bg-emerald-200 text-emerald-800 text-xs rounded-full font-semibold">
+                            <span className="px-2 py-1 bg-emerald-500/30 text-emerald-100 text-xs rounded-full font-semibold border border-emerald-400/30">
                               Available
                             </span>
                           ) : (
-                            <span className="px-2 py-1 bg-yellow-200 text-yellow-800 text-xs rounded-full font-semibold">
+                            <span className="px-2 py-1 bg-yellow-500/30 text-yellow-100 text-xs rounded-full font-semibold border border-yellow-400/30">
                               Queue: {timeSlot.queue}
                             </span>
                           )}
@@ -388,7 +388,7 @@ export default function BookAppointmentPage() {
 
                         {/* Wait Time */}
                         <div className={`text-sm ${
-                          selectedTime === timeSlot.time ? 'text-purple-100' : 'text-slate-600'
+                          selectedTime === timeSlot.time ? 'text-purple-100' : 'text-blue-100'
                         }`}>
                           {timeSlot.available ? (
                             <div className="flex items-center">
@@ -406,7 +406,7 @@ export default function BookAppointmentPage() {
                         {/* Additional Info for Queue */}
                         {timeSlot.available && timeSlot.queue > 0 && (
                           <div className={`mt-2 text-xs ${
-                            selectedTime === timeSlot.time ? 'text-purple-200' : 'text-slate-500'
+                            selectedTime === timeSlot.time ? 'text-purple-200' : 'text-blue-200'
                           }`}>
                             {timeSlot.queue} {timeSlot.queue === 1 ? 'person' : 'people'} ahead
                           </div>
@@ -418,9 +418,9 @@ export default function BookAppointmentPage() {
 
                 {/* Next Available Slots Info */}
                 {availableTimes.filter(slot => slot.available).length > 0 && (
-                  <div className="mt-8 p-4 bg-blue-50 border border-blue-200 rounded-xl">
-                    <h4 className="font-semibold text-blue-900 mb-2">Quick Tips:</h4>
-                    <ul className="text-sm text-blue-800 space-y-1">
+                  <div className="mt-8 p-4 bg-blue-600/20 border border-blue-400/30 rounded-xl backdrop-blur-sm">
+                    <h4 className="font-semibold text-blue-100 mb-2">Quick Tips:</h4>
+                    <ul className="text-sm text-blue-200 space-y-1">
                       <li>• Green slots are immediately available</li>
                       <li>• Yellow slots have a queue but shorter wait times</li>
                       <li>• Queue times are estimates and may vary</li>
@@ -439,8 +439,8 @@ export default function BookAppointmentPage() {
               disabled={currentStep === 1}
               className={`inline-flex items-center px-8 py-4 rounded-xl text-lg font-semibold transition-all duration-200 ${
                 currentStep === 1
-                  ? 'bg-slate-300 text-slate-500 cursor-not-allowed'
-                  : 'bg-slate-600 hover:bg-slate-700 text-white shadow-lg'
+                  ? 'bg-white/20 text-blue-200 cursor-not-allowed backdrop-blur-md border border-white/20'
+                  : 'bg-white/20 hover:bg-white/30 text-white shadow-lg backdrop-blur-md border border-white/20'
               }`}
             >
               <ArrowLeftIcon className="h-5 w-5 mr-2" />
@@ -453,8 +453,8 @@ export default function BookAppointmentPage() {
                 disabled={!canProceed()}
                 className={`inline-flex items-center px-8 py-4 rounded-xl text-lg font-semibold transition-all duration-200 ${
                   canProceed()
-                    ? 'bg-blue-600 hover:bg-blue-700 text-white shadow-lg'
-                    : 'bg-slate-300 text-slate-500 cursor-not-allowed'
+                    ? 'bg-gradient-to-r from-blue-600 to-blue-700 hover:from-blue-700 hover:to-blue-800 text-white shadow-lg transform hover:scale-105'
+                    : 'bg-white/20 text-blue-200 cursor-not-allowed backdrop-blur-md border border-white/20'
                 }`}
               >
                 Next
@@ -466,8 +466,8 @@ export default function BookAppointmentPage() {
                 disabled={!canProceed()}
                 className={`inline-flex items-center px-8 py-4 rounded-xl text-lg font-semibold transition-all duration-200 ${
                   canProceed()
-                    ? 'bg-emerald-600 hover:bg-emerald-700 text-white shadow-lg'
-                    : 'bg-slate-300 text-slate-500 cursor-not-allowed'
+                    ? 'bg-gradient-to-r from-emerald-600 to-emerald-700 hover:from-emerald-700 hover:to-emerald-800 text-white shadow-lg transform hover:scale-105'
+                    : 'bg-white/20 text-blue-200 cursor-not-allowed backdrop-blur-md border border-white/20'
                 }`}
               >
                 Confirm Appointment
@@ -478,25 +478,25 @@ export default function BookAppointmentPage() {
 
           {/* Summary */}
           {(selectedService || selectedDate || selectedTime) && (
-            <div className="mt-12 bg-blue-50 border-2 border-blue-200 rounded-xl p-6">
-              <h3 className="text-xl font-bold text-blue-900 mb-4">Appointment Summary</h3>
-              <div className="grid grid-cols-1 md:grid-cols-3 gap-4 text-blue-800">
+            <div className="mt-12 bg-blue-600/20 border border-blue-400/30 rounded-xl p-6 backdrop-blur-md">
+              <h3 className="text-xl font-bold text-blue-100 mb-4">Appointment Summary</h3>
+              <div className="grid grid-cols-1 md:grid-cols-3 gap-4 text-blue-200">
                 {selectedService && (
                   <div>
                     <span className="font-semibold">Service:</span>
-                    <div className="text-blue-900">{getSelectedServiceDetails()?.name}</div>
+                    <div className="text-white">{getSelectedServiceDetails()?.name}</div>
                   </div>
                 )}
                 {selectedDate && (
                   <div>
                     <span className="font-semibold">Date:</span>
-                    <div className="text-blue-900">{new Date(selectedDate).toLocaleDateString()}</div>
+                    <div className="text-white">{new Date(selectedDate).toLocaleDateString()}</div>
                   </div>
                 )}
                 {selectedTime && (
                   <div>
                     <span className="font-semibold">Time:</span>
-                    <div className="text-blue-900">{selectedTime}</div>
+                    <div className="text-white">{selectedTime}</div>
                   </div>
                 )}
               </div>

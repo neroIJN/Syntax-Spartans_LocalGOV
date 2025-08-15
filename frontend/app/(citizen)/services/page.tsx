@@ -161,26 +161,26 @@ export default function ServicesPage() {
 
   return (
     <DashboardLayout>
-      <div className="px-4 sm:px-6 lg:px-8 py-10 bg-gradient-to-br from-slate-50 via-blue-50 to-indigo-100 min-h-screen">
+      <div className="px-4 sm:px-6 lg:px-8 py-8">
         {/* Header */}
         <div className="mb-8">
-          <h1 className="text-4xl font-bold text-slate-900 mb-4">Government Services</h1>
-          <p className="text-xl text-slate-700">Discover and access various government services online.</p>
+          <h1 className="text-4xl font-bold text-white mb-4 drop-shadow-lg">Government Services</h1>
+          <p className="text-xl text-blue-100">Discover and access various government services online.</p>
         </div>
 
         {/* Search and Filter */}
-        <div className="mb-8 bg-white rounded-2xl shadow-xl border-2 border-blue-100 p-6">
+        <div className="mb-8 bg-white/10 backdrop-blur-md rounded-2xl shadow-2xl border border-white/20 p-6">
           <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
             {/* Search */}
             <div className="lg:col-span-2">
               <div className="relative">
-                <MagnifyingGlassIcon className="absolute left-4 top-1/2 transform -translate-y-1/2 h-6 w-6 text-slate-400" />
+                <MagnifyingGlassIcon className="absolute left-4 top-1/2 transform -translate-y-1/2 h-6 w-6 text-blue-200" />
                 <input
                   type="text"
                   placeholder="Search for services..."
                   value={searchTerm}
                   onChange={(e) => setSearchTerm(e.target.value)}
-                  className="w-full pl-12 pr-4 py-4 text-lg border-2 border-slate-300 rounded-xl focus:border-blue-500 focus:ring-2 focus:ring-blue-200 focus:outline-none"
+                  className="w-full pl-12 pr-4 py-4 text-lg border border-white/30 rounded-xl focus:border-blue-400 focus:ring-2 focus:ring-blue-300/50 focus:outline-none bg-white/10 backdrop-blur-sm text-white placeholder-blue-200"
                 />
               </div>
             </div>
@@ -190,7 +190,7 @@ export default function ServicesPage() {
               <select
                 value={selectedCategory}
                 onChange={(e) => setSelectedCategory(e.target.value)}
-                className="w-full py-4 px-4 text-lg border-2 border-slate-300 rounded-xl focus:border-blue-500 focus:ring-2 focus:ring-blue-200 focus:outline-none bg-white"
+                className="w-full py-4 px-4 text-lg border border-white/30 rounded-xl focus:border-blue-400 focus:ring-2 focus:ring-blue-300/50 focus:outline-none bg-white/10 backdrop-blur-sm text-white"
               >
                 {categories.map(category => (
                   <option key={category} value={category}>
@@ -205,8 +205,8 @@ export default function ServicesPage() {
         {/* Popular Services */}
         {searchTerm === '' && selectedCategory === 'All' && (
           <div className="mb-12">
-            <h2 className="text-3xl font-bold text-slate-900 mb-6 flex items-center">
-              <StarIcon className="h-8 w-8 text-yellow-500 mr-3" />
+            <h2 className="text-3xl font-bold text-white mb-6 flex items-center drop-shadow-lg">
+              <StarIcon className="h-8 w-8 text-yellow-400 mr-3" />
               Popular Services
             </h2>
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
@@ -216,18 +216,18 @@ export default function ServicesPage() {
                   <button
                     key={service.id}
                     onClick={() => handleServiceClick(service.id)}
-                    className="bg-white rounded-2xl shadow-xl border-2 border-yellow-100 p-6 hover:shadow-2xl hover:border-yellow-300 transition-all duration-300 transform hover:scale-105 text-left"
+                    className="bg-white/10 backdrop-blur-md rounded-2xl shadow-2xl border border-white/20 p-6 hover:shadow-2xl hover:bg-white/15 transition-all duration-300 transform hover:scale-105 text-left"
                   >
-                    <div className={`w-16 h-16 ${service.color} rounded-xl flex items-center justify-center mb-4`}>
+                    <div className={`w-16 h-16 ${service.color} rounded-xl flex items-center justify-center mb-4 shadow-lg`}>
                       <IconComponent className="h-8 w-8 text-white" />
                     </div>
-                    <h3 className="text-xl font-bold text-slate-900 mb-2">{service.name}</h3>
+                    <h3 className="text-xl font-bold text-white mb-2">{service.name}</h3>
                     <div className="flex items-center mb-2">
-                      <StarIcon className="h-4 w-4 text-yellow-500 fill-current" />
-                      <span className="text-sm text-slate-600 ml-1">{service.rating}</span>
+                      <StarIcon className="h-4 w-4 text-yellow-400 fill-current" />
+                      <span className="text-sm text-blue-100 ml-1">{service.rating}</span>
                     </div>
-                    <p className="text-slate-600 text-sm mb-3">{service.description}</p>
-                    <div className="text-sm text-slate-500">
+                    <p className="text-blue-100 text-sm mb-3">{service.description}</p>
+                    <div className="text-sm text-blue-200">
                       <div className="flex items-center mb-1">
                         <ClockIcon className="h-4 w-4 mr-1" />
                         {service.duration}
@@ -246,17 +246,17 @@ export default function ServicesPage() {
 
         {/* All Services */}
         <div>
-          <h2 className="text-3xl font-bold text-slate-900 mb-6 flex items-center">
-            <BuildingOfficeIcon className="h-8 w-8 text-blue-600 mr-3" />
+          <h2 className="text-3xl font-bold text-white mb-6 flex items-center drop-shadow-lg">
+            <BuildingOfficeIcon className="h-8 w-8 text-blue-300 mr-3" />
             {searchTerm || selectedCategory !== 'All' ? 'Search Results' : 'All Services'}
-            <span className="ml-3 text-lg text-slate-600">({filteredServices.length})</span>
+            <span className="ml-3 text-lg text-blue-100">({filteredServices.length})</span>
           </h2>
 
           {filteredServices.length === 0 ? (
-            <div className="bg-white rounded-2xl shadow-xl border-2 border-slate-100 p-12 text-center">
-              <MagnifyingGlassIcon className="mx-auto h-16 w-16 text-slate-400 mb-4" />
-              <h3 className="text-2xl font-bold text-slate-900 mb-2">No services found</h3>
-              <p className="text-slate-600">Try adjusting your search terms or category filter.</p>
+            <div className="bg-white/10 backdrop-blur-md rounded-2xl shadow-2xl border border-white/20 p-12 text-center">
+              <MagnifyingGlassIcon className="mx-auto h-16 w-16 text-blue-200 mb-4" />
+              <h3 className="text-2xl font-bold text-white mb-2">No services found</h3>
+              <p className="text-blue-100">Try adjusting your search terms or category filter.</p>
             </div>
           ) : (
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
@@ -265,21 +265,21 @@ export default function ServicesPage() {
                 return (
                   <div
                     key={service.id}
-                    className="bg-white rounded-2xl shadow-xl border-2 border-slate-100 overflow-hidden hover:shadow-2xl hover:border-blue-300 transition-all duration-300"
+                    className="bg-white/10 backdrop-blur-md rounded-2xl shadow-2xl border border-white/20 overflow-hidden hover:shadow-2xl hover:bg-white/15 transition-all duration-300"
                   >
                     <div className="p-8">
                       <div className="flex items-start justify-between mb-6">
                         <div className="flex items-center">
-                          <div className={`w-14 h-14 ${service.color} rounded-xl flex items-center justify-center mr-4`}>
+                          <div className={`w-14 h-14 ${service.color} rounded-xl flex items-center justify-center mr-4 shadow-lg`}>
                             <IconComponent className="h-7 w-7 text-white" />
                           </div>
                           <div>
-                            <h3 className="text-2xl font-bold text-slate-900">{service.name}</h3>
+                            <h3 className="text-2xl font-bold text-white">{service.name}</h3>
                             <div className="flex items-center mt-1">
-                              <StarIcon className="h-4 w-4 text-yellow-500 fill-current" />
-                              <span className="text-sm text-slate-600 ml-1">{service.rating}</span>
+                              <StarIcon className="h-4 w-4 text-yellow-400 fill-current" />
+                              <span className="text-sm text-blue-100 ml-1">{service.rating}</span>
                               {service.popular && (
-                                <span className="ml-2 bg-yellow-100 text-yellow-800 text-xs px-2 py-1 rounded-full font-semibold">
+                                <span className="ml-2 bg-yellow-500/30 text-yellow-200 text-xs px-2 py-1 rounded-full font-semibold border border-yellow-400/30">
                                   Popular
                                 </span>
                               )}
@@ -288,48 +288,48 @@ export default function ServicesPage() {
                         </div>
                       </div>
 
-                      <p className="text-slate-600 mb-6 text-lg">{service.description}</p>
+                      <p className="text-blue-100 mb-6 text-lg">{service.description}</p>
 
                       <div className="grid grid-cols-2 gap-6 mb-6">
                         <div className="space-y-3">
-                          <div className="flex items-center text-slate-700">
-                            <BuildingOfficeIcon className="h-5 w-5 mr-2 text-blue-600" />
+                          <div className="flex items-center text-blue-200">
+                            <BuildingOfficeIcon className="h-5 w-5 mr-2 text-blue-300" />
                             <span className="font-semibold">Department:</span>
                           </div>
-                          <p className="text-slate-600 ml-7">{service.department}</p>
+                          <p className="text-blue-100 ml-7">{service.department}</p>
                         </div>
 
                         <div className="space-y-3">
-                          <div className="flex items-center text-slate-700">
-                            <ClockIcon className="h-5 w-5 mr-2 text-blue-600" />
+                          <div className="flex items-center text-blue-200">
+                            <ClockIcon className="h-5 w-5 mr-2 text-blue-300" />
                             <span className="font-semibold">Duration:</span>
                           </div>
-                          <p className="text-slate-600 ml-7">{service.duration}</p>
+                          <p className="text-blue-100 ml-7">{service.duration}</p>
                         </div>
 
                         <div className="space-y-3">
-                          <div className="flex items-center text-slate-700">
-                            <CurrencyDollarIcon className="h-5 w-5 mr-2 text-blue-600" />
+                          <div className="flex items-center text-blue-200">
+                            <CurrencyDollarIcon className="h-5 w-5 mr-2 text-blue-300" />
                             <span className="font-semibold">Fee:</span>
                           </div>
-                          <p className="text-slate-600 ml-7">{service.fee}</p>
+                          <p className="text-blue-100 ml-7">{service.fee}</p>
                         </div>
 
                         <div className="space-y-3">
-                          <div className="flex items-center text-slate-700">
-                            <DocumentTextIcon className="h-5 w-5 mr-2 text-blue-600" />
+                          <div className="flex items-center text-blue-200">
+                            <DocumentTextIcon className="h-5 w-5 mr-2 text-blue-300" />
                             <span className="font-semibold">Category:</span>
                           </div>
-                          <p className="text-slate-600 ml-7">{service.category}</p>
+                          <p className="text-blue-100 ml-7">{service.category}</p>
                         </div>
                       </div>
 
                       <div className="mb-6">
-                        <h4 className="font-semibold text-slate-900 mb-3">Required Documents:</h4>
+                        <h4 className="font-semibold text-white mb-3">Required Documents:</h4>
                         <ul className="space-y-2">
                           {service.requirements.map((req, index) => (
-                            <li key={index} className="flex items-center text-slate-600">
-                              <div className="w-2 h-2 bg-blue-600 rounded-full mr-3"></div>
+                            <li key={index} className="flex items-center text-blue-100">
+                              <div className="w-2 h-2 bg-blue-400 rounded-full mr-3"></div>
                               {req}
                             </li>
                           ))}
@@ -338,7 +338,7 @@ export default function ServicesPage() {
 
                       <button
                         onClick={() => handleServiceClick(service.id)}
-                        className="w-full bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700 text-white font-bold py-4 px-6 rounded-xl transition-all duration-200 flex items-center justify-center shadow-lg hover:shadow-xl"
+                        className="w-full bg-gradient-to-r from-blue-600 to-blue-700 hover:from-blue-700 hover:to-blue-800 text-white font-bold py-4 px-6 rounded-xl transition-all duration-200 flex items-center justify-center shadow-lg hover:shadow-xl transform hover:scale-105"
                       >
                         Apply for Service
                         <ArrowRightIcon className="h-5 w-5 ml-2" />

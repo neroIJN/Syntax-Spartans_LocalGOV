@@ -14,7 +14,8 @@ import {
   EyeIcon,
   ChevronLeftIcon,
   ChevronRightIcon,
-  BuildingOfficeIcon
+  BuildingOfficeIcon,
+  MapPinIcon
 } from '@heroicons/react/24/outline';
 import Link from 'next/link';
 import Image from 'next/image';
@@ -267,17 +268,17 @@ export default function Dashboard() {
 
   return (
     <DashboardLayout>
-      <div className="px-4 sm:px-6 lg:px-8 py-10 bg-gradient-to-br from-slate-50 via-blue-50 to-indigo-100 min-h-screen">
+      <div className="px-4 sm:px-6 lg:px-8 py-8">
         {/* Welcome Section */}
         <div className="mb-8">
-          <div className="bg-white rounded-2xl shadow-xl border-2 border-blue-100 overflow-hidden">
-            <div className="bg-gradient-to-r from-blue-600 via-blue-700 to-indigo-700 px-8 py-12">
+          <div className="bg-white/10 backdrop-blur-md rounded-2xl shadow-2xl border border-white/20 overflow-hidden">
+            <div className="bg-gradient-to-r from-blue-600/20 via-blue-700/20 to-indigo-700/20 backdrop-blur-sm px-8 py-12">
               <div className="flex items-center space-x-6">
-                <div className="h-20 w-20 rounded-full bg-white/30 backdrop-blur-sm flex items-center justify-center border-2 border-white/50">
+                <div className="h-20 w-20 rounded-full bg-white/20 backdrop-blur-sm flex items-center justify-center border-2 border-white/30 shadow-lg">
                   <UserCircleIcon className="h-12 w-12 text-white" />
                 </div>
                 <div>
-                  <h1 className="text-4xl font-bold text-white mb-2">
+                  <h1 className="text-4xl font-bold text-white mb-2 drop-shadow-lg">
                     Welcome back, {user.name}!
                   </h1>
                   <p className="text-blue-100 text-xl font-medium">
@@ -290,7 +291,7 @@ export default function Dashboard() {
                     </div>
                     <div className="flex items-center space-x-2">
                       <span className="text-sm font-medium">Status:</span>
-                      <span className="bg-green-500 text-white px-3 py-1 rounded-full text-xs font-bold">Active</span>
+                      <span className="bg-green-500 text-white px-3 py-1 rounded-full text-xs font-bold shadow-lg">Active</span>
                     </div>
                   </div>
                 </div>
@@ -300,14 +301,14 @@ export default function Dashboard() {
         </div>
 
         {/* Animated Government Services Carousel */}
-        <div className="mb-10 bg-white rounded-2xl shadow-xl border-2 border-blue-100 overflow-hidden">
-          <div className="px-8 py-6 border-b border-slate-200 bg-gradient-to-r from-slate-50 to-blue-50">
-            <h3 className="text-3xl font-bold text-slate-900 mb-2 text-center">Sri Lankan Government Services</h3>
-            <p className="text-lg text-slate-600 text-center">Access official government departments online</p>
+        <div className="mb-10 bg-white/10 backdrop-blur-md rounded-2xl shadow-2xl border border-white/20 overflow-hidden">
+          <div className="px-8 py-6 border-b border-white/20 bg-white/5">
+            <h3 className="text-3xl font-bold text-white mb-2 text-center drop-shadow-lg">Sri Lankan Government Services</h3>
+            <p className="text-lg text-blue-100 text-center">Access official government departments online</p>
           </div>
           
           {/* Animated Carousel */}
-          <div className="relative bg-white overflow-hidden">
+          <div className="relative bg-white/5 backdrop-blur-sm overflow-hidden">
             <div className="relative h-96 lg:h-80">
               {/* Carousel Content */}
               <div 
@@ -326,29 +327,29 @@ export default function Dashboard() {
                           className="object-cover hover:scale-105 transition-transform duration-500"
                           sizes="(max-width: 768px) 100vw, 50vw"
                         />
-                        <div className="absolute inset-0 bg-gradient-to-r from-black/20 to-transparent"></div>
+                        <div className="absolute inset-0 bg-gradient-to-r from-black/40 to-transparent"></div>
                       </div>
                       
                       {/* Content Side */}
-                      <div className="p-8 flex flex-col justify-center bg-gradient-to-br from-slate-50 to-blue-50">
+                      <div className="p-8 flex flex-col justify-center bg-white/10 backdrop-blur-sm">
                         <div className="max-w-md">
-                          <h4 className="text-2xl lg:text-3xl font-bold text-slate-900 mb-2">
+                          <h4 className="text-2xl lg:text-3xl font-bold text-white mb-2 drop-shadow-lg">
                             {service.title}
                           </h4>
-                          <h5 className="text-lg font-semibold text-blue-600 mb-4">
+                          <h5 className="text-lg font-semibold text-blue-200 mb-4">
                             {service.subtitle}
                           </h5>
-                          <p className="text-slate-700 mb-6 leading-relaxed">
+                          <p className="text-blue-100 mb-6 leading-relaxed">
                             {service.description}
                           </p>
                           
                           {/* Services List */}
                           <div className="mb-6">
-                            <h6 className="font-semibold text-slate-900 mb-3">Available Services:</h6>
+                            <h6 className="font-semibold text-white mb-3">Available Services:</h6>
                             <div className="space-y-2">
                               {service.services.map((svc, idx) => (
-                                <div key={idx} className="flex items-center text-slate-600">
-                                  <CheckCircleIcon className="h-4 w-4 text-emerald-500 mr-2 flex-shrink-0" />
+                                <div key={idx} className="flex items-center text-blue-100">
+                                  <CheckCircleIcon className="h-4 w-4 text-green-400 mr-2 flex-shrink-0" />
                                   <span className="text-sm">{svc}</span>
                                 </div>
                               ))}
@@ -430,13 +431,13 @@ export default function Dashboard() {
 
         {/* Quick Actions */}
         <div className="mb-10">
-          <h2 className="text-2xl font-bold text-slate-900 mb-8">Quick Actions</h2>
+          <h2 className="text-2xl font-bold text-white mb-8 drop-shadow-lg">Quick Actions</h2>
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
             {quickActions.map((action, index) => (
               <Link
                 key={index}
                 href={action.href}
-                className={`group relative overflow-hidden rounded-2xl bg-gradient-to-br ${action.color} p-8 text-white shadow-xl hover:shadow-2xl transform hover:scale-105 transition-all duration-300 border border-white/20`}
+                className={`group relative overflow-hidden rounded-2xl bg-gradient-to-br ${action.color} p-8 text-white shadow-2xl hover:shadow-blue-500/25 transform hover:scale-105 transition-all duration-300 border border-white/20 backdrop-blur-sm`}
               >
                 <div className={`absolute inset-0 bg-gradient-to-br ${action.hoverColor} opacity-0 group-hover:opacity-100 transition-opacity duration-300`} />
                 <div className="relative z-10">
@@ -456,45 +457,45 @@ export default function Dashboard() {
           </div>
         </div>
 
-        <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
-          {/* Upcoming Appointments */}
-          <div className="lg:col-span-2">
-            <div className="bg-white rounded-2xl shadow-xl border-2 border-blue-50 overflow-hidden">
-              <div className="px-8 py-6 border-b border-slate-200 flex items-center justify-between bg-gradient-to-r from-slate-50 to-blue-50">
-                <h3 className="text-2xl font-bold text-slate-900">Upcoming Appointments</h3>
+        {/* Upcoming Appointments */}
+        <div className="mb-8">
+          <div className="bg-white/10 backdrop-blur-md rounded-2xl shadow-2xl border border-white/20 overflow-hidden">
+              <div className="px-8 py-6 border-b border-white/20 flex items-center justify-between bg-white/5">
+                <h3 className="text-2xl font-bold text-white drop-shadow-lg">Upcoming Appointments</h3>
                 <Link 
                   href="/appointments" 
-                  className="bg-blue-600 hover:bg-blue-700 text-white px-6 py-3 rounded-lg font-semibold flex items-center transition-colors duration-200 shadow-lg"
+                  className="bg-blue-600 hover:bg-blue-700 text-white px-6 py-3 rounded-lg font-semibold flex items-center transition-colors duration-200 shadow-lg backdrop-blur-sm"
                 >
                   View All
                   <ArrowRightIcon className="ml-2 h-5 w-5" />
                 </Link>
               </div>
-              <div className="divide-y divide-slate-200">
+              <div className="divide-y divide-white/10">
                 {upcomingAppointments.length > 0 ? (
                   upcomingAppointments.map((appointment) => (
-                    <div key={appointment.id} className="p-8 hover:bg-gradient-to-r hover:from-blue-50 hover:to-indigo-50 transition-all duration-200 border-l-4 border-transparent hover:border-blue-500">
+                    <div key={appointment.id} className="p-8 hover:bg-white/5 transition-all duration-200 border-l-4 border-transparent hover:border-blue-400">
                       <div className="flex items-start justify-between">
                         <div className="flex-1">
-                          <h4 className="text-xl font-bold text-slate-900 mb-3">
+                          <h4 className="text-xl font-bold text-white mb-3 drop-shadow-sm">
                             {appointment.service}
                           </h4>
-                          <p className="text-lg text-slate-700 mb-4 font-medium">
-                            {appointment.department}
-                          </p>
-                          <div className="flex items-center space-x-8 text-base text-slate-600">
+                          <div className="grid grid-cols-1 md:grid-cols-3 gap-4 text-blue-100">
                             <div className="flex items-center space-x-2">
-                              <span className="text-2xl">📅</span>
-                              <span className="font-semibold">{new Date(appointment.date).toLocaleDateString()}</span>
+                              <BuildingOfficeIcon className="h-5 w-5 text-blue-300" />
+                              <span className="font-medium">{appointment.department}</span>
                             </div>
                             <div className="flex items-center space-x-2">
-                              <span className="text-2xl">🕒</span>
-                              <span className="font-semibold">{appointment.time}</span>
+                              <CalendarDaysIcon className="h-5 w-5 text-blue-300" />
+                              <span className="font-medium">{new Date(appointment.date).toLocaleDateString()}</span>
                             </div>
                             <div className="flex items-center space-x-2">
-                              <span className="text-2xl">📍</span>
-                              <span className="font-semibold">{appointment.location}</span>
+                              <ClockIcon className="h-5 w-5 text-blue-300" />
+                              <span className="font-medium">{appointment.time}</span>
                             </div>
+                          </div>
+                          <div className="mt-4 flex items-center space-x-2">
+                            <MapPinIcon className="h-5 w-5 text-blue-300" />
+                            <span className="text-blue-100 font-medium">{appointment.location}</span>
                           </div>
                         </div>
                         <span className={`px-4 py-2 rounded-xl text-sm font-bold uppercase tracking-wider ${getStatusColor(appointment.status)} shadow-lg`}>
@@ -505,11 +506,11 @@ export default function Dashboard() {
                   ))
                 ) : (
                   <div className="p-12 text-center">
-                    <CalendarDaysIcon className="h-16 w-16 text-slate-400 mx-auto mb-6" />
-                    <p className="text-xl text-slate-600 font-medium mb-4">No upcoming appointments</p>
+                    <CalendarDaysIcon className="h-16 w-16 text-white/40 mx-auto mb-6" />
+                    <p className="text-xl text-white/80 font-medium mb-4">No upcoming appointments</p>
                     <Link 
                       href="/appointments/book" 
-                      className="inline-flex items-center bg-blue-600 hover:bg-blue-700 text-white px-6 py-3 rounded-lg font-semibold transition-colors duration-200"
+                      className="inline-flex items-center bg-blue-600 hover:bg-blue-700 text-white px-6 py-3 rounded-lg font-semibold transition-colors duration-200 shadow-lg"
                     >
                       <PlusIcon className="h-5 w-5 mr-2" />
                       Book an appointment
@@ -520,75 +521,86 @@ export default function Dashboard() {
             </div>
           </div>
 
-          {/* Notifications */}
-          <div>
-            <div className="bg-white rounded-2xl shadow-xl border-2 border-blue-50 overflow-hidden mb-8">
-              <div className="px-8 py-6 border-b border-slate-200 bg-gradient-to-r from-slate-50 to-blue-50">
+          {/* Recent Notifications */}
+          <div className="mb-8">
+            <div className="bg-white/10 backdrop-blur-md rounded-2xl shadow-2xl border border-white/20 overflow-hidden">
+              <div className="px-8 py-6 border-b border-white/20 bg-white/5">
                 <div className="flex items-center justify-between">
-                  <h3 className="text-2xl font-bold text-slate-900">Recent Notifications</h3>
-                  {unreadCount > 0 && (
-                    <span className="bg-red-500 text-white px-3 py-1 rounded-full text-sm font-bold">
-                      {unreadCount} new
-                    </span>
-                  )}
+                  <h3 className="text-2xl font-bold text-white drop-shadow-lg">Recent Notifications</h3>
+                  <div className="flex items-center space-x-4">
+                    {unreadCount > 0 && (
+                      <span className="bg-red-500 text-white px-3 py-1 rounded-full text-sm font-bold shadow-lg">
+                        {unreadCount} new
+                      </span>
+                    )}
+                    <Link 
+                      href="/notifications" 
+                      className="bg-purple-600 hover:bg-purple-700 text-white px-6 py-3 rounded-lg font-semibold flex items-center transition-colors duration-200 shadow-lg backdrop-blur-sm"
+                    >
+                      View All
+                      <BellIcon className="ml-2 h-5 w-5" />
+                    </Link>
+                  </div>
                 </div>
               </div>
               <div className="max-h-96 overflow-y-auto">
                 {notifications.slice(0, 5).map((notification) => (
                   <div 
                     key={notification.id} 
-                    className={`p-6 border-b border-slate-200 last:border-b-0 cursor-pointer hover:bg-gradient-to-r hover:from-blue-50 hover:to-indigo-50 transition-all duration-200 ${!notification.read ? 'bg-gradient-to-r from-blue-50 to-blue-100 border-l-4 border-blue-500' : ''}`}
+                    className={`p-6 border-b border-white/10 last:border-b-0 cursor-pointer hover:bg-white/5 transition-all duration-200 ${!notification.read ? 'bg-white/10 border-l-4 border-purple-400' : ''}`}
                     onClick={() => markNotificationAsRead(notification.id)}
                   >
                     <div className="flex items-start space-x-4">
-                      <div className="flex-shrink-0 p-2 rounded-lg bg-gradient-to-r from-blue-100 to-indigo-100">
+                      <div className="flex-shrink-0 p-2 rounded-lg bg-white/10 backdrop-blur-sm">
                         {getNotificationIcon(notification.type)}
                       </div>
                       <div className="flex-1 min-w-0">
-                        <p className={`text-base font-bold ${!notification.read ? 'text-slate-900' : 'text-slate-700'} mb-2`}>
+                        <p className={`text-base font-bold ${!notification.read ? 'text-white' : 'text-blue-100'} mb-2`}>
                           {notification.title}
                         </p>
-                        <p className="text-sm text-slate-600 mb-3 leading-relaxed">
+                        <p className="text-sm text-blue-200 mb-3 leading-relaxed">
                           {notification.message}
                         </p>
-                        <p className="text-xs text-slate-500 font-medium">
+                        <p className="text-xs text-blue-300 font-medium">
                           {notification.time}
                         </p>
                       </div>
                       {!notification.read && (
-                        <div className="w-3 h-3 bg-blue-500 rounded-full shadow-lg"></div>
+                        <div className="w-3 h-3 bg-purple-400 rounded-full shadow-lg"></div>
                       )}
                     </div>
                   </div>
                 ))}
               </div>
             </div>
+          </div>
 
-            {/* Recent Documents */}
-            <div className="bg-white rounded-2xl shadow-xl border-2 border-blue-50 overflow-hidden">
-              <div className="px-8 py-6 border-b border-slate-200 flex items-center justify-between bg-gradient-to-r from-slate-50 to-blue-50">
-                <h3 className="text-2xl font-bold text-slate-900">Recent Documents</h3>
+          {/* Recent Documents */}
+          <div className="mb-8">
+            <div className="bg-white/10 backdrop-blur-md rounded-2xl shadow-2xl border border-white/20 overflow-hidden">
+              <div className="px-8 py-6 border-b border-white/20 flex items-center justify-between bg-white/5">
+                <h3 className="text-2xl font-bold text-white drop-shadow-lg">Recent Documents</h3>
                 <Link 
                   href="/documents" 
-                  className="bg-emerald-600 hover:bg-emerald-700 text-white px-6 py-3 rounded-lg font-semibold flex items-center transition-colors duration-200 shadow-lg"
+                  className="bg-emerald-600 hover:bg-emerald-700 text-white px-6 py-3 rounded-lg font-semibold flex items-center transition-colors duration-200 shadow-lg backdrop-blur-sm"
                 >
                   View All
-                  <EyeIcon className="ml-2 h-5 w-5" />
+                  <DocumentTextIcon className="ml-2 h-5 w-5" />
                 </Link>
               </div>
-              <div className="divide-y divide-slate-200">
+              <div className="divide-y divide-white/10">
                 {recentDocuments.map((document) => (
-                  <div key={document.id} className="p-6 hover:bg-gradient-to-r hover:from-emerald-50 hover:to-green-50 transition-all duration-200 border-l-4 border-transparent hover:border-emerald-500">
+                  <div key={document.id} className="p-6 hover:bg-white/5 transition-all duration-200 border-l-4 border-transparent hover:border-emerald-400">
                     <div className="flex items-center justify-between">
                       <div className="flex items-center space-x-4">
                         <div className="w-12 h-12 bg-gradient-to-r from-emerald-600 to-green-600 rounded-xl flex items-center justify-center shadow-lg">
                           <DocumentTextIcon className="h-6 w-6 text-white" />
                         </div>
                         <div>
-                          <p className="text-lg font-bold text-slate-900 mb-1">
+                          <p className="text-lg font-bold text-white mb-1 drop-shadow-sm">
                             {document.name}
                           </p>
-                          <p className="text-sm text-slate-600 font-medium">
+                          <p className="text-sm text-blue-200 font-medium">
                             {document.type} • {document.size} • {new Date(document.uploadDate).toLocaleDateString()}
                           </p>
                         </div>
@@ -602,7 +614,6 @@ export default function Dashboard() {
               </div>
             </div>
           </div>
-        </div>
       </div>
     </DashboardLayout>
   );

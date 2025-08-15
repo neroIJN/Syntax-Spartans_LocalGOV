@@ -167,16 +167,16 @@ export default function AppointmentsPage() {
 
   return (
     <DashboardLayout>
-      <div className="px-4 sm:px-6 lg:px-8 py-10 bg-gradient-to-br from-slate-50 via-blue-50 to-indigo-100 min-h-screen">
+      <div className="px-4 sm:px-6 lg:px-8 py-8">
         {/* Header */}
         <div className="mb-8 flex flex-col lg:flex-row lg:items-center lg:justify-between">
           <div className="mb-4 lg:mb-0">
-            <h1 className="text-4xl font-bold text-slate-900 mb-4">My Appointments</h1>
-            <p className="text-xl text-slate-700">Manage your scheduled appointments and view appointment history.</p>
+            <h1 className="text-4xl font-bold text-white mb-4 drop-shadow-lg">My Appointments</h1>
+            <p className="text-xl text-blue-100">Manage your scheduled appointments and view appointment history.</p>
           </div>
           <button
             onClick={() => router.push('/appointments/book')}
-            className="inline-flex items-center px-6 py-3 bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700 text-white font-semibold rounded-xl shadow-lg hover:shadow-xl transition-all duration-200"
+            className="inline-flex items-center px-6 py-3 bg-gradient-to-r from-blue-600 to-blue-700 hover:from-blue-700 hover:to-blue-800 text-white font-semibold rounded-xl shadow-lg hover:shadow-xl transition-all duration-200 transform hover:scale-105"
           >
             <PlusIcon className="h-5 w-5 mr-2" />
             Book New Appointment
@@ -191,14 +191,14 @@ export default function AppointmentsPage() {
             { label: 'Completed', value: appointments.filter(a => a.status === 'Completed').length, color: 'bg-purple-500', icon: CheckCircleIcon },
             { label: 'Cancelled', value: appointments.filter(a => a.status === 'Cancelled').length, color: 'bg-red-500', icon: XMarkIcon }
           ].map((stat, index) => (
-            <div key={index} className="bg-white rounded-2xl shadow-xl border-2 border-slate-100 p-6">
+            <div key={index} className="bg-white/10 backdrop-blur-md rounded-2xl shadow-2xl border border-white/20 p-6">
               <div className="flex items-center">
-                <div className={`w-12 h-12 ${stat.color} rounded-xl flex items-center justify-center mr-4`}>
+                <div className={`w-12 h-12 ${stat.color} rounded-xl flex items-center justify-center mr-4 shadow-lg`}>
                   <stat.icon className="h-6 w-6 text-white" />
                 </div>
                 <div>
-                  <p className="text-sm font-semibold text-slate-600">{stat.label}</p>
-                  <p className="text-2xl font-bold text-slate-900">{stat.value}</p>
+                  <p className="text-sm font-semibold text-blue-100">{stat.label}</p>
+                  <p className="text-2xl font-bold text-white">{stat.value}</p>
                 </div>
               </div>
             </div>
@@ -206,17 +206,17 @@ export default function AppointmentsPage() {
         </div>
 
         {/* Search and Filter */}
-        <div className="mb-8 bg-white rounded-2xl shadow-xl border-2 border-blue-100 p-6">
+        <div className="mb-8 bg-white/10 backdrop-blur-md rounded-2xl shadow-2xl border border-white/20 p-6">
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
             {/* Search */}
             <div className="relative">
-              <MagnifyingGlassIcon className="absolute left-4 top-1/2 transform -translate-y-1/2 h-5 w-5 text-slate-400" />
+              <MagnifyingGlassIcon className="absolute left-4 top-1/2 transform -translate-y-1/2 h-5 w-5 text-blue-200" />
               <input
                 type="text"
                 placeholder="Search appointments..."
                 value={searchTerm}
                 onChange={(e) => setSearchTerm(e.target.value)}
-                className="w-full pl-12 pr-4 py-3 border-2 border-slate-300 rounded-xl focus:border-blue-500 focus:ring-2 focus:ring-blue-200 focus:outline-none"
+                className="w-full pl-12 pr-4 py-3 border border-white/30 rounded-xl focus:border-blue-400 focus:ring-2 focus:ring-blue-300/50 focus:outline-none bg-white/10 backdrop-blur-sm text-white placeholder-blue-200"
               />
             </div>
 
@@ -225,7 +225,7 @@ export default function AppointmentsPage() {
               <select
                 value={filterStatus}
                 onChange={(e) => setFilterStatus(e.target.value)}
-                className="w-full py-3 px-4 border-2 border-slate-300 rounded-xl focus:border-blue-500 focus:ring-2 focus:ring-blue-200 focus:outline-none bg-white"
+                className="w-full py-3 px-4 border border-white/30 rounded-xl focus:border-blue-400 focus:ring-2 focus:ring-blue-300/50 focus:outline-none bg-white/10 backdrop-blur-sm text-white"
               >
                 {statusOptions.map(status => (
                   <option key={status} value={status}>
@@ -239,10 +239,10 @@ export default function AppointmentsPage() {
 
         {/* Appointments List */}
         {filteredAppointments.length === 0 ? (
-          <div className="bg-white rounded-2xl shadow-xl border-2 border-slate-100 p-12 text-center">
-            <CalendarDaysIcon className="mx-auto h-16 w-16 text-slate-400 mb-4" />
-            <h3 className="text-2xl font-bold text-slate-900 mb-2">No appointments found</h3>
-            <p className="text-slate-600 mb-6">
+          <div className="bg-white/10 backdrop-blur-md rounded-2xl shadow-2xl border border-white/20 p-12 text-center">
+            <CalendarDaysIcon className="mx-auto h-16 w-16 text-blue-200 mb-4" />
+            <h3 className="text-2xl font-bold text-white mb-2">No appointments found</h3>
+            <p className="text-blue-100 mb-6">
               {searchTerm || filterStatus !== 'All' 
                 ? 'Try adjusting your search terms or filter.' 
                 : 'You haven\'t scheduled any appointments yet.'
@@ -250,7 +250,7 @@ export default function AppointmentsPage() {
             </p>
             <button
               onClick={() => router.push('/appointments/book')}
-              className="inline-flex items-center px-6 py-3 bg-blue-600 hover:bg-blue-700 text-white font-semibold rounded-xl shadow-lg hover:shadow-xl transition-all duration-200"
+              className="inline-flex items-center px-6 py-3 bg-gradient-to-r from-blue-600 to-blue-700 hover:from-blue-700 hover:to-blue-800 text-white font-semibold rounded-xl shadow-lg hover:shadow-xl transition-all duration-200 transform hover:scale-105"
             >
               <PlusIcon className="h-5 w-5 mr-2" />
               Schedule Your First Appointment
@@ -261,15 +261,15 @@ export default function AppointmentsPage() {
             {filteredAppointments.map((appointment) => (
               <div
                 key={appointment.id}
-                className={`bg-white rounded-2xl shadow-xl border-2 ${getCardBorderColor(appointment.status)} overflow-hidden transition-all duration-300 hover:shadow-2xl`}
+                className={`bg-white/10 backdrop-blur-md rounded-2xl shadow-2xl border border-white/20 overflow-hidden transition-all duration-300 hover:shadow-2xl hover:bg-white/15`}
               >
                 <div className="p-8">
                   {/* Header */}
                   <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between mb-6">
                     <div className="flex items-center mb-4 lg:mb-0">
                       <div className="mr-4">
-                        <h3 className="text-2xl font-bold text-slate-900">{appointment.service}</h3>
-                        <p className="text-slate-600">{appointment.department}</p>
+                        <h3 className="text-2xl font-bold text-white">{appointment.service}</h3>
+                        <p className="text-blue-100">{appointment.department}</p>
                       </div>
                       <div className={`inline-flex items-center px-3 py-1 rounded-full text-sm font-semibold border ${getStatusColor(appointment.status)}`}>
                         {getStatusIcon(appointment.status)}
@@ -277,42 +277,42 @@ export default function AppointmentsPage() {
                       </div>
                     </div>
                     <div className="text-right">
-                      <p className="text-sm text-slate-500">Reference</p>
-                      <p className="font-mono text-lg font-bold text-slate-900">{appointment.reference}</p>
+                      <p className="text-sm text-blue-200">Reference</p>
+                      <p className="font-mono text-lg font-bold text-white">{appointment.reference}</p>
                     </div>
                   </div>
 
                   {/* Details Grid */}
                   <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-6">
                     <div className="flex items-center space-x-3">
-                      <CalendarDaysIcon className="h-5 w-5 text-blue-600" />
+                      <CalendarDaysIcon className="h-5 w-5 text-blue-300" />
                       <div>
-                        <p className="text-sm font-semibold text-slate-600">Date</p>
-                        <p className="text-slate-900">{new Date(appointment.date).toLocaleDateString()}</p>
+                        <p className="text-sm font-semibold text-blue-200">Date</p>
+                        <p className="text-white">{new Date(appointment.date).toLocaleDateString()}</p>
                       </div>
                     </div>
 
                     <div className="flex items-center space-x-3">
-                      <ClockIcon className="h-5 w-5 text-blue-600" />
+                      <ClockIcon className="h-5 w-5 text-blue-300" />
                       <div>
-                        <p className="text-sm font-semibold text-slate-600">Time</p>
-                        <p className="text-slate-900">{appointment.time}</p>
+                        <p className="text-sm font-semibold text-blue-200">Time</p>
+                        <p className="text-white">{appointment.time}</p>
                       </div>
                     </div>
 
                     <div className="flex items-center space-x-3">
-                      <UserIcon className="h-5 w-5 text-blue-600" />
+                      <UserIcon className="h-5 w-5 text-blue-300" />
                       <div>
-                        <p className="text-sm font-semibold text-slate-600">Officer</p>
-                        <p className="text-slate-900">{appointment.officer}</p>
+                        <p className="text-sm font-semibold text-blue-200">Officer</p>
+                        <p className="text-white">{appointment.officer}</p>
                       </div>
                     </div>
 
                     <div className="flex items-center space-x-3">
-                      <BuildingOfficeIcon className="h-5 w-5 text-blue-600" />
+                      <BuildingOfficeIcon className="h-5 w-5 text-blue-300" />
                       <div>
-                        <p className="text-sm font-semibold text-slate-600">Location</p>
-                        <p className="text-slate-900">{appointment.location}</p>
+                        <p className="text-sm font-semibold text-blue-200">Location</p>
+                        <p className="text-white">{appointment.location}</p>
                       </div>
                     </div>
                   </div>
@@ -320,15 +320,15 @@ export default function AppointmentsPage() {
                   {/* Duration and Documents */}
                   <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-6">
                     <div>
-                      <p className="text-sm font-semibold text-slate-600 mb-2">Estimated Duration</p>
-                      <p className="text-slate-900">{appointment.estimatedDuration}</p>
+                      <p className="text-sm font-semibold text-blue-200 mb-2">Estimated Duration</p>
+                      <p className="text-white">{appointment.estimatedDuration}</p>
                     </div>
 
                     <div>
-                      <p className="text-sm font-semibold text-slate-600 mb-2">Required Documents</p>
+                      <p className="text-sm font-semibold text-blue-200 mb-2">Required Documents</p>
                       <div className="flex flex-wrap gap-2">
                         {appointment.documents.map((doc, index) => (
-                          <span key={index} className="bg-blue-100 text-blue-800 text-xs px-2 py-1 rounded-full">
+                          <span key={index} className="bg-blue-600/30 text-blue-100 text-xs px-2 py-1 rounded-full border border-blue-400/30">
                             {doc}
                           </span>
                         ))}
@@ -337,10 +337,10 @@ export default function AppointmentsPage() {
                   </div>
 
                   {/* Actions */}
-                  <div className="flex flex-wrap gap-3 pt-4 border-t border-slate-200">
+                  <div className="flex flex-wrap gap-3 pt-4 border-t border-white/20">
                     <button
                       onClick={() => handleViewAppointment(appointment.id)}
-                      className="inline-flex items-center px-4 py-2 bg-blue-100 hover:bg-blue-200 text-blue-700 font-semibold rounded-lg transition-colors duration-200"
+                      className="inline-flex items-center px-4 py-2 bg-blue-600/30 hover:bg-blue-500/40 text-blue-100 font-semibold rounded-lg transition-all duration-200 border border-blue-400/30"
                     >
                       <EyeIcon className="h-4 w-4 mr-2" />
                       View Details
@@ -350,7 +350,7 @@ export default function AppointmentsPage() {
                       <>
                         <button
                           onClick={() => handleRescheduleAppointment(appointment.id)}
-                          className="inline-flex items-center px-4 py-2 bg-emerald-100 hover:bg-emerald-200 text-emerald-700 font-semibold rounded-lg transition-colors duration-200"
+                          className="inline-flex items-center px-4 py-2 bg-emerald-600/30 hover:bg-emerald-500/40 text-emerald-100 font-semibold rounded-lg transition-all duration-200 border border-emerald-400/30"
                         >
                           <ArrowPathIcon className="h-4 w-4 mr-2" />
                           Reschedule
@@ -358,7 +358,7 @@ export default function AppointmentsPage() {
 
                         <button
                           onClick={() => handleCancelAppointment(appointment.id)}
-                          className="inline-flex items-center px-4 py-2 bg-red-100 hover:bg-red-200 text-red-700 font-semibold rounded-lg transition-colors duration-200"
+                          className="inline-flex items-center px-4 py-2 bg-red-600/30 hover:bg-red-500/40 text-red-100 font-semibold rounded-lg transition-all duration-200 border border-red-400/30"
                         >
                           <XMarkIcon className="h-4 w-4 mr-2" />
                           Cancel
