@@ -14,7 +14,7 @@ import {
   CreditCardIcon
 } from '@heroicons/react/24/outline'
 import DashboardLayout from '../../../../components/DashboardLayout'
-import { services, getServiceById, calculateTotalFee } from '../../../../lib/services'
+import { services, getServiceById, calculateTotalFee, getDepartments } from '../../../../lib/services'
 
 export default function BookAppointmentPage() {
   const router = useRouter()

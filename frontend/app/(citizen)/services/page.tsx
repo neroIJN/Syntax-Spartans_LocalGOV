@@ -13,7 +13,6 @@ import {
   HomeIcon,
   BriefcaseIcon,
   IdentificationIcon,
-  HeartIcon,
   CameraIcon,
   StarIcon,
   FunnelIcon,
@@ -27,34 +26,7 @@ import {
   BanknotesIcon
 } from '@heroicons/react/24/outline'
 import DashboardLayout from '../../../components/DashboardLayout'
-
-interface Service {
-  id: string
-  name: string
-  description: string
-  category: string
-  department: string
-  departmentCode: string
-  duration: string
-  fee: string
-  requirements: string[]
-  rating: number
-  icon: any
-  color: string
-  popular: boolean
-  location: string
-  availability: string
-}
-
-interface Department {
-  code: string
-  name: string
-  description: string
-  icon: any
-  color: string
-  location: string
-  services: Service[]
-}
+import { services, getDepartments, getCategories, getPopularServices } from '../../../lib/services'
 
 export default function ServicesPage() {
   const router = useRouter()
@@ -65,348 +37,76 @@ export default function ServicesPage() {
   const [sortBy, setSortBy] = useState('name')
   const [expandedDepartments, setExpandedDepartments] = useState<string[]>(['DS', 'GN'])
 
-  // Comprehensive services data organized by departments
-
-  // Comprehensive services data organized by departments
-  const departments: Department[] = [
+  // Get data from services configuration
+  const allServices = services
+  const departments = [
     {
       code: 'DS',
       name: 'Divisional Secretariat',
-      description: 'Administrative services and civil registrations',
-      icon: BuildingOfficeIcon,
-      color: 'bg-blue-500',
-      location: 'Main Administrative Building',
-      services: [
-        {
-          id: 'national-id',
-          name: 'National Identity Card',
-          description: 'Apply for a new National Identity Card or replace an existing one.',
-          category: 'Identity Services',
-          department: 'Divisional Secretariat',
-          departmentCode: 'DS',
-          duration: '45 minutes',
-          fee: 'Rs. 500',
-          requirements: ['Birth Certificate', 'Proof of Address', 'Two Passport Photos'],
-          rating: 4.8,
-          icon: IdentificationIcon,
-          color: 'bg-blue-500',
-          popular: true,
-          location: 'Counter 1-3',
-          availability: 'Mon-Fri 9:00-15:00'
-        },
-        {
-          id: 'grama-niladhari-certificate',
-          name: 'Grama Niladhari Certificate',
-          description: 'Official certificate from Grama Niladhari for various purposes.',
-          category: 'Certificates',
-          department: 'Divisional Secretariat',
-          departmentCode: 'DS',
-          duration: '30 minutes',
-          fee: 'Rs. 100',
-          requirements: ['National ID', 'Application Form'],
-          rating: 4.7,
-          icon: DocumentTextIcon,
-          color: 'bg-green-500',
-          popular: true,
-          location: 'Counter 4-5',
-          availability: 'Mon-Fri 9:00-16:00'
-        }
-      ]
+      description: 'Administrative services at divisional level',
+      location: 'Divisional Secretariat Office',
+      color: 'bg-gradient-to-br from-blue-600 to-blue-700',
+      icon: BuildingOfficeIcon
     },
     {
       code: 'GN',
-      name: 'Grama Niladhari Office',
-      description: 'Local administrative services and certifications',
-      icon: HomeIcon,
-      color: 'bg-emerald-500',
-      location: 'Village Office Complex',
-      services: [
-        {
-          id: 'birth-certificate',
-          name: 'Birth Certificate',
-          description: 'Obtain an official birth certificate for various purposes.',
-          category: 'Civil Registration',
-          department: 'Grama Niladhari Office',
-          departmentCode: 'GN',
-          duration: '30 minutes',
-          fee: 'Rs. 100',
-          requirements: ['Baptism Certificate', 'Hospital Birth Report'],
-          rating: 4.7,
-          icon: DocumentTextIcon,
-          color: 'bg-emerald-500',
-          popular: true,
-          location: 'Registration Counter',
-          availability: 'Mon-Fri 8:30-16:00'
-        },
-        {
-          id: 'marriage-registration',
-          name: 'Marriage Registration',
-          description: 'Register your marriage officially with government records.',
-          category: 'Civil Registration',
-          department: 'Grama Niladhari Office',
-          departmentCode: 'GN',
-          duration: '1 hour',
-          fee: 'Rs. 200',
-          requirements: ['Birth Certificates', 'Witness Documents', 'Application Form'],
-          rating: 4.9,
-          icon: HeartIcon,
-          color: 'bg-pink-500',
-          popular: false,
-          location: 'Registration Counter',
-          availability: 'Mon-Fri 9:00-15:00'
-        },
-        {
-          id: 'death-certificate',
-          name: 'Death Certificate',
-          description: 'Obtain an official death certificate for legal purposes.',
-          category: 'Civil Registration',
-          department: 'Grama Niladhari Office',
-          departmentCode: 'GN',
-          duration: '30 minutes',
-          fee: 'Rs. 150',
-          requirements: ['Medical Certificate', 'Application Form', 'Identification'],
-          rating: 4.8,
-          icon: DocumentTextIcon,
-          color: 'bg-slate-500',
-          popular: false,
-          location: 'Registration Counter',
-          availability: 'Mon-Fri 8:30-16:00'
-        }
-      ]
+      name: 'Grama Niladhari',
+      description: 'Village-level administrative services',
+      location: 'Grama Niladhari Office',
+      color: 'bg-gradient-to-br from-green-600 to-green-700',
+      icon: UserGroupIcon
     },
     {
       code: 'ID',
       name: 'Immigration Department',
       description: 'Passport and immigration services',
-      icon: CameraIcon,
-      color: 'bg-purple-500',
       location: 'Immigration Office',
-      services: [
-        {
-          id: 'passport-application',
-          name: 'Passport Application',
-          description: 'Apply for a new passport or renew your existing passport.',
-          category: 'Identity Services',
-          department: 'Immigration Department',
-          departmentCode: 'ID',
-          duration: '2 hours',
-          fee: 'Rs. 3,500',
-          requirements: ['National ID', 'Birth Certificate', 'Passport Photos'],
-          rating: 4.6,
-          icon: CameraIcon,
-          color: 'bg-purple-500',
-          popular: true,
-          location: 'Passport Office',
-          availability: 'Mon-Fri 8:00-14:00'
-        },
-        {
-          id: 'passport-renewal',
-          name: 'Passport Renewal',
-          description: 'Renew your existing passport with updated information.',
-          category: 'Identity Services',
-          department: 'Immigration Department',
-          departmentCode: 'ID',
-          duration: '1.5 hours',
-          fee: 'Rs. 3,000',
-          requirements: ['Current Passport', 'National ID', 'Passport Photos'],
-          rating: 4.5,
-          icon: CameraIcon,
-          color: 'bg-purple-600',
-          popular: false,
-          location: 'Passport Office',
-          availability: 'Mon-Fri 8:00-14:00'
-        }
-      ]
+      color: 'bg-gradient-to-br from-purple-600 to-purple-700',
+      icon: IdentificationIcon
     },
     {
       code: 'RC',
       name: 'Registrar of Companies',
       description: 'Business registration and corporate services',
-      icon: BriefcaseIcon,
-      color: 'bg-orange-500',
-      location: 'Business Registration Office',
-      services: [
-        {
-          id: 'business-registration',
-          name: 'Business Registration',
-          description: 'Register a new business or company with the government.',
-          category: 'Business Services',
-          department: 'Registrar of Companies',
-          departmentCode: 'RC',
-          duration: '1.5 hours',
-          fee: 'Rs. 2,000',
-          requirements: ['Business Plan', 'Address Proof', 'Director Details'],
-          rating: 4.5,
-          icon: BriefcaseIcon,
-          color: 'bg-orange-500',
-          popular: false,
-          location: 'Registration Desk',
-          availability: 'Mon-Fri 9:00-15:00'
-        },
-        {
-          id: 'company-name-search',
-          name: 'Company Name Search',
-          description: 'Search and reserve company names for registration.',
-          category: 'Business Services',
-          department: 'Registrar of Companies',
-          departmentCode: 'RC',
-          duration: '15 minutes',
-          fee: 'Rs. 100',
-          requirements: ['Proposed Names List', 'Application Form'],
-          rating: 4.3,
-          icon: MagnifyingGlassIcon,
-          color: 'bg-orange-600',
-          popular: false,
-          location: 'Information Desk',
-          availability: 'Mon-Fri 9:00-16:00'
-        }
-      ]
+      location: 'Registrar of Companies Office',
+      color: 'bg-gradient-to-br from-orange-600 to-orange-700',
+      icon: BriefcaseIcon
     },
     {
       code: 'LR',
       name: 'Land Registry',
-      description: 'Property and land-related services',
-      icon: HomeIcon,
-      color: 'bg-green-500',
+      description: 'Land registration and property services',
       location: 'Land Registry Office',
-      services: [
-        {
-          id: 'land-registration',
-          name: 'Land Registration',
-          description: 'Register land ownership or check land ownership details.',
-          category: 'Property Services',
-          department: 'Land Registry',
-          departmentCode: 'LR',
-          duration: '2 hours',
-          fee: 'Rs. 1,500',
-          requirements: ['Survey Plan', 'Previous Deed', 'Tax Receipts'],
-          rating: 4.4,
-          icon: HomeIcon,
-          color: 'bg-green-500',
-          popular: false,
-          location: 'Registry Counter',
-          availability: 'Mon-Fri 9:00-15:00'
-        },
-        {
-          id: 'land-title-search',
-          name: 'Land Title Search',
-          description: 'Search and verify land title and ownership information.',
-          category: 'Property Services',
-          department: 'Land Registry',
-          departmentCode: 'LR',
-          duration: '1 hour',
-          fee: 'Rs. 500',
-          requirements: ['Plot Number', 'Survey Number', 'Application Form'],
-          rating: 4.2,
-          icon: MagnifyingGlassIcon,
-          color: 'bg-green-600',
-          popular: false,
-          location: 'Search Counter',
-          availability: 'Mon-Fri 9:00-16:00'
-        }
-      ]
+      color: 'bg-gradient-to-br from-teal-600 to-teal-700',
+      icon: HomeIcon
     },
     {
       code: 'PD',
       name: 'Police Department',
-      description: 'Security and clearance services',
-      icon: ShieldCheckIcon,
-      color: 'bg-red-500',
+      description: 'Police clearance and security services',
       location: 'Police Station',
-      services: [
-        {
-          id: 'police-clearance',
-          name: 'Police Clearance Certificate',
-          description: 'Obtain a police clearance certificate for various purposes.',
-          category: 'Security Services',
-          department: 'Police Department',
-          departmentCode: 'PD',
-          duration: '1 hour',
-          fee: 'Rs. 500',
-          requirements: ['National ID', 'Application Form', 'Passport Photos'],
-          rating: 4.6,
-          icon: ShieldCheckIcon,
-          color: 'bg-red-500',
-          popular: true,
-          location: 'CID Office',
-          availability: 'Mon-Fri 9:00-15:00'
-        },
-        {
-          id: 'character-certificate',
-          name: 'Character Certificate',
-          description: 'Official character certificate from local police.',
-          category: 'Security Services',
-          department: 'Police Department',
-          departmentCode: 'PD',
-          duration: '45 minutes',
-          fee: 'Rs. 300',
-          requirements: ['National ID', 'Application Form', 'Grama Niladhari Certificate'],
-          rating: 4.4,
-          icon: DocumentTextIcon,
-          color: 'bg-red-600',
-          popular: false,
-          location: 'Local Police Station',
-          availability: 'Mon-Fri 9:00-16:00'
-        }
-      ]
+      color: 'bg-gradient-to-br from-red-600 to-red-700',
+      icon: ShieldCheckIcon
     },
     {
       code: 'ED',
       name: 'Education Department',
-      description: 'Educational certificates and verifications',
-      icon: AcademicCapIcon,
-      color: 'bg-indigo-500',
-      location: 'Education Office',
-      services: [
-        {
-          id: 'school-certificate',
-          name: 'School Leaving Certificate',
-          description: 'Official school leaving certificate for students.',
-          category: 'Educational Services',
-          department: 'Education Department',
-          departmentCode: 'ED',
-          duration: '30 minutes',
-          fee: 'Rs. 50',
-          requirements: ['Student Records', 'Application Form', 'School ID'],
-          rating: 4.5,
-          icon: AcademicCapIcon,
-          color: 'bg-indigo-500',
-          popular: false,
-          location: 'Certificate Counter',
-          availability: 'Mon-Fri 9:00-16:00'
-        },
-        {
-          id: 'education-verification',
-          name: 'Education Verification',
-          description: 'Verify educational qualifications and certificates.',
-          category: 'Educational Services',
-          department: 'Education Department',
-          departmentCode: 'ED',
-          duration: '1 hour',
-          fee: 'Rs. 200',
-          requirements: ['Original Certificates', 'Application Form', 'National ID'],
-          rating: 4.3,
-          icon: DocumentTextIcon,
-          color: 'bg-indigo-600',
-          popular: false,
-          location: 'Verification Office',
-          availability: 'Mon-Fri 9:00-15:00'
-        }
-      ]
+      description: 'Educational certificates and verification',
+      location: 'Education Department Office',
+      color: 'bg-gradient-to-br from-indigo-600 to-indigo-700',
+      icon: AcademicCapIcon
     }
   ]
+  const categories = ['all', ...getCategories()]
+  const popularServices = getPopularServices()
 
-  // Extract all services from departments
-  const allServices = departments.flatMap(dept => 
-    dept.services.map(service => ({ ...service, departmentCode: dept.code }))
-  )
-
-  // Extract unique categories and other filter options
-  const categories = ['all', ...Array.from(new Set(allServices.map(s => s.category)))]
+  // Department options for filter
   const departmentOptions = [
     { value: 'all', label: 'All Departments' },
     ...departments.map(dept => ({ value: dept.code, label: dept.name }))
   ]
+
+  // Fee range options
   const feeRanges = [
     { value: 'all', label: 'All Fees' },
     { value: 'free', label: 'Free Services' },
@@ -417,10 +117,66 @@ export default function ServicesPage() {
     { value: '5000+', label: 'Above Rs. 5,000' }
   ]
 
+  // Icon mapping for departments
+  const getDepartmentIcon = (code: string) => {
+    const iconMap: { [key: string]: any } = {
+      'DS': BuildingOfficeIcon,
+      'GN': HomeIcon,
+      'ID': CameraIcon,
+      'RC': BriefcaseIcon,
+      'LR': HomeIcon,
+      'PD': ShieldCheckIcon,
+      'ED': AcademicCapIcon
+    }
+    return iconMap[code] || BuildingOfficeIcon
+  }
+
+  // Color mapping for departments
+  const getDepartmentColor = (code: string) => {
+    const colorMap: { [key: string]: string } = {
+      'DS': 'bg-blue-500',
+      'GN': 'bg-emerald-500',
+      'ID': 'bg-purple-500',
+      'RC': 'bg-orange-500',
+      'LR': 'bg-green-500',
+      'PD': 'bg-red-500',
+      'ED': 'bg-indigo-500'
+    }
+    return colorMap[code] || 'bg-blue-500'
+  }
+
+  // Icon mapping for services
+  const getServiceIcon = (serviceId: string) => {
+    const iconMap: { [key: string]: any } = {
+      'national-id': IdentificationIcon,
+      'grama-niladhari-certificate': DocumentTextIcon,
+      'birth-certificate': DocumentTextIcon,
+            'marriage-registration': DocumentTextIcon,
+      'death-certificate': DocumentTextIcon,
+      'passport-application': CameraIcon,
+      'passport-renewal': CameraIcon,
+      'business-registration': BriefcaseIcon,
+      'company-name-search': MagnifyingGlassIcon,
+      'land-registration': HomeIcon,
+      'land-title-search': MagnifyingGlassIcon,
+      'police-clearance': ShieldCheckIcon,
+      'character-certificate': DocumentTextIcon,
+      'school-certificate': AcademicCapIcon,
+      'education-verification': DocumentTextIcon
+    }
+    const IconComponent = iconMap[serviceId] || DocumentTextIcon
+    
+    // Defensive check to ensure we have a valid component
+    if (!IconComponent) {
+      return <DocumentTextIcon className="h-6 w-6 text-white" />
+    }
+    
+    return <IconComponent className="h-6 w-6 text-white" />
+  }
+
   // Helper function to parse fee
-  const parseFee = (feeString: string): number => {
-    const fee = feeString.replace(/[Rs.,\s]/g, '')
-    return fee === 'Free' ? 0 : parseInt(fee) || 0
+  const parseFee = (feeAmount: number): number => {
+    return feeAmount
   }
 
   // Filter and sort services
@@ -484,7 +240,6 @@ export default function ServicesPage() {
   }
 
   const filteredServices = getFilteredServices()
-  const popularServices = allServices.filter(service => service.popular)
 
   const toggleDepartmentExpansion = (deptCode: string) => {
     setExpandedDepartments(prev => 
@@ -495,11 +250,8 @@ export default function ServicesPage() {
   }
 
   const handleServiceClick = (serviceId: string) => {
-    if (serviceId === 'birth-certificate') {
-      router.push('/services/birth-certificate')
-    } else {
-      router.push(`/appointments/book?service=${serviceId}`)
-    }
+    // Always redirect to appointment booking page with the selected service
+    router.push(`/appointments/book?service=${serviceId}`)
   }
 
   return (
@@ -632,7 +384,8 @@ export default function ServicesPage() {
             </h2>
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
               {popularServices.map((service, index) => {
-                const IconComponent = service.icon
+                const serviceIcon = getServiceIcon(service.id)
+                const serviceColor = getDepartmentColor(service.departmentCode)
                 return (
                   <div
                     key={service.id}
@@ -640,8 +393,8 @@ export default function ServicesPage() {
                     onClick={() => handleServiceClick(service.id)}
                     style={{ animationDelay: `${index * 0.1}s` }}
                   >
-                    <div className={`w-16 h-16 ${service.color} rounded-xl flex items-center justify-center mb-4 shadow-lg`}>
-                      <IconComponent className="h-8 w-8 text-white" />
+                    <div className={`w-16 h-16 ${serviceColor} rounded-xl flex items-center justify-center mb-4 shadow-lg`}>
+                      {serviceIcon}
                     </div>
                     <h3 className="text-xl font-bold text-white mb-2 drop-shadow-sm">{service.name}</h3>
                     <div className="flex items-center mb-3">
@@ -655,7 +408,7 @@ export default function ServicesPage() {
                     <div className="space-y-2 text-sm text-blue-200">
                       <div className="flex items-center">
                         <BuildingOfficeIcon className="h-4 w-4 mr-2" />
-                        {service.department}
+                        {getDepartments().find(dept => dept.code === service.departmentCode)?.name}
                       </div>
                       <div className="flex items-center justify-between">
                         <div className="flex items-center">
@@ -664,7 +417,7 @@ export default function ServicesPage() {
                         </div>
                         <div className="flex items-center font-semibold text-blue-100">
                           <CurrencyDollarIcon className="h-4 w-4 mr-1" />
-                          {service.fee}
+                          {service.fee > 0 ? `Rs. ${service.fee.toLocaleString()}` : 'Free'}
                         </div>
                       </div>
                     </div>
@@ -744,7 +497,8 @@ export default function ServicesPage() {
                       <div className="p-8">
                         <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
                           {deptServices.map((service, index) => {
-                            const ServiceIcon = service.icon
+                            const serviceIcon = getServiceIcon(service.id)
+                            const serviceColor = getDepartmentColor(service.departmentCode)
                             return (
                               <div
                                 key={service.id}
@@ -754,8 +508,8 @@ export default function ServicesPage() {
                               >
                                 <div className="flex items-start justify-between mb-4">
                                   <div className="flex items-center">
-                                    <div className={`w-12 h-12 ${service.color} rounded-xl flex items-center justify-center mr-4 shadow-lg`}>
-                                      <ServiceIcon className="h-6 w-6 text-white" />
+                                    <div className={`w-12 h-12 ${serviceColor} rounded-xl flex items-center justify-center mr-4 shadow-lg`}>
+                                      {serviceIcon}
                                     </div>
                                     <div>
                                       <h4 className="text-xl font-bold text-white drop-shadow-sm">{service.name}</h4>
@@ -788,7 +542,9 @@ export default function ServicesPage() {
                                       <CurrencyDollarIcon className="h-4 w-4 mr-2" />
                                       <span className="font-semibold">Fee:</span>
                                     </div>
-                                    <p className="text-blue-100 ml-6 font-semibold">{service.fee}</p>
+                                    <p className="text-blue-100 ml-6 font-semibold">
+                                      {service.fee > 0 ? `Rs. ${service.fee.toLocaleString()}` : 'Free'}
+                                    </p>
                                   </div>
 
                                   <div className="space-y-2">
@@ -811,7 +567,7 @@ export default function ServicesPage() {
                                 <div className="mb-4">
                                   <h5 className="font-semibold text-white mb-2 text-sm">Required Documents:</h5>
                                   <div className="flex flex-wrap gap-2">
-                                    {service.requirements.map((req, reqIndex) => (
+                                    {service.requiredDocuments.map((req, reqIndex) => (
                                       <span key={reqIndex} className="bg-blue-500/20 text-blue-300 text-xs px-2 py-1 rounded-full border border-blue-400/30">
                                         {req}
                                       </span>
@@ -827,7 +583,7 @@ export default function ServicesPage() {
                                     }}
                                     className="flex-1 bg-gradient-to-r from-blue-600 to-blue-700 hover:from-blue-700 hover:to-blue-800 text-white font-semibold py-3 px-4 rounded-xl transition-smooth hover-lift shadow-lg flex items-center justify-center"
                                   >
-                                    Apply Now
+                                    Book Appointment
                                     <ArrowRightIcon className="h-4 w-4 ml-2" />
                                   </button>
                                 </div>
