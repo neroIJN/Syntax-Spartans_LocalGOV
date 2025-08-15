@@ -15,19 +15,22 @@ import {
 } from '@heroicons/react/24/outline'
 import DashboardLayout from '../../../../components/DashboardLayout'
 import { services, getServiceById, calculateTotalFee, getDepartments } from '../../../../lib/services'
+import { appointmentAPI } from '../../../../lib/api'
 
 function BookAppointmentContent() {
   const router = useRouter()
   const searchParams = useSearchParams()
   const preSelectedService = searchParams.get('service')
+  const preSelectedFilter = searchParams.get('filter')
   
   const [currentStep, setCurrentStep] = useState(1)
   const [selectedService, setSelectedService] = useState(preSelectedService || '')
   const [selectedDate, setSelectedDate] = useState('')
   const [selectedTime, setSelectedTime] = useState('')
-
-  // Mock services - now using the service configuration
-  // (Remove this mock data as we're importing from services.ts)
+  const [isSubmitting, setIsSubmitting] = useState(false)
+  const [submitError, setSubmitError] = useState('')
+  const [serviceFilter, setServiceFilter] = useState(preSelectedFilter === 'free' ? 'free' : 'all')
+  const [categoryFilter, setCategoryFilter] = useState('all')
 
   // Mock available times with queue information
   const getAvailableTimesForDate = (date: string) => {
@@ -109,21 +112,51 @@ function BookAppointmentContent() {
     }
   }
 
-  const handleConfirmAppointment = () => {
+  const handleConfirmAppointment = async () => {
     const service = getServiceById(selectedService)
     if (!service) return
     
-    const fees = calculateTotalFee(selectedService)
-    const appointmentId = 'APT-' + Date.now()
-    
-    // If service requires payment, go to payment page
-    if (fees.total > 0) {
-      const paymentUrl = `/payment?serviceId=${selectedService}&date=${selectedDate}&time=${selectedTime}&appointmentId=${appointmentId}`
-      router.push(paymentUrl)
-    } else {
-      // If service is free, go directly to confirmation
-      const confirmUrl = `/appointments/confirm?serviceId=${selectedService}&date=${selectedDate}&time=${selectedTime}&appointmentId=${appointmentId}`
-      router.push(confirmUrl)
+    setIsSubmitting(true)
+    setSubmitError('')
+
+    try {
+      // Create appointment data
+      const appointmentData = {
+        serviceName: service.name,
+        department: service.department,
+        appointmentDate: selectedDate,
+        timeSlot: selectedTime,
+        location: service.location || 'To be determined',
+        description: `Appointment for ${service.name}`,
+        priority: 'normal'
+      }
+
+      console.log('Submitting appointment data:', appointmentData)
+
+      // Create appointment via API
+      const response = await appointmentAPI.createAppointment(appointmentData)
+      
+      if (response.success) {
+        const appointmentId = response.data.id
+        const fees = calculateTotalFee(selectedService)
+        
+        // If service requires payment, go to payment page
+        if (fees.total > 0) {
+          const paymentUrl = `/payment?serviceId=${selectedService}&date=${selectedDate}&time=${selectedTime}&appointmentId=${appointmentId}`
+          router.push(paymentUrl)
+        } else {
+          // If service is free, go directly to confirmation
+          const confirmUrl = `/appointments/confirm?serviceId=${selectedService}&date=${selectedDate}&time=${selectedTime}&appointmentId=${appointmentId}`
+          router.push(confirmUrl)
+        }
+      } else {
+        setSubmitError(response.message || 'Failed to create appointment')
+      }
+    } catch (error: any) {
+      console.error('Error creating appointment:', error)
+      setSubmitError(error.response?.data?.message || 'Failed to create appointment. Please try again.')
+    } finally {
+      setIsSubmitting(false)
     }
   }
 
@@ -144,13 +177,41 @@ function BookAppointmentContent() {
     return services.find(s => s.id === selectedService)
   }
 
+  // Filter services based on selected filters
+  const filteredServices = services.filter(service => {
+    const matchesFeeFilter = serviceFilter === 'all' || 
+                            (serviceFilter === 'free' && service.fee === 0) ||
+                            (serviceFilter === 'paid' && service.fee > 0)
+    
+    const matchesCategoryFilter = categoryFilter === 'all' || service.category === categoryFilter
+    
+    return matchesFeeFilter && matchesCategoryFilter
+  })
+
+  // Get unique categories for filter dropdown
+  const availableCategories = Array.from(new Set(services.map(s => s.category))).sort()
+
   return (
     <DashboardLayout>
       <div className="px-4 sm:px-6 lg:px-8 py-8">
         {/* Header */}
         <div className="mb-8">
           <h1 className="text-4xl font-bold text-white mb-4 drop-shadow-lg">Schedule Appointment</h1>
-          <p className="text-xl text-blue-100">Select a service and then choose a date and time for your appointment.</p>
+          <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between">
+            <p className="text-xl text-blue-100">Select a service and then choose a date and time for your appointment.</p>
+            <div className="mt-4 lg:mt-0 flex flex-wrap gap-4">
+              <div className="bg-green-600/20 border border-green-400/30 rounded-xl px-4 py-2 backdrop-blur-sm">
+                <span className="text-green-200 text-sm font-semibold">
+                  🆓 {services.filter(s => s.fee === 0).length} Free Services Available
+                </span>
+              </div>
+              <div className="bg-blue-600/20 border border-blue-400/30 rounded-xl px-4 py-2 backdrop-blur-sm">
+                <span className="text-blue-200 text-sm font-semibold">
+                  📋 {services.length} Total Services
+                </span>
+              </div>
+            </div>
+          </div>
         </div>
 
         {/* Progress Steps */}
@@ -192,36 +253,140 @@ function BookAppointmentContent() {
             <div className="bg-white/10 backdrop-blur-md rounded-2xl shadow-2xl border border-white/20 overflow-hidden">
               <div className="px-8 py-6 border-b border-white/20 bg-white/5">
                 <h2 className="text-2xl font-bold text-white">Select a Service</h2>
+                <p className="text-blue-100 mt-2">Choose from {filteredServices.length} available services</p>
               </div>
-              <div className="p-8">
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                  {services.map((service) => (
-                    <button
-                      key={service.id}
-                      onClick={() => setSelectedService(service.id)}
-                      className={`p-6 rounded-xl border-2 text-left transition-all duration-200 ${
-                        selectedService === service.id
-                          ? 'border-blue-400 bg-blue-600/30 shadow-lg backdrop-blur-sm'
-                          : 'border-white/30 bg-white/10 hover:border-blue-400/50 hover:bg-white/15 backdrop-blur-sm'
-                      }`}
+              
+              {/* Service Filters */}
+              <div className="px-8 py-6 border-b border-white/20 bg-white/5">
+                <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                  {/* Fee Filter */}
+                  <div>
+                    <label className="block text-sm font-semibold text-blue-200 mb-2">Filter by Fee</label>
+                    <select
+                      value={serviceFilter}
+                      onChange={(e) => setServiceFilter(e.target.value)}
+                      className="w-full py-2 px-3 border border-white/30 rounded-lg focus:border-blue-400 focus:ring-2 focus:ring-blue-300/50 focus:outline-none bg-white/10 backdrop-blur-sm text-white"
                     >
-                      <h3 className="text-xl font-bold text-white mb-2">{service.name}</h3>
-                      <div className="space-y-2 text-blue-100">
-                        <p>Department: {service.department}</p>
-                        <p>Duration: {service.duration}</p>
-                        <div className="flex items-center justify-between">
-                          <p>Fee: {service.fee > 0 ? `Rs. ${service.fee.toLocaleString()}` : 'Free'}</p>
-                          {service.fee === 0 && (
-                            <span className="bg-green-500/20 text-green-200 px-2 py-1 rounded-full text-xs font-semibold border border-green-400/30">
-                              No Fee
-                            </span>
-                          )}
-                        </div>
-                        <p className="text-sm text-blue-200 mt-2">{service.description}</p>
-                      </div>
+                      <option value="all">All Services</option>
+                      <option value="free">Free Services Only</option>
+                      <option value="paid">Paid Services Only</option>
+                    </select>
+                  </div>
+
+                  {/* Category Filter */}
+                  <div>
+                    <label className="block text-sm font-semibold text-blue-200 mb-2">Filter by Category</label>
+                    <select
+                      value={categoryFilter}
+                      onChange={(e) => setCategoryFilter(e.target.value)}
+                      className="w-full py-2 px-3 border border-white/30 rounded-lg focus:border-blue-400 focus:ring-2 focus:ring-blue-300/50 focus:outline-none bg-white/10 backdrop-blur-sm text-white"
+                    >
+                      <option value="all">All Categories</option>
+                      {availableCategories.map(category => (
+                        <option key={category} value={category}>{category}</option>
+                      ))}
+                    </select>
+                  </div>
+
+                  {/* Quick Free Services Button */}
+                  <div className="flex items-end">
+                    <button
+                      onClick={() => {
+                        setServiceFilter('free')
+                        setCategoryFilter('all')
+                      }}
+                      className="w-full py-2 px-4 bg-green-600/30 hover:bg-green-500/40 text-green-100 font-semibold rounded-lg transition-all duration-200 border border-green-400/30"
+                    >
+                      🆓 Show Free Services
                     </button>
-                  ))}
+                  </div>
                 </div>
+
+                {/* Filter Summary */}
+                <div className="mt-4 flex flex-wrap gap-2">
+                  {serviceFilter !== 'all' && (
+                    <span className="inline-flex items-center px-3 py-1 rounded-full text-xs font-semibold bg-blue-600/30 text-blue-100 border border-blue-400/30">
+                      {serviceFilter === 'free' ? 'Free Services' : 'Paid Services'}
+                      <button
+                        onClick={() => setServiceFilter('all')}
+                        className="ml-2 text-blue-200 hover:text-white"
+                      >
+                        ×
+                      </button>
+                    </span>
+                  )}
+                  {categoryFilter !== 'all' && (
+                    <span className="inline-flex items-center px-3 py-1 rounded-full text-xs font-semibold bg-purple-600/30 text-purple-100 border border-purple-400/30">
+                      {categoryFilter}
+                      <button
+                        onClick={() => setCategoryFilter('all')}
+                        className="ml-2 text-purple-200 hover:text-white"
+                      >
+                        ×
+                      </button>
+                    </span>
+                  )}
+                </div>
+              </div>
+
+              <div className="p-8">
+                {filteredServices.length === 0 ? (
+                  <div className="text-center py-12">
+                    <DocumentTextIcon className="mx-auto h-16 w-16 text-blue-200 mb-4" />
+                    <h3 className="text-xl font-bold text-white mb-2">No services found</h3>
+                    <p className="text-blue-100 mb-4">Try adjusting your filters to see more services.</p>
+                    <button
+                      onClick={() => {
+                        setServiceFilter('all')
+                        setCategoryFilter('all')
+                      }}
+                      className="inline-flex items-center px-4 py-2 bg-blue-600/30 hover:bg-blue-500/40 text-blue-100 font-semibold rounded-lg transition-all duration-200 border border-blue-400/30"
+                    >
+                      Clear All Filters
+                    </button>
+                  </div>
+                ) : (
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    {filteredServices.map((service) => (
+                      <button
+                        key={service.id}
+                        onClick={() => setSelectedService(service.id)}
+                        className={`p-6 rounded-xl border-2 text-left transition-all duration-200 relative ${
+                          selectedService === service.id
+                            ? 'border-blue-400 bg-blue-600/30 shadow-lg backdrop-blur-sm'
+                            : 'border-white/30 bg-white/10 hover:border-blue-400/50 hover:bg-white/15 backdrop-blur-sm'
+                        }`}
+                      >
+                        {/* Free Service Badge */}
+                        {service.fee === 0 && (
+                          <div className="absolute top-3 right-3">
+                            <span className="bg-green-500/20 text-green-200 px-2 py-1 rounded-full text-xs font-semibold border border-green-400/30 flex items-center">
+                              🆓 FREE
+                            </span>
+                          </div>
+                        )}
+                        
+                        <h3 className="text-xl font-bold text-white mb-2 pr-16">{service.name}</h3>
+                        <div className="space-y-2 text-blue-100">
+                          <p>Department: {service.department}</p>
+                          <p>Duration: {service.duration}</p>
+                          <p>Category: {service.category}</p>
+                          <div className="flex items-center justify-between">
+                            <p className={`font-semibold ${service.fee === 0 ? 'text-green-200' : 'text-blue-100'}`}>
+                              Fee: {service.fee > 0 ? `Rs. ${service.fee.toLocaleString()}` : 'Free'}
+                            </p>
+                            {service.popular && (
+                              <span className="bg-yellow-500/20 text-yellow-200 px-2 py-1 rounded-full text-xs font-semibold border border-yellow-400/30">
+                                Popular
+                              </span>
+                            )}
+                          </div>
+                          <p className="text-sm text-blue-200 mt-2">{service.description}</p>
+                        </div>
+                      </button>
+                    ))}
+                  </div>
+                )}
               </div>
             </div>
           )}
@@ -450,9 +615,9 @@ function BookAppointmentContent() {
             ) : (
               <button
                 onClick={handleConfirmAppointment}
-                disabled={!canProceed()}
+                disabled={!canProceed() || isSubmitting}
                 className={`inline-flex items-center px-8 py-4 rounded-xl text-lg font-semibold transition-smooth hover-lift ${
-                  canProceed()
+                  canProceed() && !isSubmitting
                     ? (() => {
                         const service = getServiceById(selectedService)
                         const fees = calculateTotalFee(selectedService)
@@ -463,36 +628,54 @@ function BookAppointmentContent() {
                     : 'bg-white/20 text-blue-200 cursor-not-allowed backdrop-blur-md border border-white/20'
                 }`}
               >
-                {(() => {
-                  if (!canProceed()) return (
-                    <>
-                      <CheckCircleIcon className="h-5 w-5 mr-2" />
-                      Complete Selection
-                    </>
-                  )
-                  
-                  const service = getServiceById(selectedService)
-                  const fees = calculateTotalFee(selectedService)
-                  
-                  if (fees.total > 0) {
-                    return (
-                      <>
-                        <CreditCardIcon className="h-5 w-5 mr-2" />
-                        Proceed to Payment (Rs. {fees.total.toLocaleString()})
-                      </>
-                    )
-                  } else {
-                    return (
+                {isSubmitting ? (
+                  <>
+                    <div className="animate-spin rounded-full h-5 w-5 border-b-2 border-white mr-2"></div>
+                    Creating Appointment...
+                  </>
+                ) : (
+                  (() => {
+                    if (!canProceed()) return (
                       <>
                         <CheckCircleIcon className="h-5 w-5 mr-2" />
-                        Confirm Appointment (Free)
+                        Complete Selection
                       </>
                     )
-                  }
-                })()}
+                    
+                    const service = getServiceById(selectedService)
+                    const fees = calculateTotalFee(selectedService)
+                    
+                    if (fees.total > 0) {
+                      return (
+                        <>
+                          <CreditCardIcon className="h-5 w-5 mr-2" />
+                          Proceed to Payment (Rs. {fees.total.toLocaleString()})
+                        </>
+                      )
+                    } else {
+                      return (
+                        <>
+                          <CheckCircleIcon className="h-5 w-5 mr-2" />
+                          Confirm Appointment (Free)
+                        </>
+                      )
+                    }
+                  })()
+                )}
               </button>
             )}
           </div>
+
+          {/* Error Message */}
+          {submitError && (
+            <div className="mt-6 bg-red-600/20 border border-red-400/30 rounded-xl p-4 backdrop-blur-sm">
+              <div className="flex items-center">
+                <XMarkIcon className="h-5 w-5 text-red-400 mr-2" />
+                <p className="text-red-100 font-semibold">Error creating appointment</p>
+              </div>
+              <p className="text-red-200 text-sm mt-1">{submitError}</p>
+            </div>
+          )}
 
           {/* Summary */}
           {(selectedService || selectedDate || selectedTime) && (

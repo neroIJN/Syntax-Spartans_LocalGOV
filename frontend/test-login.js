@@ -8,7 +8,7 @@ async function testLogin() {
     const response = await axios.post(
       'http://localhost:5000/api/auth/mysql/login',
       {
-        email: 'test@example.com',
+        email: 'niroshanijn@gmail.com',
         password: 'password123'
       },
       {

@@ -25,6 +25,7 @@ interface AuthContextType {
   token: string | null;
   login: (token: string, userData: User) => void;
   logout: () => void;
+  refreshUser: () => Promise<void>;
   isLoading: boolean;
 }
 
@@ -79,6 +80,12 @@ export const useAuth = (): AuthContextType => {
     setUser(userData);
   };
 
+  const refreshUser = async () => {
+    if (token) {
+      await verifyToken(token);
+    }
+  };
+
   const logout = async () => {
     try {
       // Call backend logout endpoint if token exists
@@ -106,6 +113,7 @@ export const useAuth = (): AuthContextType => {
     token,
     login,
     logout,
+    refreshUser,
     isLoading
   };
 };

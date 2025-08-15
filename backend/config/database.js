@@ -37,6 +37,13 @@ const initializeMySQLDatabase = async () => {
   try {
     await testMySQLConnection();
     
+    // Import models to ensure they are registered
+    require('../models/MySQLUser');
+    require('../models/MySQLAppointment');
+    require('../models/MySQLNotification');
+    require('../models/MySQLDocument');
+    require('../models/UserPhoto');
+    
     // Sync all models
     await sequelize.sync({ alter: process.env.NODE_ENV === 'development' });
     console.log('✅ MySQL Database synchronized successfully.');

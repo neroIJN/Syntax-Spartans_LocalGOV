@@ -17,14 +17,22 @@ app.use(helmet());
 // Rate limiting
 const limiter = rateLimit({
   windowMs: 15 * 60 * 1000, // 15 minutes
-  max: 100 // limit each IP to 100 requests per windowMs
+  max: 200 // increased limit for development
 });
 app.use('/api/', limiter);
 
 // Middleware
 app.use(cors({
-  origin: process.env.CORS_ORIGIN || 'http://localhost:3000',
-  credentials: true
+  origin: [
+    'http://localhost:3000',
+    'http://localhost:3001',
+    'http://127.0.0.1:3000',
+    'http://127.0.0.1:3001'
+  ],
+  credentials: true,
+  methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
+  allowedHeaders: ['Content-Type', 'Authorization', 'X-Requested-With'],
+  optionsSuccessStatus: 200
 }));
 app.use(express.json({ limit: '10mb' }));
 app.use(express.urlencoded({ extended: true, limit: '10mb' }));
@@ -59,6 +67,11 @@ const serviceRoutes = require('./routes/services');
 const notificationRoutes = require('./routes/notifications');
 const paymentRoutes = require('./routes/payments');
 
+// MySQL Routes
+const mysqlAppointmentRoutes = require('./routes/mysqlAppointments');
+const mysqlNotificationRoutes = require('./routes/mysqlNotifications');
+const mysqlDocumentRoutes = require('./routes/mysqlDocuments');
+
 // API Routes
 app.use('/api/auth', authRoutes); // MongoDB authentication
 app.use('/api/auth/mysql', mysqlAuthRoutes); // MySQL authentication
@@ -68,6 +81,11 @@ app.use('/api/documents', documentRoutes);
 app.use('/api/services', serviceRoutes);
 app.use('/api/notifications', notificationRoutes);
 app.use('/api/payments', paymentRoutes);
+
+// MySQL API Routes
+app.use('/api/mysql/appointments', mysqlAppointmentRoutes);
+app.use('/api/mysql/notifications', mysqlNotificationRoutes);
+app.use('/api/mysql/documents', mysqlDocumentRoutes);
 
 // Health check endpoint
 app.get('/api/health', (req, res) => {
