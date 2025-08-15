@@ -90,7 +90,7 @@ export const useAuth = (): AuthContextType => {
         });
       }
     } catch (error) {
-      console.error('Logout error:', error);
+      console.error('Backend logout error:', error);
       // Continue with client-side logout even if backend call fails
     } finally {
       // Always clear client-side data
