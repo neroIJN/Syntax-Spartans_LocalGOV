@@ -103,4 +103,35 @@ export const dashboardAPI = {
   }
 };
 
+// Profile API services
+export const profileAPI = {
+  // Update user details
+  updateDetails: async (userData: any) => {
+    const response = await apiClient.put('/auth/mysql/updatedetails', userData);
+    return response.data;
+  },
+
+  // Update password
+  updatePassword: async (passwords: { currentPassword: string; newPassword: string }) => {
+    const response = await apiClient.put('/auth/mysql/updatepassword', passwords);
+    return response.data;
+  },
+
+  // Update profile photo
+  updatePhoto: async (formData: FormData) => {
+    const response = await apiClient.put('/auth/mysql/photo', formData, {
+      headers: {
+        'Content-Type': 'multipart/form-data',
+      },
+    });
+    return response.data;
+  },
+
+  // Get current user
+  getCurrentUser: async () => {
+    const response = await apiClient.get('/auth/mysql/me');
+    return response.data;
+  }
+};
+
 export default apiClient;
