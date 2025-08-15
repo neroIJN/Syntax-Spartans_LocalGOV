@@ -200,33 +200,28 @@ export default function Dashboard() {
         console.log('Fetching dashboard data for user:', user.email);
 
         // Fetch all dashboard data in parallel
-        const [appointmentsData, notificationsData, documentsData, unreadCountData] = await Promise.all([
+        const [appointmentsData, notificationsResponse, documentsData] = await Promise.all([
           dashboardAPI.getAppointments().catch(err => {
             console.warn('Failed to fetch appointments:', err);
             return [];
           }),
           dashboardAPI.getNotifications().catch(err => {
             console.warn('Failed to fetch notifications:', err);
-            return [];
+            return { notifications: [], unreadCount: 0 };
           }),
           dashboardAPI.getDocuments().catch(err => {
             console.warn('Failed to fetch documents:', err);
             return [];
-          }),
-          dashboardAPI.getUnreadCount().catch(err => {
-            console.warn('Failed to fetch unread count:', err);
-            return 0;
           })
         ]);
 
         console.log('API Response - Appointments:', appointmentsData);
-        console.log('API Response - Notifications:', notificationsData);
+        console.log('API Response - Notifications:', notificationsResponse);
         console.log('API Response - Documents:', documentsData);
-        console.log('API Response - Unread Count:', unreadCountData);
 
         // Ensure we have arrays to work with
         const safeAppointments = Array.isArray(appointmentsData) ? appointmentsData : [];
-        const safeNotifications = Array.isArray(notificationsData) ? notificationsData : [];
+        const safeNotifications = Array.isArray(notificationsResponse.notifications) ? notificationsResponse.notifications : [];
         const safeDocuments = Array.isArray(documentsData) ? documentsData : [];
 
         // Transform appointment data to match interface
@@ -268,7 +263,7 @@ export default function Dashboard() {
         setUpcomingAppointments(transformedAppointments);
         setNotifications(transformedNotifications);
         setRecentDocuments(transformedDocuments);
-        setUnreadCount(unreadCountData);
+        setUnreadCount(notificationsResponse.unreadCount || 0);
       } catch (err) {
         console.error('Error fetching dashboard data:', err);
         setError('Failed to load dashboard data. Please try refreshing the page.');

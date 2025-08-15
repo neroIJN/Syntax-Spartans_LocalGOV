@@ -56,7 +56,16 @@ export const dashboardAPI = {
     try {
       const response = await apiClient.get('/mysql/notifications/dashboard');
       console.log('Notifications API response:', response.data);
-      return response.data.data || [];
+      
+      // The backend returns { success: true, data: { notifications: [...], unreadCount: ... } }
+      if (response.data?.success && response.data?.data) {
+        return {
+          notifications: response.data.data.notifications || [],
+          unreadCount: response.data.data.unreadCount || 0
+        };
+      }
+      
+      return { notifications: [], unreadCount: 0 };
     } catch (error) {
       console.error('Failed to fetch notifications:', error);
       throw error;
