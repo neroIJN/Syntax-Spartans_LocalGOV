@@ -182,11 +182,22 @@ export default function Dashboard() {
   // Fetch dashboard data from backend
   useEffect(() => {
     const fetchDashboardData = async () => {
-      if (!user) return;
+      if (!user) {
+        console.log('No user found, skipping API calls');
+        return;
+      }
+
+      const token = localStorage.getItem('authToken');
+      if (!token) {
+        console.log('No auth token found, skipping API calls');
+        setError('Please log in to view dashboard data.');
+        return;
+      }
 
       try {
         setIsLoading(true);
         setError(null);
+        console.log('Fetching dashboard data for user:', user.email);
 
         // Fetch all dashboard data in parallel
         const [appointmentsData, notificationsData, documentsData, unreadCountData] = await Promise.all([
@@ -208,8 +219,18 @@ export default function Dashboard() {
           })
         ]);
 
+        console.log('API Response - Appointments:', appointmentsData);
+        console.log('API Response - Notifications:', notificationsData);
+        console.log('API Response - Documents:', documentsData);
+        console.log('API Response - Unread Count:', unreadCountData);
+
+        // Ensure we have arrays to work with
+        const safeAppointments = Array.isArray(appointmentsData) ? appointmentsData : [];
+        const safeNotifications = Array.isArray(notificationsData) ? notificationsData : [];
+        const safeDocuments = Array.isArray(documentsData) ? documentsData : [];
+
         // Transform appointment data to match interface
-        const transformedAppointments = appointmentsData.map((apt: any) => ({
+        const transformedAppointments = safeAppointments.map((apt: any) => ({
           id: apt.id.toString(),
           service: apt.serviceType || apt.service || 'Unknown Service',
           department: apt.department || 'Government Department',
@@ -221,17 +242,17 @@ export default function Dashboard() {
         }));
 
         // Transform notification data to match interface
-        const transformedNotifications = notificationsData.map((notif: any) => ({
+        const transformedNotifications = safeNotifications.map((notif: any) => ({
           id: notif.id.toString(),
           title: notif.title,
           message: notif.message,
           time: notif.createdAt ? getTimeAgo(notif.createdAt) : 'Recently',
-          type: getNotificationType(notif.notificationType || notif.type),
+          type: getNotificationType(notif.type || notif.notificationType),
           read: notif.isRead !== undefined ? notif.isRead : notif.read
         }));
 
         // Transform document data to match interface
-        const transformedDocuments = documentsData.map((doc: any) => ({
+        const transformedDocuments = safeDocuments.map((doc: any) => ({
           id: doc.id.toString(),
           name: doc.name,
           fileType: doc.fileType,
@@ -520,9 +541,8 @@ export default function Dashboard() {
                       : 'bg-white/60 hover:bg-white/80'
                   }`}
                 />
-                  ))}
-                )}
-              </div>            {/* Auto-play Indicator */}
+              ))}
+            </div>            {/* Auto-play Indicator */}
             <div className="absolute top-4 right-4 z-10">
               <button
                 onClick={() => setIsAutoPlaying(!isAutoPlaying)}

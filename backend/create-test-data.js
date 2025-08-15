@@ -12,12 +12,12 @@ const createTestData = async () => {
     // Find a test user (assuming you have one from previous tests)
     const user = await MySQLUser.findOne({
       where: {
-        email: 'test@example.com'
+        email: 'niroshanijn@gmail.com'
       }
     });
 
     if (!user) {
-      console.log('No test user found with email test@example.com');
+      console.log('No test user found with email niroshanijn@gmail.com');
       console.log('Please create a user first by registering through the frontend');
       return;
     }

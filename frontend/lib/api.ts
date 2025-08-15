@@ -41,20 +41,38 @@ apiClient.interceptors.response.use(
 export const dashboardAPI = {
   // Get dashboard appointments
   getAppointments: async () => {
-    const response = await apiClient.get('/mysql/appointments/dashboard');
-    return response.data.data;
+    try {
+      const response = await apiClient.get('/mysql/appointments/dashboard');
+      console.log('Appointments API response:', response.data);
+      return response.data.data || [];
+    } catch (error) {
+      console.error('Failed to fetch appointments:', error);
+      throw error;
+    }
   },
 
   // Get dashboard notifications
   getNotifications: async () => {
-    const response = await apiClient.get('/mysql/notifications/dashboard');
-    return response.data.data;
+    try {
+      const response = await apiClient.get('/mysql/notifications/dashboard');
+      console.log('Notifications API response:', response.data);
+      return response.data.data || [];
+    } catch (error) {
+      console.error('Failed to fetch notifications:', error);
+      throw error;
+    }
   },
 
   // Get dashboard documents
   getDocuments: async () => {
-    const response = await apiClient.get('/mysql/documents/dashboard');
-    return response.data.data;
+    try {
+      const response = await apiClient.get('/mysql/documents/dashboard');
+      console.log('Documents API response:', response.data);
+      return response.data.data || [];
+    } catch (error) {
+      console.error('Failed to fetch documents:', error);
+      throw error;
+    }
   },
 
   // Mark notification as read
@@ -65,8 +83,14 @@ export const dashboardAPI = {
 
   // Get unread notifications count
   getUnreadCount: async () => {
-    const response = await apiClient.get('/mysql/notifications/unread-count');
-    return response.data.count;
+    try {
+      const response = await apiClient.get('/mysql/notifications/unread-count');
+      console.log('Unread count API response:', response.data);
+      return response.data.count || 0;
+    } catch (error) {
+      console.error('Failed to fetch unread count:', error);
+      throw error;
+    }
   }
 };
 
