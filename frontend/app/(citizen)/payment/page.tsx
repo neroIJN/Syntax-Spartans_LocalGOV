@@ -1,6 +1,6 @@
 'use client'
 
-import { useState, useEffect } from 'react'
+import { useState, useEffect, Suspense } from 'react'
 import { useRouter, useSearchParams } from 'next/navigation'
 import { 
   CreditCardIcon,
@@ -14,7 +14,7 @@ import {
 import DashboardLayout from '../../../components/DashboardLayout'
 import { getServiceById, calculateTotalFee } from '../../../lib/services'
 
-export default function PaymentPage() {
+function PaymentContent() {
   const router = useRouter()
   const searchParams = useSearchParams()
   const appointmentId = searchParams.get('appointmentId')
@@ -394,5 +394,22 @@ export default function PaymentPage() {
         </div>
       </div>
     </DashboardLayout>
+  )
+}
+
+export default function PaymentPage() {
+  return (
+    <Suspense fallback={
+      <DashboardLayout>
+        <div className="flex items-center justify-center min-h-[400px]">
+          <div className="text-center">
+            <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-white mx-auto mb-4"></div>
+            <p className="text-white text-lg">Loading...</p>
+          </div>
+        </div>
+      </DashboardLayout>
+    }>
+      <PaymentContent />
+    </Suspense>
   )
 }

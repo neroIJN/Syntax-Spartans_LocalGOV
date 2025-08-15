@@ -1,6 +1,6 @@
 'use client'
 
-import { useState } from 'react'
+import { useState, Suspense } from 'react'
 import { useRouter, useSearchParams } from 'next/navigation'
 import { 
   CalendarDaysIcon,
@@ -16,7 +16,7 @@ import {
 import DashboardLayout from '../../../../components/DashboardLayout'
 import { services, getServiceById, calculateTotalFee, getDepartments } from '../../../../lib/services'
 
-export default function BookAppointmentPage() {
+function BookAppointmentContent() {
   const router = useRouter()
   const searchParams = useSearchParams()
   const preSelectedService = searchParams.get('service')
@@ -538,5 +538,22 @@ export default function BookAppointmentPage() {
         </div>
       </div>
     </DashboardLayout>
+  )
+}
+
+export default function BookAppointmentPage() {
+  return (
+    <Suspense fallback={
+      <DashboardLayout>
+        <div className="flex items-center justify-center min-h-[400px]">
+          <div className="text-center">
+            <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-white mx-auto mb-4"></div>
+            <p className="text-white text-lg">Loading...</p>
+          </div>
+        </div>
+      </DashboardLayout>
+    }>
+      <BookAppointmentContent />
+    </Suspense>
   )
 }

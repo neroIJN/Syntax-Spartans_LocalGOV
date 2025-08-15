@@ -2,10 +2,16 @@
 
 import Link from 'next/link'
 import { useState } from 'react'
+import axios from 'axios'
+import { useRouter } from 'next/navigation'
+import { useAuth } from '@/hooks/useAuth'
+import AuthGuard from '@/components/AuthGuard'
 
 export default function LoginPage() {
+  const router = useRouter()
+  const { login } = useAuth()
   const [formData, setFormData] = useState({
-    usernameOrNationalId: '',
+    email: '',
     password: ''
   })
 
@@ -30,8 +36,10 @@ export default function LoginPage() {
   const validateForm = () => {
     const newErrors: Record<string, string> = {}
 
-    if (!formData.usernameOrNationalId.trim()) {
-      newErrors.usernameOrNationalId = 'Username or National ID is required'
+    if (!formData.email.trim()) {
+      newErrors.email = 'Email is required'
+    } else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(formData.email)) {
+      newErrors.email = 'Please enter a valid email address'
     }
 
     if (!formData.password) {
@@ -44,17 +52,53 @@ export default function LoginPage() {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
-    if (validateForm()) {
-      setIsLoading(true)
-      try {
-        console.log('Login submitted:', formData)
-        // Handle login logic here
-        await new Promise(resolve => setTimeout(resolve, 1000)) // Simulate API call
-      } catch (error) {
-        console.error('Login error:', error)
-      } finally {
-        setIsLoading(false)
+    if (!validateForm()) {
+      return
+    }
+
+    setIsLoading(true)
+    setErrors({})
+
+    try {
+      console.log('Login submitted:', formData)
+      
+      // Call the backend API
+      const response = await axios.post(
+        'http://localhost:5000/api/auth/mysql/login',
+        formData,
+        {
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          timeout: 10000
+        }
+      )
+      
+      console.log('Login successful:', response.data)
+      
+      // Get the token and user data from the response
+      const { token, user } = response.data;
+      
+      // Use the auth hook to login and store user data
+      login(token, user);
+      
+      // Redirect to dashboard
+      router.push('/dashboard')
+      
+    } catch (error: any) {
+      console.error('Login error:', error)
+      
+      if (error.response?.data?.message) {
+        setErrors({ submit: error.response.data.message })
+      } else if (error.response?.status === 401) {
+        setErrors({ submit: 'Invalid email or password' })
+      } else if (error.response?.status === 404) {
+        setErrors({ submit: 'Login service not available. Please check if the server is running.' })
+      } else {
+        setErrors({ submit: 'Login failed. Please try again.' })
       }
+    } finally {
+      setIsLoading(false)
     }
   }
 
@@ -69,8 +113,9 @@ export default function LoginPage() {
   }
 
   return (
-    <>
-      {/* Navigation Header */}
+    <AuthGuard requireAuth={false}>
+      <>
+        {/* Navigation Header */}
       <nav className="absolute top-0 left-0 right-0 z-50 bg-white/10 backdrop-blur-md border-b border-white/20">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex items-center justify-between h-14 lg:h-16">
@@ -143,21 +188,21 @@ export default function LoginPage() {
               {/* Login Form */}
               <form onSubmit={handleSubmit} className="space-y-6">
                 
-                {/* Username or National ID */}
+                {/* Email */}
                 <div>
-                  <label htmlFor="usernameOrNationalId" className="block text-sm font-medium text-white/90 mb-2">
-                    Username or National ID
+                  <label htmlFor="email" className="block text-sm font-medium text-white/90 mb-2">
+                    Email Address
                   </label>
                   <input
-                    type="text"
-                    id="usernameOrNationalId"
-                    name="usernameOrNationalId"
-                    value={formData.usernameOrNationalId}
+                    type="email"
+                    id="email"
+                    name="email"
+                    value={formData.email}
                     onChange={handleInputChange}
-                    placeholder="Enter your username or National ID"
-                    className={`w-full px-4 py-3 bg-white/10 backdrop-blur-sm border ${errors.usernameOrNationalId ? 'border-red-400' : 'border-white/30'} rounded-xl text-white placeholder-white/60 focus:outline-none focus:ring-2 focus:ring-blue-400 focus:border-transparent transition-all duration-200 text-sm`}
+                    placeholder="Enter your email address"
+                    className={`w-full px-4 py-3 bg-white/10 backdrop-blur-sm border ${errors.email ? 'border-red-400' : 'border-white/30'} rounded-xl text-white placeholder-white/60 focus:outline-none focus:ring-2 focus:ring-blue-400 focus:border-transparent transition-all duration-200 text-sm`}
                   />
-                  {errors.usernameOrNationalId && <p className="text-red-300 text-xs mt-1">{errors.usernameOrNationalId}</p>}
+                  {errors.email && <p className="text-red-300 text-xs mt-1">{errors.email}</p>}
                 </div>
 
                 {/* Password */}
@@ -187,6 +232,13 @@ export default function LoginPage() {
                     Forgot Password?
                   </button>
                 </div>
+
+                {/* Submit Error */}
+                {errors.submit && (
+                  <div className="p-3 bg-red-500/20 border border-red-400 rounded-xl">
+                    <p className="text-red-300 text-sm">{errors.submit}</p>
+                  </div>
+                )}
 
                 {/* Action Buttons */}
                 <div className="flex flex-col sm:flex-row gap-4 pt-4">
@@ -230,6 +282,7 @@ export default function LoginPage() {
           </div>
         </div>
       </main>
-    </>
+      </>
+    </AuthGuard>
   )
 }

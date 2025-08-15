@@ -2,24 +2,29 @@
 
 import Link from 'next/link'
 import { useState } from 'react'
+import axios from 'axios'
 
 export default function RegisterPage() {
   const [formData, setFormData] = useState({
-    fullName: '',
-    nameWithInitials: '',
-    nationalId: '',
-    contactNumber: '',
+    firstName: '',
+    lastName: '',
+    email: '',
+    nicNumber: '',
+    phoneNumber: '',
     address: '',
+    dateOfBirth: '',
+    gender: '',
     password: '',
-    confirmPassword: '',
-    profilePhoto: null as File | null
+    confirmPassword: ''
   })
 
+  const [photoFile, setPhotoFile] = useState<File | null>(null)
   const [photoPreview, setPhotoPreview] = useState<string | null>(null)
-
+  const [loading, setLoading] = useState(false)
+  const [success, setSuccess] = useState(false)
   const [errors, setErrors] = useState<Record<string, string>>({})
 
-  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
+  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => {
     const { name, value } = e.target
     setFormData(prev => ({
       ...prev,
@@ -38,11 +43,11 @@ export default function RegisterPage() {
     const file = e.target.files?.[0]
     if (file) {
       // Validate file type
-      const allowedTypes = ['image/jpeg', 'image/jpg', 'image/png']
+      const allowedTypes = ['image/jpeg', 'image/jpg', 'image/png', 'image/gif']
       if (!allowedTypes.includes(file.type)) {
         setErrors(prev => ({
           ...prev,
-          profilePhoto: 'Please select a valid image file (JPEG, JPG, or PNG)'
+          photo: 'Please select a valid image file (JPEG, PNG, or GIF)'
         }))
         return
       }
@@ -52,7 +57,7 @@ export default function RegisterPage() {
       if (file.size > maxSize) {
         setErrors(prev => ({
           ...prev,
-          profilePhoto: 'File size must be less than 5MB'
+          photo: 'File size must be less than 5MB'
         }))
         return
       }
@@ -60,14 +65,11 @@ export default function RegisterPage() {
       // Clear any previous errors
       setErrors(prev => ({
         ...prev,
-        profilePhoto: ''
+        photo: ''
       }))
 
-      // Update form data
-      setFormData(prev => ({
-        ...prev,
-        profilePhoto: file
-      }))
+      // Update photo file
+      setPhotoFile(file)
 
       // Create preview
       const reader = new FileReader()
@@ -81,32 +83,39 @@ export default function RegisterPage() {
   const validateForm = () => {
     const newErrors: Record<string, string> = {}
 
-    if (!formData.fullName.trim()) {
-      newErrors.fullName = 'Full name is required'
+    // Required fields validation
+    if (!formData.firstName.trim()) {
+      newErrors.firstName = 'First name is required'
     }
 
-    if (!formData.nameWithInitials.trim()) {
-      newErrors.nameWithInitials = 'Name with initials is required'
+    if (!formData.lastName.trim()) {
+      newErrors.lastName = 'Last name is required'
     }
 
-    if (!formData.nationalId.trim()) {
-      newErrors.nationalId = 'National ID is required'
-    } else if (!/^\d{9}[vVxX]$/.test(formData.nationalId.trim())) {
-      newErrors.nationalId = 'Invalid National ID format (e.g., 123456789V)'
+    if (!formData.email.trim()) {
+      newErrors.email = 'Email is required'
+    } else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(formData.email)) {
+      newErrors.email = 'Please enter a valid email address'
     }
 
-    if (!formData.contactNumber.trim()) {
-      newErrors.contactNumber = 'Contact number is required'
-    } else if (!/^0\d{9}$/.test(formData.contactNumber.trim())) {
-      newErrors.contactNumber = 'Invalid contact number format (e.g., 0771234567)'
+    if (!formData.nicNumber.trim()) {
+      newErrors.nicNumber = 'NIC number is required'
+    } else if (!/^[0-9]{9}[vVxX]$|^[0-9]{12}$/.test(formData.nicNumber.trim())) {
+      newErrors.nicNumber = 'Invalid NIC format (e.g., 123456789V or 123456789012)'
     }
 
-    if (!formData.address.trim()) {
-      newErrors.address = 'Address is required'
+    if (!formData.phoneNumber.trim()) {
+      newErrors.phoneNumber = 'Phone number is required'
+    } else if (!/^(\+94|0)[0-9]{9}$/.test(formData.phoneNumber.trim())) {
+      newErrors.phoneNumber = 'Invalid phone format (e.g., +94771234567 or 0771234567)'
     }
 
-    if (!formData.profilePhoto) {
-      newErrors.profilePhoto = 'Profile photo is required'
+    if (!formData.dateOfBirth) {
+      newErrors.dateOfBirth = 'Date of birth is required'
+    }
+
+    if (!formData.gender) {
+      newErrors.gender = 'Gender is required'
     }
 
     if (!formData.password) {
@@ -125,17 +134,106 @@ export default function RegisterPage() {
     return Object.keys(newErrors).length === 0
   }
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
-    if (validateForm()) {
-      console.log('Form submitted:', formData)
-      // Handle registration logic here
+    
+    if (!validateForm()) {
+      return
+    }
+
+    setLoading(true)
+    setErrors({})
+
+    try {
+      // Create FormData for multipart form submission
+      const submitData = new FormData()
+      
+      // Append all form fields
+      Object.entries(formData).forEach(([key, value]) => {
+        if (key !== 'confirmPassword' && value) {
+          submitData.append(key, value)
+        }
+      })
+      
+      // Append photo if selected
+      if (photoFile) {
+        submitData.append('photo', photoFile)
+      }
+      
+      // Submit to backend
+      const response = await axios.post(
+        'http://localhost:5000/api/auth/mysql/register',
+        submitData,
+        {
+          headers: {
+            'Content-Type': 'multipart/form-data',
+          },
+          timeout: 30000 // 30 second timeout for file upload
+        }
+      )
+      
+      console.log('Registration successful:', response.data)
+      setSuccess(true)
+      
+      // Store the authentication token
+      if (response.data.token) {
+        localStorage.setItem('authToken', response.data.token)
+      }
+      
+    } catch (error: any) {
+      console.error('Registration error:', error)
+      
+      if (error.response?.data?.message) {
+        setErrors({ submit: error.response.data.message })
+      } else if (error.response?.data?.errors) {
+        setErrors({ submit: Array.isArray(error.response.data.errors) ? error.response.data.errors.join(', ') : error.response.data.errors })
+      } else {
+        setErrors({ submit: 'Registration failed. Please try again.' })
+      }
+    } finally {
+      setLoading(false)
     }
   }
 
   const handleCancel = () => {
     // Navigate back or clear form
     window.history.back()
+  }
+
+  // Success screen
+  if (success) {
+    return (
+      <main className="relative min-h-screen overflow-hidden">
+        {/* Background Image */}
+        <div 
+          className="absolute inset-0 bg-cover bg-center bg-no-repeat"
+          style={{
+            backgroundImage: `url('/Manage.jpg')`
+          }}
+        />
+        
+        {/* Professional Overlay */}
+        <div className="absolute inset-0 bg-gradient-to-br from-slate-900/85 via-blue-900/75 to-slate-800/90" />
+        
+        <div className="relative z-10 flex flex-col justify-center items-center min-h-screen px-4 sm:px-6 lg:px-8">
+          <div className="w-full max-w-md mx-auto">
+            <div className="bg-white/10 backdrop-blur-md rounded-2xl shadow-2xl border border-white/20 p-8 text-center">
+              <div className="text-green-400 text-6xl mb-4">✅</div>
+              <h2 className="text-2xl font-bold text-white mb-4">Registration Successful!</h2>
+              <p className="text-blue-100 mb-6">
+                Your account has been created successfully. Please check your email for verification instructions.
+              </p>
+              <Link
+                href="/auth/login"
+                className="inline-block bg-gradient-to-r from-blue-600 to-blue-700 text-white font-semibold px-8 py-3 rounded-xl shadow-2xl hover:from-blue-700 hover:to-blue-800 transition-all duration-300"
+              >
+                Continue to Login
+              </Link>
+            </div>
+          </div>
+        </div>
+      </main>
+    )
   }
 
   return (
@@ -213,78 +311,96 @@ export default function RegisterPage() {
               {/* Registration Form */}
               <form onSubmit={handleSubmit} className="space-y-4">
                 
-                {/* Full Name */}
+                {/* Name Fields */}
+                <div className="grid grid-cols-2 gap-4">
+                  <div>
+                    <label htmlFor="firstName" className="block text-sm font-medium text-white/90 mb-2">
+                      First Name
+                    </label>
+                    <input
+                      type="text"
+                      id="firstName"
+                      name="firstName"
+                      value={formData.firstName}
+                      onChange={handleInputChange}
+                      placeholder="First name"
+                      className={`w-full px-4 py-3 bg-white/10 backdrop-blur-sm border ${errors.firstName ? 'border-red-400' : 'border-white/30'} rounded-xl text-white placeholder-white/60 focus:outline-none focus:ring-2 focus:ring-blue-400 focus:border-transparent transition-all duration-200 text-sm`}
+                    />
+                    {errors.firstName && <p className="text-red-300 text-xs mt-1">{errors.firstName}</p>}
+                  </div>
+
+                  <div>
+                    <label htmlFor="lastName" className="block text-sm font-medium text-white/90 mb-2">
+                      Last Name
+                    </label>
+                    <input
+                      type="text"
+                      id="lastName"
+                      name="lastName"
+                      value={formData.lastName}
+                      onChange={handleInputChange}
+                      placeholder="Last name"
+                      className={`w-full px-4 py-3 bg-white/10 backdrop-blur-sm border ${errors.lastName ? 'border-red-400' : 'border-white/30'} rounded-xl text-white placeholder-white/60 focus:outline-none focus:ring-2 focus:ring-blue-400 focus:border-transparent transition-all duration-200 text-sm`}
+                    />
+                    {errors.lastName && <p className="text-red-300 text-xs mt-1">{errors.lastName}</p>}
+                  </div>
+                </div>
+
+                {/* Email */}
                 <div>
-                  <label htmlFor="fullName" className="block text-sm font-medium text-white/90 mb-2">
-                    Full Name
+                  <label htmlFor="email" className="block text-sm font-medium text-white/90 mb-2">
+                    Email Address
+                  </label>
+                  <input
+                    type="email"
+                    id="email"
+                    name="email"
+                    value={formData.email}
+                    onChange={handleInputChange}
+                    placeholder="Enter your email"
+                    className={`w-full px-4 py-3 bg-white/10 backdrop-blur-sm border ${errors.email ? 'border-red-400' : 'border-white/30'} rounded-xl text-white placeholder-white/60 focus:outline-none focus:ring-2 focus:ring-blue-400 focus:border-transparent transition-all duration-200 text-sm`}
+                  />
+                  {errors.email && <p className="text-red-300 text-xs mt-1">{errors.email}</p>}
+                </div>
+
+                {/* NIC Number */}
+                <div>
+                  <label htmlFor="nicNumber" className="block text-sm font-medium text-white/90 mb-2">
+                    NIC Number
                   </label>
                   <input
                     type="text"
-                    id="fullName"
-                    name="fullName"
-                    value={formData.fullName}
+                    id="nicNumber"
+                    name="nicNumber"
+                    value={formData.nicNumber}
                     onChange={handleInputChange}
-                    placeholder="Enter your full name"
-                    className={`w-full px-4 py-3 bg-white/10 backdrop-blur-sm border ${errors.fullName ? 'border-red-400' : 'border-white/30'} rounded-xl text-white placeholder-white/60 focus:outline-none focus:ring-2 focus:ring-blue-400 focus:border-transparent transition-all duration-200 text-sm`}
+                    placeholder="e.g., 123456789V or 123456789012"
+                    className={`w-full px-4 py-3 bg-white/10 backdrop-blur-sm border ${errors.nicNumber ? 'border-red-400' : 'border-white/30'} rounded-xl text-white placeholder-white/60 focus:outline-none focus:ring-2 focus:ring-blue-400 focus:border-transparent transition-all duration-200 text-sm`}
                   />
-                  {errors.fullName && <p className="text-red-300 text-xs mt-1">{errors.fullName}</p>}
+                  {errors.nicNumber && <p className="text-red-300 text-xs mt-1">{errors.nicNumber}</p>}
                 </div>
 
-                {/* Name with Initials */}
+                {/* Phone Number */}
                 <div>
-                  <label htmlFor="nameWithInitials" className="block text-sm font-medium text-white/90 mb-2">
-                    Name with Initials
-                  </label>
-                  <input
-                    type="text"
-                    id="nameWithInitials"
-                    name="nameWithInitials"
-                    value={formData.nameWithInitials}
-                    onChange={handleInputChange}
-                    placeholder="e.g., S.M.K. Silva"
-                    className={`w-full px-4 py-3 bg-white/10 backdrop-blur-sm border ${errors.nameWithInitials ? 'border-red-400' : 'border-white/30'} rounded-xl text-white placeholder-white/60 focus:outline-none focus:ring-2 focus:ring-blue-400 focus:border-transparent transition-all duration-200 text-sm`}
-                  />
-                  {errors.nameWithInitials && <p className="text-red-300 text-xs mt-1">{errors.nameWithInitials}</p>}
-                </div>
-
-                {/* National ID */}
-                <div>
-                  <label htmlFor="nationalId" className="block text-sm font-medium text-white/90 mb-2">
-                    National ID
-                  </label>
-                  <input
-                    type="text"
-                    id="nationalId"
-                    name="nationalId"
-                    value={formData.nationalId}
-                    onChange={handleInputChange}
-                    placeholder="Enter your National ID"
-                    className={`w-full px-4 py-3 bg-white/10 backdrop-blur-sm border ${errors.nationalId ? 'border-red-400' : 'border-white/30'} rounded-xl text-white placeholder-white/60 focus:outline-none focus:ring-2 focus:ring-blue-400 focus:border-transparent transition-all duration-200 text-sm`}
-                  />
-                  {errors.nationalId && <p className="text-red-300 text-xs mt-1">{errors.nationalId}</p>}
-                </div>
-
-                {/* Contact Number */}
-                <div>
-                  <label htmlFor="contactNumber" className="block text-sm font-medium text-white/90 mb-2">
-                    Contact Number
+                  <label htmlFor="phoneNumber" className="block text-sm font-medium text-white/90 mb-2">
+                    Phone Number
                   </label>
                   <input
                     type="tel"
-                    id="contactNumber"
-                    name="contactNumber"
-                    value={formData.contactNumber}
+                    id="phoneNumber"
+                    name="phoneNumber"
+                    value={formData.phoneNumber}
                     onChange={handleInputChange}
-                    placeholder="Enter your contact number"
-                    className={`w-full px-4 py-3 bg-white/10 backdrop-blur-sm border ${errors.contactNumber ? 'border-red-400' : 'border-white/30'} rounded-xl text-white placeholder-white/60 focus:outline-none focus:ring-2 focus:ring-blue-400 focus:border-transparent transition-all duration-200 text-sm`}
+                    placeholder="e.g., +94771234567"
+                    className={`w-full px-4 py-3 bg-white/10 backdrop-blur-sm border ${errors.phoneNumber ? 'border-red-400' : 'border-white/30'} rounded-xl text-white placeholder-white/60 focus:outline-none focus:ring-2 focus:ring-blue-400 focus:border-transparent transition-all duration-200 text-sm`}
                   />
-                  {errors.contactNumber && <p className="text-red-300 text-xs mt-1">{errors.contactNumber}</p>}
+                  {errors.phoneNumber && <p className="text-red-300 text-xs mt-1">{errors.phoneNumber}</p>}
                 </div>
 
                 {/* Address */}
                 <div>
                   <label htmlFor="address" className="block text-sm font-medium text-white/90 mb-2">
-                    Address
+                    Address (Optional)
                   </label>
                   <textarea
                     id="address"
@@ -298,10 +414,47 @@ export default function RegisterPage() {
                   {errors.address && <p className="text-red-300 text-xs mt-1">{errors.address}</p>}
                 </div>
 
+                {/* Date of Birth and Gender */}
+                <div className="grid grid-cols-2 gap-4">
+                  <div>
+                    <label htmlFor="dateOfBirth" className="block text-sm font-medium text-white/90 mb-2">
+                      Date of Birth
+                    </label>
+                    <input
+                      type="date"
+                      id="dateOfBirth"
+                      name="dateOfBirth"
+                      value={formData.dateOfBirth}
+                      onChange={handleInputChange}
+                      className={`w-full px-4 py-3 bg-white/10 backdrop-blur-sm border ${errors.dateOfBirth ? 'border-red-400' : 'border-white/30'} rounded-xl text-white focus:outline-none focus:ring-2 focus:ring-blue-400 focus:border-transparent transition-all duration-200 text-sm`}
+                    />
+                    {errors.dateOfBirth && <p className="text-red-300 text-xs mt-1">{errors.dateOfBirth}</p>}
+                  </div>
+
+                  <div>
+                    <label htmlFor="gender" className="block text-sm font-medium text-white/90 mb-2">
+                      Gender
+                    </label>
+                    <select
+                      id="gender"
+                      name="gender"
+                      value={formData.gender}
+                      onChange={handleInputChange}
+                      className={`w-full px-4 py-3 bg-white/10 backdrop-blur-sm border ${errors.gender ? 'border-red-400' : 'border-white/30'} rounded-xl text-white focus:outline-none focus:ring-2 focus:ring-blue-400 focus:border-transparent transition-all duration-200 text-sm`}
+                    >
+                      <option value="">Select Gender</option>
+                      <option value="male">Male</option>
+                      <option value="female">Female</option>
+                      <option value="other">Other</option>
+                    </select>
+                    {errors.gender && <p className="text-red-300 text-xs mt-1">{errors.gender}</p>}
+                  </div>
+                </div>
+
                 {/* Profile Photo */}
                 <div>
-                  <label htmlFor="profilePhoto" className="block text-sm font-medium text-white/90 mb-2">
-                    Profile Photo
+                  <label htmlFor="photo" className="block text-sm font-medium text-white/90 mb-2">
+                    Profile Photo (Optional)
                   </label>
                   <div className="flex flex-col space-y-3">
                     {/* Photo Preview */}
@@ -321,26 +474,26 @@ export default function RegisterPage() {
                     <div className="relative">
                       <input
                         type="file"
-                        id="profilePhoto"
-                        name="profilePhoto"
-                        accept="image/jpeg,image/jpg,image/png"
+                        id="photo"
+                        name="photo"
+                        accept="image/jpeg,image/jpg,image/png,image/gif"
                         onChange={handleFileChange}
                         className="sr-only"
                       />
                       <label 
-                        htmlFor="profilePhoto"
-                        className={`block w-full px-4 py-3 bg-white/10 backdrop-blur-sm border ${errors.profilePhoto ? 'border-red-400' : 'border-white/30'} rounded-xl text-white text-center cursor-pointer hover:bg-white/20 transition-all duration-200 text-sm`}
+                        htmlFor="photo"
+                        className={`block w-full px-4 py-3 bg-white/10 backdrop-blur-sm border ${errors.photo ? 'border-red-400' : 'border-white/30'} rounded-xl text-white text-center cursor-pointer hover:bg-white/20 transition-all duration-200 text-sm`}
                       >
                         <div className="flex items-center justify-center gap-2">
                           <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12" />
                           </svg>
-                          {formData.profilePhoto ? formData.profilePhoto.name : 'Choose profile photo (JPEG, PNG - Max 5MB)'}
+                          {photoFile ? photoFile.name : 'Choose profile photo (JPEG, PNG, GIF - Max 5MB)'}
                         </div>
                       </label>
                     </div>
                   </div>
-                  {errors.profilePhoto && <p className="text-red-300 text-xs mt-1">{errors.profilePhoto}</p>}
+                  {errors.photo && <p className="text-red-300 text-xs mt-1">{errors.photo}</p>}
                 </div>
 
                 {/* Password */}
@@ -377,18 +530,41 @@ export default function RegisterPage() {
                   {errors.confirmPassword && <p className="text-red-300 text-xs mt-1">{errors.confirmPassword}</p>}
                 </div>
 
+                {/* Submit Error */}
+                {errors.submit && (
+                  <div className="p-3 bg-red-500/20 border border-red-400 rounded-xl">
+                    <p className="text-red-300 text-sm">{errors.submit}</p>
+                  </div>
+                )}
+
                 {/* Action Buttons */}
                 <div className="flex flex-col sm:flex-row gap-4 pt-6">
                   <button
                     type="submit"
-                    className="bg-gradient-to-r from-blue-600 to-blue-700 text-white font-semibold px-8 py-3 rounded-xl shadow-2xl hover:from-blue-700 hover:to-blue-800 hover:shadow-blue-500/25 transform hover:scale-105 transition-all duration-300 w-full sm:flex-1 text-sm"
+                    disabled={loading}
+                    className={`${
+                      loading
+                        ? 'bg-gray-600 cursor-not-allowed'
+                        : 'bg-gradient-to-r from-blue-600 to-blue-700 hover:from-blue-700 hover:to-blue-800 hover:shadow-blue-500/25 transform hover:scale-105'
+                    } text-white font-semibold px-8 py-3 rounded-xl shadow-2xl transition-all duration-300 w-full sm:flex-1 text-sm`}
                   >
-                    Create Account
+                    {loading ? (
+                      <span className="flex items-center justify-center">
+                        <svg className="animate-spin -ml-1 mr-3 h-5 w-5 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                          <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
+                          <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                        </svg>
+                        Creating Account...
+                      </span>
+                    ) : (
+                      'Create Account'
+                    )}
                   </button>
                   <button
                     type="button"
                     onClick={handleCancel}
-                    className="bg-white/10 backdrop-blur-sm text-white font-semibold px-8 py-3 rounded-xl border border-white/30 hover:bg-white/20 hover:shadow-xl transform hover:scale-105 transition-all duration-300 w-full sm:flex-1 text-sm"
+                    disabled={loading}
+                    className="bg-white/10 backdrop-blur-sm text-white font-semibold px-8 py-3 rounded-xl border border-white/30 hover:bg-white/20 hover:shadow-xl transform hover:scale-105 transition-all duration-300 w-full sm:flex-1 text-sm disabled:opacity-50 disabled:cursor-not-allowed"
                   >
                     Cancel
                   </button>

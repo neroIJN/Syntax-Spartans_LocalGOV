@@ -20,6 +20,8 @@ import {
 import Link from 'next/link';
 import Image from 'next/image';
 import DashboardLayout from '@/components/DashboardLayout';
+import AuthGuard from '@/components/AuthGuard';
+import { useAuth } from '@/hooks/useAuth';
 
 interface Appointment {
   id: string;
@@ -50,13 +52,43 @@ interface Notification {
 }
 
 export default function Dashboard() {
-  const [user, setUser] = useState({
-    name: 'Ms. Perera',
-    profileImage: '/images/profile-placeholder.jpg',
-    nationalId: '123456789V',
-    email: 'perera@example.com',
-    phone: '+94 70 123 4567'
+  const { user } = useAuth();
+  
+  // Use authenticated user data instead of hardcoded data
+  const [userProfile, setUserProfile] = useState({
+    name: user ? `${user.firstName} ${user.lastName}` : 'Loading...',
+    profileImage: user?.profilePicture ? `http://localhost:5000/uploads/profiles/${user.profilePicture}` : null,
+    nationalId: user?.nicNumber || 'Loading...',
+    email: user?.email || 'Loading...',
+    phone: user?.phoneNumber || 'Loading...',
+    title: ''
   });
+
+  // Update profile when user data changes
+  useEffect(() => {
+    if (user) {
+      // Determine title based on gender
+      const getTitle = (gender: string, firstName: string) => {
+        if (gender === 'female') {
+          return 'Ms.';
+        } else if (gender === 'male') {
+          return 'Mr.';
+        }
+        return '';
+      };
+
+      const title = getTitle(user.gender || '', user.firstName || '');
+      
+      setUserProfile({
+        name: `${user.firstName} ${user.lastName}`,
+        profileImage: user.profilePicture ? `http://localhost:5000/uploads/profiles/${user.profilePicture}` : null,
+        nationalId: user.nicNumber,
+        email: user.email,
+        phone: user.phoneNumber,
+        title: title
+      });
+    }
+  }, [user]);
 
   // Carousel state
   const [currentSlide, setCurrentSlide] = useState(0);
@@ -267,19 +299,33 @@ export default function Dashboard() {
   const unreadCount = notifications.filter(n => !n.read).length;
 
   return (
-    <DashboardLayout>
-      <div className="px-4 sm:px-6 lg:px-8 py-8">
+    <AuthGuard>
+      <DashboardLayout>
+        <div className="px-4 sm:px-6 lg:px-8 py-8">
         {/* Welcome Section */}
         <div className="mb-8">
           <div className="bg-white/10 backdrop-blur-md rounded-2xl shadow-2xl border border-white/20 overflow-hidden">
             <div className="bg-gradient-to-r from-blue-600/20 via-blue-700/20 to-indigo-700/20 backdrop-blur-sm px-8 py-12">
               <div className="flex items-center space-x-6">
-                <div className="h-20 w-20 rounded-full bg-white/20 backdrop-blur-sm flex items-center justify-center border-2 border-white/30 shadow-lg">
-                  <UserCircleIcon className="h-12 w-12 text-white" />
+                <div className="h-20 w-20 rounded-full bg-white/20 backdrop-blur-sm flex items-center justify-center border-2 border-white/30 shadow-lg overflow-hidden">
+                  {userProfile.profileImage ? (
+                    <img 
+                      src={userProfile.profileImage} 
+                      alt={`${userProfile.name}'s profile`}
+                      className="w-full h-full object-cover rounded-full"
+                      onError={(e) => {
+                        // Fallback to icon if image fails to load
+                        const target = e.target as HTMLImageElement;
+                        target.style.display = 'none';
+                        target.nextElementSibling?.classList.remove('hidden');
+                      }}
+                    />
+                  ) : null}
+                  <UserCircleIcon className={`h-12 w-12 text-white ${userProfile.profileImage ? 'hidden' : ''}`} />
                 </div>
                 <div>
                   <h1 className="text-4xl font-bold text-white mb-2 drop-shadow-lg">
-                    Welcome back, {user.name}!
+                    Welcome back, {userProfile.title} {userProfile.name}!
                   </h1>
                   <p className="text-blue-100 text-xl font-medium">
                     Manage your government services efficiently
@@ -287,7 +333,7 @@ export default function Dashboard() {
                   <div className="mt-4 flex items-center space-x-6 text-blue-100">
                     <div className="flex items-center space-x-2">
                       <span className="text-sm font-medium">National ID:</span>
-                      <span className="text-white font-semibold">{user.nationalId}</span>
+                      <span className="text-white font-semibold">{userProfile.nationalId}</span>
                     </div>
                     <div className="flex items-center space-x-2">
                       <span className="text-sm font-medium">Status:</span>
@@ -616,5 +662,6 @@ export default function Dashboard() {
           </div>
       </div>
     </DashboardLayout>
+    </AuthGuard>
   );
 }

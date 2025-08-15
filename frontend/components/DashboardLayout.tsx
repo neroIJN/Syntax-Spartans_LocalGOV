@@ -16,6 +16,8 @@ import {
   PlusCircleIcon,
   ClipboardDocumentListIcon
 } from '@heroicons/react/24/outline';
+import UserProfileHeader from './UserProfileHeader';
+import { useAuth } from '@/hooks/useAuth';
 
 interface DashboardLayoutProps {
   children: React.ReactNode;
@@ -25,6 +27,7 @@ export default function DashboardLayout({ children }: DashboardLayoutProps) {
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
   const router = useRouter();
   const pathname = usePathname();
+  const { logout } = useAuth();
 
   const navigation = [
     { name: 'Dashboard', href: '/dashboard', icon: HomeIcon },
@@ -50,12 +53,7 @@ export default function DashboardLayout({ children }: DashboardLayoutProps) {
   };
 
   const handleLogout = () => {
-    // Clear any stored authentication data
-    localStorage.removeItem('token');
-    localStorage.removeItem('user');
-    
-    // Redirect to login page
-    router.push('/auth/login');
+    logout();
   };
 
   return (
@@ -197,16 +195,7 @@ export default function DashboardLayout({ children }: DashboardLayoutProps) {
                 </button>
 
                 {/* Profile dropdown */}
-                <div className="relative hover-lift">
-                  <button type="button" className="-m-1.5 flex items-center p-1.5 hover:bg-white/10 rounded-lg transition-smooth hover-lift">
-                    <div className="h-8 w-8 rounded-full bg-gradient-to-r from-blue-600 to-blue-700 flex items-center justify-center shadow-lg hover-lift">
-                      <UserCircleIcon className="h-5 w-5 text-white" />
-                    </div>
-                    <span className="hidden lg:flex lg:items-center">
-                      <span className="ml-3 text-sm font-semibold text-white">Ms. Perera</span>
-                    </span>
-                  </button>
-                </div>
+                <UserProfileHeader className="relative hover-lift" />
               </div>
             </div>
           </div>

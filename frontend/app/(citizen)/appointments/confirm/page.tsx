@@ -1,6 +1,6 @@
 'use client'
 
-import { useState, useEffect } from 'react'
+import { useState, useEffect, Suspense } from 'react'
 import { useRouter, useSearchParams } from 'next/navigation'
 import { 
   CheckCircleIcon,
@@ -18,7 +18,7 @@ import {
 import DashboardLayout from '../../../../components/DashboardLayout'
 import { getServiceById } from '../../../../lib/services'
 
-export default function AppointmentConfirmedPage() {
+function AppointmentConfirmedContent() {
   const router = useRouter()
   const searchParams = useSearchParams()
   const [showCalendarOptions, setShowCalendarOptions] = useState(false)
@@ -303,5 +303,22 @@ export default function AppointmentConfirmedPage() {
         </div>
       </div>
     </DashboardLayout>
+  )
+}
+
+export default function AppointmentConfirmedPage() {
+  return (
+    <Suspense fallback={
+      <DashboardLayout>
+        <div className="flex items-center justify-center min-h-[400px]">
+          <div className="text-center">
+            <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-white mx-auto mb-4"></div>
+            <p className="text-white text-lg">Loading...</p>
+          </div>
+        </div>
+      </DashboardLayout>
+    }>
+      <AppointmentConfirmedContent />
+    </Suspense>
   )
 }

@@ -33,6 +33,10 @@ const nextConfig = {
       },
     ]
   },
+  
+  async redirects() {
+    return []
+  },
   async headers() {
     return [
       {
